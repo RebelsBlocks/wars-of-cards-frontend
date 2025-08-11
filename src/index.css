@@ -1,0 +1,362 @@
+@import "tailwindcss";
+
+/* Ultra aggressive light theme enforcement */
+:root {
+  color-scheme: light !important;
+  -webkit-color-scheme: light !important;
+}
+
+* {
+  color-scheme: light !important;
+  -webkit-color-scheme: light !important;
+}
+
+*:before,
+*:after {
+  color-scheme: light !important;
+  -webkit-color-scheme: light !important;
+}
+
+html {
+  color-scheme: light !important;
+  -webkit-color-scheme: light !important;
+  background-color: transparent !important;
+}
+
+body {
+  color-scheme: light !important;
+  -webkit-color-scheme: light !important;
+  background-color: transparent !important;
+}
+
+/* Override any potential dark mode media queries */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: light !important;
+    -webkit-color-scheme: light !important;
+  }
+  
+  * {
+    color-scheme: light !important;
+    -webkit-color-scheme: light !important;
+  }
+  
+  html {
+    background-color: transparent !important;
+    color: #1c1917 !important;
+  }
+  
+  body {
+    background-color: transparent !important;
+    color: #1c1917 !important;
+  }
+  
+  #root {
+    background-color: transparent !important;
+    color: #1c1917 !important;
+  }
+}
+
+:root {
+  /* Card Table Theme Colors - Casino Felt Green & Gold */
+  --felt-green: 13, 56, 27;  /* Darker poker felt green from logo */
+  --felt-green-dark: 8, 35, 17;  /* Even darker shade for depth */
+  --felt-green-light: 18, 77, 37;  /* Lighter shade for highlights */
+  --gold-accent: 237, 201, 81;  /* Warmer gold to match logo text */
+  --cream-text: 237, 201, 81;  /* Matching the logo text color */
+  
+  /* Card colors from logo */
+  --card-black: 0, 0, 0;  /* Spades and clubs */
+  --card-orange: 255, 102, 0;  /* Diamonds */
+  --card-red: 220, 53, 53;  /* Logo red dress */
+  
+  /* Primary Colors - Casino-based */
+  --primary: var(--gold-accent);
+  --primary-dark: 217, 119, 6;  /* amber-600 */
+  --primary-light: 251, 191, 36;  /* amber-300 */
+  
+  /* Secondary Colors */
+  --secondary: var(--card-orange);
+  --secondary-dark: 194, 65, 12;  /* orange-700 */
+  --secondary-light: 251, 146, 60;  /* orange-400 */
+  
+  /* Status Colors - Casino-inspired */
+  --success: 34, 197, 94;  /* green-500 */
+  --warning: var(--card-orange);
+  --error: var(--card-red);
+  --info: 59, 130, 246;  /* blue-500 */
+  
+  /* Text Colors - Casino palette */
+  --text-primary: var(--cream-text);
+  --text-secondary: 237, 201, 81, 0.8;
+  --text-muted: 237, 201, 81, 0.6;
+  --text-light: 255, 255, 255;
+  
+  /* Background Colors - Casino palette */
+  --bg-primary: 250, 250, 249;  /* stone-50 */
+  --bg-secondary: 245, 245, 244;  /* stone-100 */
+  --bg-tertiary: 231, 229, 228;  /* stone-200 */
+  --bg-dark: 28, 25, 23;  /* stone-900 */
+  
+  /* Border Colors - Stone palette */
+  --border-primary: 231, 229, 228;  /* stone-200 */
+  --border-secondary: 214, 211, 209;  /* stone-300 */
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+    scroll-behavior: smooth;
+    color-scheme: light !important;
+  }
+  
+  body {
+    background: transparent !important;
+    color: rgb(var(--text-primary));
+    min-height: 100vh;
+    color-scheme: light !important;
+  }
+  
+  * {
+    box-sizing: border-box;
+    color-scheme: light !important;
+  }
+}
+
+@layer components {
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .btn:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 2px rgb(var(--primary-stone) / 0.5);
+  }
+  
+  .btn-primary {
+    background: linear-gradient(135deg, rgb(var(--gold-accent)) 0%, rgb(var(--primary-dark)) 100%);
+    color: rgb(var(--felt-green-dark));
+    box-shadow: var(--shadow-sm);
+    font-weight: 600;
+  }
+  
+  .btn-primary:hover {
+    background: linear-gradient(135deg, rgb(var(--primary-dark)) 0%, rgb(var(--gold-accent)) 100%);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+  }
+  
+  .btn-secondary {
+    background: linear-gradient(135deg, rgb(var(--card-orange)) 0%, rgb(var(--secondary-dark)) 100%);
+    color: rgb(var(--felt-green-dark));
+    box-shadow: var(--shadow-sm);
+    font-weight: 600;
+  }
+  
+  .btn-secondary:hover {
+    background: linear-gradient(135deg, rgb(var(--secondary-dark)) 0%, rgb(var(--card-orange)) 100%);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+  }
+  
+  .btn-accent {
+    background: linear-gradient(135deg, rgb(var(--accent-warm)) 0%, rgb(var(--accent-warm-dark)) 100%);
+    color: rgb(var(--text-light));
+    box-shadow: var(--shadow-sm);
+  }
+  
+  .btn-accent:hover {
+    background: linear-gradient(135deg, rgb(var(--accent-warm-dark)) 0%, rgb(var(--secondary-stone-dark)) 100%);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+  }
+  
+  .btn-clean {
+    background: transparent;
+    color: rgb(var(--cream-text));
+    box-shadow: none;
+    border: none;
+  }
+  
+  .btn-clean:hover {
+    background: transparent;
+    box-shadow: none;
+    transform: none;
+    color: rgb(var(--gold-accent));
+  }
+  
+  .btn-clean:focus {
+    outline: none;
+    box-shadow: none;
+  }
+  
+  .card {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    box-shadow: var(--shadow-md);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 1.25rem;
+    transition: all 0.2s ease-in-out;
+    backdrop-filter: blur(10px);
+  }
+  
+  .card:hover {
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+  
+  .card-accent {
+    background: linear-gradient(135deg, rgba(var(--primary-stone-light), 0.1) 0%, rgba(var(--accent-warm-light), 0.1) 100%);
+    border: 1px solid rgb(var(--primary-stone) / 0.2);
+  }
+  
+  .gradient-text {
+    background: linear-gradient(135deg, rgb(var(--gold-accent)) 0%, rgb(var(--card-orange)) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .glass-effect {
+    backdrop-filter: blur(16px) saturate(180%);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  /* Navbar background icon helpers (use images from /public) */
+  /* Replaced with tile + badge visuals below */
+
+  /* Menu tile visuals (felt tile with gold border and subtle glow) - NAVBAR ONLY */
+  .menu-tile {
+    background: linear-gradient(180deg, rgba(var(--felt-green), 0.18) 0%, rgba(var(--felt-green-dark), 0.25) 100%),
+                radial-gradient(120% 120% at 20% 10%, rgba(var(--felt-green-light), 0.18), transparent 60%);
+    border: 1px solid rgba(var(--gold-accent), 0.28);
+    border-radius: 0.6rem;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.2) inset, 0 6px 14px rgba(0,0,0,0.25);
+  }
+  .menu-tile:hover {
+    border-color: rgba(var(--gold-accent), 0.45);
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.2) inset, 0 8px 18px rgba(0,0,0,0.35);
+    background: linear-gradient(180deg, rgba(var(--felt-green), 0.24) 0%, rgba(var(--felt-green-dark), 0.3) 100%),
+                radial-gradient(120% 120% at 20% 10%, rgba(var(--felt-green-light), 0.22), transparent 60%);
+  }
+  .menu-tile-active {
+    background: linear-gradient(180deg, rgba(var(--felt-green), 0.3) 0%, rgba(var(--felt-green-dark), 0.36) 100%),
+                radial-gradient(120% 120% at 20% 10%, rgba(var(--felt-green-light), 0.28), transparent 60%);
+    border-color: rgba(var(--gold-accent), 0.55);
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.2) inset, 0 0 0 2px rgba(var(--gold-accent), 0.15), 0 10px 22px rgba(0,0,0,0.4);
+  }
+
+  /* Right-side icon badge (dark felt with golden border) - NAVBAR ONLY */
+  .menu-icon-badge {
+    background: linear-gradient(180deg, rgba(var(--felt-green-dark), 0.85) 0%, rgba(var(--felt-green), 0.7) 100%);
+    border: 1px solid rgba(var(--gold-accent), 0.35);
+    border-radius: 0.4rem;
+    width: 2.2rem;
+    height: 2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.25) inset, 0 2px 6px rgba(0,0,0,0.3);
+  }
+
+  /* Full-image tile buttons (image fills background, text on top) - NAVBAR ONLY */
+  .nav-tile {
+    position: relative;
+    border: 1px solid rgba(var(--gold-accent), 0.35);
+    border-radius: 0.6rem;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.2) inset, 0 6px 14px rgba(0,0,0,0.25);
+    background-image:
+      linear-gradient(90deg, rgba(var(--felt-green-dark), 0.85) 0%, rgba(var(--felt-green-dark), 0.6) 45%, rgba(var(--felt-green-dark), 0.35) 100%),
+      var(--tile-img);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    color: rgb(var(--cream-text));
+  }
+  .nav-tile:hover { border-color: rgba(var(--gold-accent), 0.5); }
+  .nav-tile-active {
+    border-color: rgba(var(--gold-accent), 0.6);
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.2) inset, 0 0 0 2px rgba(var(--gold-accent), 0.15), 0 10px 22px rgba(0,0,0,0.4);
+    background-image:
+      linear-gradient(90deg, rgba(var(--felt-green-dark), 0.9) 0%, rgba(var(--felt-green-dark), 0.65) 45%, rgba(var(--felt-green-dark), 0.4) 100%),
+      var(--tile-img);
+  }
+  .nav-tile-collapsed {
+    background-size: cover;
+    background-position: right center;
+    padding: 0.75rem;
+    min-height: 3rem;
+  }
+  .nav-img-home { --tile-img: url('/logo_transparent.png'); }
+  .nav-img-play { --tile-img: url('/Play.png'); }
+  .nav-img-chat { --tile-img: url('/Chat.png'); }
+  .nav-img-mail { --tile-img: url('/Mail.png'); }
+  .nav-img-profile { --tile-img: url('/Profile.png'); }
+  
+  /* Stone Gradients */
+  .gradient-stone-subtle {
+    background: linear-gradient(135deg, rgb(var(--stone-50)) 0%, rgb(var(--stone-100)) 50%, rgb(var(--stone-200)) 100%);
+  }
+  
+  .gradient-stone-warm {
+    background: linear-gradient(135deg, rgb(var(--stone-100)) 0%, rgb(var(--accent-warm-light)) 50%, rgb(var(--accent-warm)) 100%);
+  }
+  
+  .gradient-stone-elegant {
+    background: linear-gradient(135deg, rgb(var(--stone-200)) 0%, rgb(var(--stone-300)) 50%, rgb(var(--stone-400)) 100%);
+  }
+  
+  .gradient-stone-dark {
+    background: linear-gradient(135deg, rgb(var(--stone-700)) 0%, rgb(var(--stone-800)) 50%, rgb(var(--stone-900)) 100%);
+  }
+  
+  .gradient-stone-horizontal {
+    background: linear-gradient(90deg, rgb(var(--stone-50)) 0%, rgb(var(--stone-100)) 25%, rgb(var(--stone-200)) 50%, rgb(var(--stone-300)) 75%, rgb(var(--stone-400)) 100%);
+  }
+  
+  .gradient-stone-radial {
+    background: radial-gradient(circle, rgb(var(--stone-50)) 0%, rgb(var(--stone-100)) 25%, rgb(var(--stone-200)) 50%, rgb(var(--stone-300)) 75%, rgb(var(--stone-400)) 100%);
+  }
+  
+  .gradient-stone-accent {
+    background: linear-gradient(135deg, rgb(var(--stone-100)) 0%, rgb(var(--accent-warm-light)) 30%, rgb(var(--accent-warm)) 70%, rgb(var(--stone-200)) 100%);
+  }
+  
+  .gradient-stone-professional {
+    background: linear-gradient(135deg, rgb(var(--stone-50)) 0%, rgb(var(--stone-100)) 20%, rgb(var(--stone-200)) 40%, rgb(var(--stone-300)) 60%, rgb(var(--stone-400)) 80%, rgb(var(--stone-500)) 100%);
+  }
+  
+  /* Hover Effects with Gradients */
+  .hover-gradient-stone:hover {
+    background: linear-gradient(135deg, rgb(var(--stone-200)) 0%, rgb(var(--stone-300)) 50%, rgb(var(--accent-warm-light)) 100%);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+  
+  .hover-gradient-warm:hover {
+    background: linear-gradient(135deg, rgb(var(--accent-warm-light)) 0%, rgb(var(--accent-warm)) 50%, rgb(var(--accent-warm-dark)) 100%);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+}
