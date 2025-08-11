@@ -23,6 +23,6 @@
       "./src/types"
     ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/types/*.d.ts"],
-  "exclude": ["node_modules"]
+  "include": ["next-env.d.ts", "src/**/*.ts", "src/**/*.tsx", "src/types/*.d.ts"],
+  "exclude": ["node_modules", "vite.config.ts"]
 } 
