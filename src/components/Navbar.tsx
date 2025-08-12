@@ -1,47 +1,68 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import Header from './Header';
 
-export type MenuItem = 'play' | 'chat' | 'mail' | 'profile';
+export type MenuItem = 'home' | 'play' | 'chat' | 'mail' | 'profile';
 
 export default function Navbar() {
   const router = useRouter();
-  const [activeMenuItem, setActiveMenuItem] = useState<MenuItem>('play');
+  const [activeMenuItem, setActiveMenuItem] = useState<MenuItem>('home');
   const [useMobileHeader, setUseMobileHeader] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(false); // desktop: collapsed sidebar
+
   const [isMenuOpen, setIsMenuOpen] = useState(false); // mobile: dropdown open
+
+  // Dispatch sidebar state changes to App.tsx
+  const dispatchSidebarState = useCallback(() => {
+    const event = new CustomEvent('sidebarStateChange', {
+      detail: {
+        isOpen: isMenuOpen,
+        isCollapsed: false, // Always full width now
+        isMobile: useMobileHeader
+      }
+    });
+    window.dispatchEvent(event);
+  }, [isMenuOpen, useMobileHeader]);
 
   // Map pathname to menu item
   const getActiveMenuItem = (): MenuItem => {
     const path = router.pathname;
-    if (path === '/') return 'play';
+    if (path === '/') return 'home';
     if (path === '/Play') return 'play';
     if (path === '/Chat') return 'chat';
     if (path === '/Mail') return 'mail';
     if (path === '/Profile') return 'profile';
-    return 'play';
+    return 'home';
   };
 
-  // Decide header vs sidebar using width and height
+  // Decide mobile behavior using MainLayout breakpoint
   useEffect(() => {
-    const decideLayout = () => {
-      const width = window.innerWidth;
-      const height = window.innerHeight;
-      // Use header on small width or small height (landscape phones/tablets)
-      setUseMobileHeader(width <= 960 || height <= 600);
+    const checkMobile = () => {
+      const isMobile = window.innerWidth <= 768;
+      setUseMobileHeader(isMobile);
+      if (!isMobile) {
+        setIsMenuOpen(true); // Desktop: sidebar always open
+      }
     };
-    decideLayout();
-    window.addEventListener('resize', decideLayout);
-    return () => window.removeEventListener('resize', decideLayout);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  // Dispatch state changes when any state updates
+  useEffect(() => {
+    dispatchSidebarState();
+  }, [dispatchSidebarState]);
 
   // Sync active menu item with route changes
   useEffect(() => {
     setActiveMenuItem(getActiveMenuItem());
-    // Close mobile menu on route change
-    setIsMenuOpen(false);
-  }, [router.pathname]);
+    // Close mobile menu on route change (but keep desktop sidebar open)
+    if (useMobileHeader) {
+      setIsMenuOpen(false);
+    }
+  }, [router.pathname, useMobileHeader]);
 
   const handleMenuItemClick = (menuItem: MenuItem) => {
     setActiveMenuItem(menuItem);
@@ -51,130 +72,177 @@ export default function Navbar() {
   const isActive = (menuItem: MenuItem) => activeMenuItem === menuItem;
 
   const baseItem = 'rounded-md transition-all duration-300 nav-tile';
-  const expandedItemPadding = 'px-3 py-3 flex items-center justify-between min-h-[48px]';
-  const collapsedItemPadding = 'nav-tile-collapsed';
-  const inactiveItem = 'text-[rgba(237,201,81,0.95)] hover:text-[rgb(237,201,81)]';
-  const activeItem = 'text-[rgb(237,201,81)] nav-tile-active';
+  const itemPadding = 'px-3 py-3 flex items-center justify-between min-h-[48px]';
+  const inactiveItem = 'text-[rgb(237,201,81)] hover:text-[rgba(237,201,81,0.8)] hover:bg-[rgba(237,201,81,0.1)]';
+  const activeItem = 'text-[rgb(237,201,81)] nav-tile-active bg-[rgba(237,201,81,0.15)] border-[rgba(237,201,81,0.5)]';
 
-  // Desktop sidebar variant
-  if (!useMobileHeader) {
-    const sidebarWidthClass = isCollapsed ? 'w-28' : 'w-[220px]';
-    return (
-      <>
+  const sidebarWidthClass = 'w-[220px]'; // Always full width
+
+  // Universal layout - header always visible, sidebar for mobile and desktop
+  return (
+    <>
+      {/* Header with fade animation - fades out when sidebar opens */}
+      <Header 
+        isMenuOpen={isMenuOpen} 
+        onMenuToggle={() => setIsMenuOpen(!isMenuOpen)} 
+      />
+
+      {/* Desktop sidebar */}
+      {!useMobileHeader && (
         <aside
-          className={`fixed left-0 top-0 bottom-0 z-20 ${sidebarWidthClass} bg-[rgba(8,35,17,0.95)] border-r border-[rgba(237,201,81,0.3)] backdrop-blur transition-all duration-300`}
+          className={`fixed left-0 top-0 bottom-0 z-20 ${sidebarWidthClass} bg-[rgba(8,35,17,0.95)] border-r border-[rgba(237,201,81,0.3)] backdrop-blur transition-all duration-300 ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}
         >
-          {/* Logo acts as collapse toggle on desktop */}
-          <button
-            className={`relative border-b border-[rgba(237,201,81,0.3)] w-full transition-all duration-300 hover:bg-[rgba(237,201,81,0.05)] overflow-hidden`}
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            aria-label={isCollapsed ? 'Expand menu' : 'Collapse menu'}
-            style={{ height: isCollapsed ? `${sidebarWidthClass === 'w-28' ? '112px' : '80px'}` : '220px', aspectRatio: '1/1' }}
-          >
-            <Image
-              src="/logo.png"
-              alt="Wars of Cards"
-              fill
-              className="object-cover"
-              priority
-              sizes={isCollapsed ? "112px" : "220px"}
-            />
-          </button>
+          {/* Logo section with close button */}
+          <div className="relative border-b border-[rgba(237,201,81,0.3)] w-full overflow-hidden h-[220px]">
+            <button
+              className="absolute top-2 right-2 z-10 w-6 h-6 bg-[rgba(8,35,17,0.8)] border border-[rgba(237,201,81,0.3)] rounded flex items-center justify-center hover:bg-[rgba(237,201,81,0.1)] transition-all duration-300"
+              onClick={() => setIsMenuOpen(false)}
+              aria-label="Close menu"
+            >
+              <span className="text-[rgb(237,201,81)] text-sm leading-none">×</span>
+            </button>
+            <Link href="/" onClick={() => handleMenuItemClick('home')} className="block w-full h-full cursor-pointer">
+              <Image
+                src="/logo.png"
+                alt="Wars of Cards"
+                fill
+                className="object-cover hover:opacity-90 transition-opacity duration-200"
+                priority
+              />
+            </Link>
+          </div>
 
           {/* Menu */}
           <nav className="flex flex-col gap-2 p-2">
             
-            <Link href="/Play" onClick={() => handleMenuItemClick('play')} className={`${baseItem} nav-img-play ${isCollapsed ? collapsedItemPadding : expandedItemPadding} ${isActive('play') ? activeItem : inactiveItem}`}>
-              {!isCollapsed && <span className="font-semibold tracking-wide">Play</span>}
+            <Link href="/Play" onClick={() => handleMenuItemClick('play')} className={`${baseItem} nav-img-play ${itemPadding} ${isActive('play') ? activeItem : inactiveItem}`}>
+              <span className="font-semibold tracking-wide">Play</span>
             </Link>
-            <Link href="/Chat" onClick={() => handleMenuItemClick('chat')} className={`${baseItem} nav-img-chat ${isCollapsed ? collapsedItemPadding : expandedItemPadding} ${isActive('chat') ? activeItem : inactiveItem}`}>
-              {!isCollapsed && <span className="font-semibold tracking-wide">Chat</span>}
+            <Link href="/Chat" onClick={() => handleMenuItemClick('chat')} className={`${baseItem} nav-img-chat ${itemPadding} ${isActive('chat') ? activeItem : inactiveItem}`}>
+              <span className="font-semibold tracking-wide">Chat</span>
             </Link>
-            <Link href="/Mail" onClick={() => handleMenuItemClick('mail')} className={`${baseItem} nav-img-mail ${isCollapsed ? collapsedItemPadding : expandedItemPadding} ${isActive('mail') ? activeItem : inactiveItem}`}>
-              {!isCollapsed && <span className="font-semibold tracking-wide">Mail</span>}
+            <Link href="/Mail" onClick={() => handleMenuItemClick('mail')} className={`${baseItem} nav-img-mail ${itemPadding} ${isActive('mail') ? activeItem : inactiveItem}`}>
+              <span className="font-semibold tracking-wide">Mail</span>
             </Link>
-            <Link href="/Profile" onClick={() => handleMenuItemClick('profile')} className={`${baseItem} nav-img-profile ${isCollapsed ? collapsedItemPadding : expandedItemPadding} ${isActive('profile') ? activeItem : inactiveItem}`}>
-              {!isCollapsed && <span className="font-semibold tracking-wide">Profile</span>}
+            <Link href="/Profile" onClick={() => handleMenuItemClick('profile')} className={`${baseItem} nav-img-profile ${itemPadding} ${isActive('profile') ? activeItem : inactiveItem}`}>
+              <span className="font-semibold tracking-wide">Profile</span>
             </Link>
           </nav>
 
-          {/* Bottom section only visible when expanded */}
-          {!isCollapsed && (
-            <>
-              <div className="mt-auto p-3 flex flex-col gap-2">
-                <div className="flex items-center justify-between rounded-md border border-[rgba(237,201,81,0.3)] bg-[rgba(13,56,27,0.6)] px-3 py-2">
-                  <span className="text-sm font-semibold text-[rgb(237,201,81)]">NEAR</span>
-                  <span className="text-sm text-[rgba(237,201,81,0.9)]">$—</span>
-                </div>
-                <div className="flex items-center justify-between rounded-md border border-[rgba(237,201,81,0.3)] bg-[rgba(13,56,27,0.6)] px-3 py-2">
-                  <span className="text-sm font-semibold text-[rgb(237,201,81)]">CRANS</span>
-                  <span className="text-sm text-[rgba(237,201,81,0.9)]">—</span>
-                </div>
+          {/* Token prices section - enhanced styling */}
+          <div className="mt-auto p-3 space-y-3">
+            <div className="text-xs text-[rgba(237,201,81,0.7)] font-medium tracking-wider uppercase mb-2">Token Prices</div>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between rounded-lg border border-[rgba(237,201,81,0.4)] bg-gradient-to-r from-[rgba(237,201,81,0.08)] to-[rgba(237,201,81,0.12)] px-3 py-2.5 hover:bg-gradient-to-r hover:from-[rgba(237,201,81,0.12)] hover:to-[rgba(237,201,81,0.16)] transition-all duration-200">
+                <span className="text-sm font-bold text-[rgb(237,201,81)] tracking-wide">NEAR</span>
+                <span className="text-sm text-[rgb(237,201,81)] font-semibold">$—</span>
               </div>
+              <div className="flex items-center justify-between rounded-lg border border-[rgba(237,201,81,0.4)] bg-gradient-to-r from-[rgba(237,201,81,0.08)] to-[rgba(237,201,81,0.12)] px-3 py-2.5 hover:bg-gradient-to-r hover:from-[rgba(237,201,81,0.12)] hover:to-[rgba(237,201,81,0.16)] transition-all duration-200">
+                <span className="text-sm font-bold text-[rgb(237,201,81)] tracking-wide">CRANS</span>
+                <span className="text-sm text-[rgb(237,201,81)] font-semibold">—</span>
+              </div>
+            </div>
+          </div>
 
-              <div className="p-3 flex items-center gap-3">
-                <a href="https://t.me/+-xPEx_2Kxuo5YmY0" target="_blank" rel="noopener noreferrer" className="opacity-90 hover:opacity-100 transition">
-                  <Image src="/telegram.png" alt="Telegram" width={22} height={22} />
-                </a>
-                <a href="https://x.com/rebelsblocks" target="_blank" rel="noopener noreferrer" className="opacity-90 hover:opacity-100 transition">
-                  <Image src="/x.png" alt="X" width={22} height={22} />
-                </a>
-              </div>
-            </>
-          )}
+          {/* Social links - positioned at very bottom */}
+          <div className="p-3 pb-4">
+            <div className="flex items-center justify-center gap-4">
+              <a 
+                href="https://t.me/+-xPEx_2Kxuo5YmY0" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[rgba(237,201,81,0.1)] transition-all duration-200 group opacity-70 hover:opacity-100"
+              >
+                <Image src="/telegram.png" alt="Telegram" width={18} height={18} className="group-hover:scale-110 transition-transform duration-200" />
+              </a>
+              <a 
+                href="https://x.com/rebelsblocks" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[rgba(237,201,81,0.1)] transition-all duration-200 group opacity-70 hover:opacity-100"
+              >
+                <Image src="/x.png" alt="X" width={16} height={16} className="group-hover:scale-110 transition-transform duration-200" />
+              </a>
+            </div>
+          </div>
         </aside>
+      )}
 
-        {/* Spacer: match sidebar width to keep content visible */}
-        <div className={`${isCollapsed ? 'w-28' : 'w-[220px]'} shrink-0`} />
-      </>
-    );
-  }
-
-  // Mobile header variant
-  return (
-    <>
-      <header className="fixed top-0 left-0 right-0 z-20 h-14 bg-[rgba(8,35,17,0.95)] border-b border-[rgba(237,201,81,0.3)] backdrop-blur flex items-center justify-between px-3">
-        {/* Logo acts as menu toggle on mobile */}
-        <button
-          className="flex items-center gap-2 text-[rgb(237,201,81)]"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+      {/* Mobile sliding sidebar - same structure as desktop */}
+      {useMobileHeader && (
+        <aside
+          className={`fixed left-0 top-0 bottom-0 z-20 w-[250px] bg-[rgba(8,35,17,0.95)] border-r border-[rgba(237,201,81,0.3)] backdrop-blur transition-transform duration-300 ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}
         >
-          <Image src="/logo.png" alt="Wars of Cards" width={36} height={36} />
-          <span className="font-semibold tracking-wide">Wars of Cards</span>
-        </button>
+          {/* Logo section for mobile */}
+          <div className="relative border-b border-[rgba(237,201,81,0.3)] w-full h-[120px] flex items-center justify-center">
+            <button
+              className="absolute top-2 right-2 z-10 w-8 h-8 bg-[rgba(8,35,17,0.8)] border border-[rgba(237,201,81,0.3)] rounded flex items-center justify-center hover:bg-[rgba(237,201,81,0.1)] transition-all duration-300"
+              onClick={() => setIsMenuOpen(false)}
+              aria-label="Close menu"
+            >
+              <span className="text-[rgb(237,201,81)] text-lg leading-none">×</span>
+            </button>
+            <Link href="/" onClick={() => handleMenuItemClick('home')} className="cursor-pointer">
+              <Image
+                src="/logo.png"
+                alt="Wars of Cards"
+                width={120}
+                height={80}
+                className="object-contain hover:opacity-90 transition-opacity duration-200"
+                priority
+              />
+            </Link>
+          </div>
 
-        <div className="flex items-center gap-3">
-          <a href="https://t.me/+-xPEx_2Kxuo5YmY0" target="_blank" rel="noopener noreferrer" className="opacity-90 hover:opacity-100 transition">
-            <Image src="/telegram.png" alt="Telegram" width={20} height={20} />
-          </a>
-          <a href="https://x.com/rebelsblocks" target="_blank" rel="noopener noreferrer" className="opacity-90 hover:opacity-100 transition">
-            <Image src="/x.png" alt="X" width={20} height={20} />
-          </a>
-        </div>
-      </header>
+          {/* Menu */}
+          <nav className="flex flex-col gap-2 p-2">
+            <Link href="/Play" onClick={() => handleMenuItemClick('play')} className={`nav-tile nav-img-play px-3 py-3 flex items-center justify-between min-h-[48px] ${isActive('play') ? 'nav-tile-active text-[rgb(237,201,81)]' : 'text-[rgba(237,201,81,0.95)] hover:text-[rgb(237,201,81)]'}`}>
+              <span className="font-semibold tracking-wide">Play</span>
+            </Link>
+            <Link href="/Chat" onClick={() => handleMenuItemClick('chat')} className={`nav-tile nav-img-chat px-3 py-3 flex items-center justify-between min-h-[48px] ${isActive('chat') ? 'nav-tile-active text-[rgb(237,201,81)]' : 'text-[rgba(237,201,81,0.95)] hover:text-[rgb(237,201,81)]'}`}>
+              <span className="font-semibold tracking-wide">Chat</span>
+            </Link>
+            <Link href="/Mail" onClick={() => handleMenuItemClick('mail')} className={`nav-tile nav-img-mail px-3 py-3 flex items-center justify-between min-h-[48px] ${isActive('mail') ? 'nav-tile-active text-[rgb(237,201,81)]' : 'text-[rgba(237,201,81,0.95)] hover:text-[rgb(237,201,81)]'}`}>
+              <span className="font-semibold tracking-wide">Mail</span>
+            </Link>
+            <Link href="/Profile" onClick={() => handleMenuItemClick('profile')} className={`nav-tile nav-img-profile px-3 py-3 flex items-center justify-between min-h-[48px] ${isActive('profile') ? 'nav-tile-active text-[rgb(237,201,81)]' : 'text-[rgba(237,201,81,0.95)] hover:text-[rgb(237,201,81)]'}`}>
+              <span className="font-semibold tracking-wide">Profile</span>
+            </Link>
+          </nav>
 
-      {/* Dropdown menu */}
-      <nav className={`fixed top-14 left-0 right-0 z-20 bg-[rgba(8,35,17,0.98)] border-b border-[rgba(237,201,81,0.3)] backdrop-blur transition-all duration-300 ${isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
-        <div className="flex flex-col p-3 gap-2">
-          
-          <Link className={`px-4 py-3 rounded-md nav-tile nav-img-play flex items-center justify-between ${isActive('play') ? 'nav-tile-active text-[rgb(237,201,81)]' : 'text-[rgba(237,201,81,0.95)] hover:text-[rgb(237,201,81)]'}`} href="/Play" onClick={() => handleMenuItemClick('play')}>
-            <span>Play</span>
-          </Link>
-          <Link className={`px-4 py-3 rounded-md nav-tile nav-img-chat flex items-center justify-between ${isActive('chat') ? 'nav-tile-active text-[rgb(237,201,81)]' : 'text-[rgba(237,201,81,0.95)] hover:text-[rgb(237,201,81)]'}`} href="/Chat" onClick={() => handleMenuItemClick('chat')}>
-            <span>Chat</span>
-          </Link>
-          <Link className={`px-4 py-3 rounded-md nav-tile nav-img-mail flex items-center justify-between ${isActive('mail') ? 'nav-tile-active text-[rgb(237,201,81)]' : 'text-[rgba(237,201,81,0.95)] hover:text-[rgb(237,201,81)]'}`} href="/Mail" onClick={() => handleMenuItemClick('mail')}>
-            <span>Mail</span>
-          </Link>
-          <Link className={`px-4 py-3 rounded-md nav-tile nav-img-profile flex items-center justify-between ${isActive('profile') ? 'nav-tile-active text-[rgb(237,201,81)]' : 'text-[rgba(237,201,81,0.95)] hover:text-[rgb(237,201,81)]'}`} href="/Profile" onClick={() => handleMenuItemClick('profile')}>
-            <span>Profile</span>
-          </Link>
-        </div>
-      </nav>
+          {/* Bottom section */}
+          <div className="mt-auto p-3 flex flex-col gap-2">
+            <div className="flex items-center justify-between rounded-md border border-[rgba(237,201,81,0.3)] bg-[rgba(13,56,27,0.6)] px-3 py-2">
+              <span className="text-sm font-semibold text-[rgb(237,201,81)]">NEAR</span>
+              <span className="text-sm text-[rgba(237,201,81,0.9)]">$—</span>
+            </div>
+            <div className="flex items-center justify-between rounded-md border border-[rgba(237,201,81,0.3)] bg-[rgba(13,56,27,0.6)] px-3 py-2">
+              <span className="text-sm font-semibold text-[rgb(237,201,81)]">CRANS</span>
+              <span className="text-sm text-[rgba(237,201,81,0.9)]">—</span>
+            </div>
+          </div>
 
-      {/* Header spacer so content is not under the header */}
+          <div className="p-3 flex items-center gap-3">
+            <a href="https://t.me/+-xPEx_2Kxuo5YmY0" target="_blank" rel="noopener noreferrer" className="opacity-90 hover:opacity-100 transition">
+              <Image src="/telegram.png" alt="Telegram" width={20} height={20} />
+            </a>
+            <a href="https://x.com/rebelsblocks" target="_blank" rel="noopener noreferrer" className="opacity-90 hover:opacity-100 transition">
+              <Image src="/x.png" alt="X" width={20} height={20} />
+            </a>
+          </div>
+        </aside>
+      )}
+
+      {/* Header spacer so content is not under the header - always needed */}
       <div className="h-14" />
+
+      {/* Overlay - only for mobile */}
+      {useMobileHeader && isMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-black/70 z-10 backdrop-blur-sm"
+          onClick={() => setIsMenuOpen(false)}
+        />
+      )}
     </>
   );
 }
