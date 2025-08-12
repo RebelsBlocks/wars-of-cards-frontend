@@ -72,11 +72,11 @@ export default function Navbar() {
   const isActive = (menuItem: MenuItem) => activeMenuItem === menuItem;
 
   const baseItem = 'rounded-md transition-all duration-300 nav-tile';
-  const itemPadding = 'px-3 py-3 flex items-center justify-between min-h-[48px]';
+  const itemPadding = 'px-4 py-3 flex items-center justify-between min-h-[48px]';
   const inactiveItem = 'text-[rgb(237,201,81)] hover:text-[rgba(237,201,81,0.8)] hover:bg-[rgba(237,201,81,0.1)]';
   const activeItem = 'text-[rgb(237,201,81)] nav-tile-active bg-[rgba(237,201,81,0.15)] border-[rgba(237,201,81,0.5)]';
 
-  const sidebarWidthClass = 'w-[220px]'; // Always full width
+  const sidebarWidthClass = 'w-[200px]'; // Reduced width to eliminate green strips around logo
 
   // Universal layout - header always visible, sidebar for mobile and desktop
   return (
@@ -93,7 +93,7 @@ export default function Navbar() {
           className={`fixed left-0 top-0 bottom-0 z-20 ${sidebarWidthClass} bg-[rgba(8,35,17,0.95)] border-r border-[rgba(237,201,81,0.3)] backdrop-blur transition-all duration-300 ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}
         >
           {/* Logo section with close button */}
-          <div className="relative border-b border-[rgba(237,201,81,0.3)] w-full overflow-hidden h-[220px]">
+          <div className="relative border-b border-[rgba(237,201,81,0.3)] w-full h-[160px] bg-[rgba(8,35,17,0.4)]">
             <button
               className="absolute top-2 right-2 z-10 w-6 h-6 bg-[rgba(8,35,17,0.8)] border border-[rgba(237,201,81,0.3)] rounded flex items-center justify-center hover:bg-[rgba(237,201,81,0.1)] transition-all duration-300"
               onClick={() => setIsMenuOpen(false)}
@@ -101,19 +101,19 @@ export default function Navbar() {
             >
               <span className="text-[rgb(237,201,81)] text-sm leading-none">×</span>
             </button>
-            <Link href="/" onClick={() => handleMenuItemClick('home')} className="block w-full h-full cursor-pointer">
+            <Link href="/" onClick={() => handleMenuItemClick('home')} className="block w-full h-full cursor-pointer relative overflow-hidden">
               <Image
-                src="/logo.png"
+                src="/logo_load.png"
                 alt="Wars of Cards"
                 fill
-                className="object-cover hover:opacity-90 transition-opacity duration-200"
+                className="object-contain object-center hover:opacity-90 transition-opacity duration-200"
                 priority
               />
             </Link>
           </div>
 
           {/* Menu */}
-          <nav className="flex flex-col gap-2 p-2">
+          <nav className="flex flex-col gap-2 px-3 py-2">
             
             <Link href="/Play" onClick={() => handleMenuItemClick('play')} className={`${baseItem} nav-img-play ${itemPadding} ${isActive('play') ? activeItem : inactiveItem}`}>
               <span className="font-semibold tracking-wide">Play</span>
@@ -130,7 +130,7 @@ export default function Navbar() {
           </nav>
 
           {/* Token prices section - enhanced styling */}
-          <div className="mt-auto p-3 space-y-3">
+          <div className="mt-auto px-3 py-3 space-y-3">
             <div className="text-xs text-[rgba(237,201,81,0.7)] font-medium tracking-wider uppercase mb-2">Token Prices</div>
             <div className="space-y-2">
               <div className="flex items-center justify-between rounded-lg border border-[rgba(237,201,81,0.4)] bg-gradient-to-r from-[rgba(237,201,81,0.08)] to-[rgba(237,201,81,0.12)] px-3 py-2.5 hover:bg-gradient-to-r hover:from-[rgba(237,201,81,0.12)] hover:to-[rgba(237,201,81,0.16)] transition-all duration-200">
@@ -171,64 +171,72 @@ export default function Navbar() {
       {/* Mobile sliding sidebar - same structure as desktop */}
       {useMobileHeader && (
         <aside
-          className={`fixed left-0 top-0 bottom-0 z-20 w-[250px] bg-[rgba(8,35,17,0.95)] border-r border-[rgba(237,201,81,0.3)] backdrop-blur transition-transform duration-300 ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}
+          className={`fixed left-0 top-0 bottom-0 z-20 w-[220px] bg-[rgba(8,35,17,0.95)] border-r border-[rgba(237,201,81,0.3)] backdrop-blur transition-transform duration-300 ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}
         >
           {/* Logo section for mobile */}
-          <div className="relative border-b border-[rgba(237,201,81,0.3)] w-full h-[120px] flex items-center justify-center">
-            <button
-              className="absolute top-2 right-2 z-10 w-8 h-8 bg-[rgba(8,35,17,0.8)] border border-[rgba(237,201,81,0.3)] rounded flex items-center justify-center hover:bg-[rgba(237,201,81,0.1)] transition-all duration-300"
-              onClick={() => setIsMenuOpen(false)}
-              aria-label="Close menu"
-            >
-              <span className="text-[rgb(237,201,81)] text-lg leading-none">×</span>
-            </button>
-            <Link href="/" onClick={() => handleMenuItemClick('home')} className="cursor-pointer">
+          <div className="relative border-b border-[rgba(237,201,81,0.3)] w-full h-[120px] bg-[rgba(8,35,17,0.4)]">
+            <Link href="/" onClick={() => handleMenuItemClick('home')} className="block w-full h-full cursor-pointer relative overflow-hidden">
               <Image
-                src="/logo.png"
+                src="/logo_load.png"
                 alt="Wars of Cards"
-                width={120}
-                height={80}
-                className="object-contain hover:opacity-90 transition-opacity duration-200"
+                fill
+                className="object-contain object-center hover:opacity-90 transition-opacity duration-200"
                 priority
               />
             </Link>
           </div>
 
           {/* Menu */}
-          <nav className="flex flex-col gap-2 p-2">
-            <Link href="/Play" onClick={() => handleMenuItemClick('play')} className={`nav-tile nav-img-play px-3 py-3 flex items-center justify-between min-h-[48px] ${isActive('play') ? 'nav-tile-active text-[rgb(237,201,81)]' : 'text-[rgba(237,201,81,0.95)] hover:text-[rgb(237,201,81)]'}`}>
+          <nav className="flex flex-col gap-2 pt-3 p-0">
+            <Link href="/Play" onClick={() => handleMenuItemClick('play')} className={`nav-tile nav-img-play px-4 py-3 flex items-center justify-between min-h-[48px] ${isActive('play') ? 'nav-tile-active text-[rgb(237,201,81)]' : 'text-[rgba(237,201,81,0.95)] hover:text-[rgb(237,201,81)]'}`}>
               <span className="font-semibold tracking-wide">Play</span>
             </Link>
-            <Link href="/Chat" onClick={() => handleMenuItemClick('chat')} className={`nav-tile nav-img-chat px-3 py-3 flex items-center justify-between min-h-[48px] ${isActive('chat') ? 'nav-tile-active text-[rgb(237,201,81)]' : 'text-[rgba(237,201,81,0.95)] hover:text-[rgb(237,201,81)]'}`}>
+            <Link href="/Chat" onClick={() => handleMenuItemClick('chat')} className={`nav-tile nav-img-chat px-4 py-3 flex items-center justify-between min-h-[48px] ${isActive('chat') ? 'nav-tile-active text-[rgb(237,201,81)]' : 'text-[rgba(237,201,81,0.95)] hover:text-[rgb(237,201,81)]'}`}>
               <span className="font-semibold tracking-wide">Chat</span>
             </Link>
-            <Link href="/Mail" onClick={() => handleMenuItemClick('mail')} className={`nav-tile nav-img-mail px-3 py-3 flex items-center justify-between min-h-[48px] ${isActive('mail') ? 'nav-tile-active text-[rgb(237,201,81)]' : 'text-[rgba(237,201,81,0.95)] hover:text-[rgb(237,201,81)]'}`}>
+            <Link href="/Mail" onClick={() => handleMenuItemClick('mail')} className={`nav-tile nav-img-mail px-4 py-3 flex items-center justify-between min-h-[48px] ${isActive('mail') ? 'nav-tile-active text-[rgb(237,201,81)]' : 'text-[rgba(237,201,81,0.95)] hover:text-[rgb(237,201,81)]'}`}>
               <span className="font-semibold tracking-wide">Mail</span>
             </Link>
-            <Link href="/Profile" onClick={() => handleMenuItemClick('profile')} className={`nav-tile nav-img-profile px-3 py-3 flex items-center justify-between min-h-[48px] ${isActive('profile') ? 'nav-tile-active text-[rgb(237,201,81)]' : 'text-[rgba(237,201,81,0.95)] hover:text-[rgb(237,201,81)]'}`}>
+            <Link href="/Profile" onClick={() => handleMenuItemClick('profile')} className={`nav-tile nav-img-profile px-4 py-3 flex items-center justify-between min-h-[48px] ${isActive('profile') ? 'nav-tile-active text-[rgb(237,201,81)]' : 'text-[rgba(237,201,81,0.95)] hover:text-[rgb(237,201,81)]'}`}>
               <span className="font-semibold tracking-wide">Profile</span>
             </Link>
           </nav>
 
-          {/* Bottom section */}
-          <div className="mt-auto p-3 flex flex-col gap-2">
-            <div className="flex items-center justify-between rounded-md border border-[rgba(237,201,81,0.3)] bg-[rgba(13,56,27,0.6)] px-3 py-2">
-              <span className="text-sm font-semibold text-[rgb(237,201,81)]">NEAR</span>
-              <span className="text-sm text-[rgba(237,201,81,0.9)]">$—</span>
-            </div>
-            <div className="flex items-center justify-between rounded-md border border-[rgba(237,201,81,0.3)] bg-[rgba(13,56,27,0.6)] px-3 py-2">
-              <span className="text-sm font-semibold text-[rgb(237,201,81)]">CRANS</span>
-              <span className="text-sm text-[rgba(237,201,81,0.9)]">—</span>
+          {/* Token prices section - mobile version matching desktop style */}
+          <div className="mt-auto px-3 py-3 space-y-3">
+            <div className="text-xs text-[rgba(237,201,81,0.7)] font-medium tracking-wider uppercase mb-2">Token Prices</div>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between rounded-lg border border-[rgba(237,201,81,0.4)] bg-gradient-to-r from-[rgba(237,201,81,0.08)] to-[rgba(237,201,81,0.12)] px-3 py-2.5 hover:bg-gradient-to-r hover:from-[rgba(237,201,81,0.12)] hover:to-[rgba(237,201,81,0.16)] transition-all duration-200">
+                <span className="text-sm font-bold text-[rgb(237,201,81)] tracking-wide">NEAR</span>
+                <span className="text-sm text-[rgb(237,201,81)] font-semibold">$—</span>
+              </div>
+              <div className="flex items-center justify-between rounded-lg border border-[rgba(237,201,81,0.4)] bg-gradient-to-r from-[rgba(237,201,81,0.08)] to-[rgba(237,201,81,0.12)] px-3 py-2.5 hover:bg-gradient-to-r hover:from-[rgba(237,201,81,0.12)] hover:to-[rgba(237,201,81,0.16)] transition-all duration-200">
+                <span className="text-sm font-bold text-[rgb(237,201,81)] tracking-wide">CRANS</span>
+                <span className="text-sm text-[rgb(237,201,81)] font-semibold">—</span>
+              </div>
             </div>
           </div>
 
-          <div className="p-3 flex items-center gap-3">
-            <a href="https://t.me/+-xPEx_2Kxuo5YmY0" target="_blank" rel="noopener noreferrer" className="opacity-90 hover:opacity-100 transition">
-              <Image src="/telegram.png" alt="Telegram" width={20} height={20} />
-            </a>
-            <a href="https://x.com/rebelsblocks" target="_blank" rel="noopener noreferrer" className="opacity-90 hover:opacity-100 transition">
-              <Image src="/x.png" alt="X" width={20} height={20} />
-            </a>
+          {/* Social links - positioned at very bottom */}
+          <div className="px-3 py-3 pb-4">
+            <div className="flex items-center justify-center gap-4">
+              <a 
+                href="https://t.me/+-xPEx_2Kxuo5YmY0" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[rgba(237,201,81,0.1)] transition-all duration-200 group opacity-70 hover:opacity-100"
+              >
+                <Image src="/telegram.png" alt="Telegram" width={18} height={18} className="group-hover:scale-110 transition-transform duration-200" />
+              </a>
+              <a 
+                href="https://x.com/rebelsblocks" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[rgba(237,201,81,0.1)] transition-all duration-200 group opacity-70 hover:opacity-100"
+              >
+                <Image src="/x.png" alt="X" width={16} height={16} className="group-hover:scale-110 transition-transform duration-200" />
+              </a>
+            </div>
           </div>
         </aside>
       )}
