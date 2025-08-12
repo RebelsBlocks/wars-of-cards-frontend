@@ -289,10 +289,11 @@ body {
     background-image:
       linear-gradient(90deg, rgba(var(--felt-green-dark), 0.3) 0%, rgba(var(--felt-green-dark), 0.2) 45%, rgba(var(--felt-green-dark), 0.1) 100%),
       var(--tile-img);
-    background-size: contain;
+    background-size: cover;
     background-repeat: no-repeat;
     background-position: right center;
     color: rgb(var(--cream-text));
+    overflow: hidden;
   }
   .nav-tile:hover { border-color: rgba(var(--gold-accent), 0.5); }
   .nav-tile-active {
@@ -301,12 +302,14 @@ body {
     background-image:
       linear-gradient(90deg, rgba(var(--felt-green-dark), 0.4) 0%, rgba(var(--felt-green-dark), 0.25) 45%, rgba(var(--felt-green-dark), 0.15) 100%),
       var(--tile-img);
+    overflow: hidden;
   }
   .nav-tile-collapsed {
-    background-size: contain;
+    background-size: cover;
     background-position: right center;
     padding: 0.75rem;
     min-height: 3rem;
+    overflow: hidden;
   }
   .nav-img-home { --tile-img: url('/logo_transparent.png'); }
   .nav-img-play { --tile-img: url('/Play.png'); }
