@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import Header from './Header';
+import TokenPriceDisplay from './TokenPriceDisplay';
 
 export type MenuItem = 'home' | 'play' | 'chat' | 'mail' | 'profile';
 
@@ -137,16 +138,7 @@ export default function Navbar() {
             {/* Token prices section */}
             <div className="px-3 py-3 space-y-3">
               <div className="text-xs text-[rgba(237,201,81,0.7)] font-medium tracking-wider uppercase mb-2">Token Prices</div>
-              <div className="space-y-2">
-                <div className="flex items-center justify-between rounded-lg border border-[rgba(237,201,81,0.4)] bg-gradient-to-r from-[rgba(237,201,81,0.08)] to-[rgba(237,201,81,0.12)] px-3 py-2.5 hover:bg-gradient-to-r hover:from-[rgba(237,201,81,0.12)] hover:to-[rgba(237,201,81,0.16)] transition-all duration-200">
-                  <span className="text-sm font-bold text-[rgb(237,201,81)] tracking-wide">NEAR</span>
-                  <span className="text-sm text-[rgb(237,201,81)] font-semibold">$—</span>
-                </div>
-                <div className="flex items-center justify-between rounded-lg border border-[rgba(237,201,81,0.4)] bg-gradient-to-r from-[rgba(237,201,81,0.08)] to-[rgba(237,201,81,0.12)] px-3 py-2.5 hover:bg-gradient-to-r hover:from-[rgba(237,201,81,0.12)] hover:to-[rgba(237,201,81,0.16)] transition-all duration-200">
-                  <span className="text-sm font-bold text-[rgb(237,201,81)] tracking-wide">CRANS</span>
-                  <span className="text-sm text-[rgb(237,201,81)] font-semibold">—</span>
-                </div>
-              </div>
+              <TokenPriceDisplay />
             </div>
 
             {/* Social links footer */}
