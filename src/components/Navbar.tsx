@@ -114,18 +114,18 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Menu - responsive styling */}
-        <nav className={`flex flex-col gap-2 ${useMobileHeader ? 'pt-3 p-0' : 'px-3 py-2'}`}>
-          <Link href="/Play" onClick={() => handleMenuItemClick('play')} className={`${useMobileHeader ? 'nav-tile nav-img-play px-4 py-3 flex items-center justify-between min-h-[48px]' : `${baseItem} nav-img-play ${itemPadding}`} ${isActive('play') ? (useMobileHeader ? 'nav-tile-active text-[rgb(237,201,81)]' : activeItem) : (useMobileHeader ? 'text-[rgba(237,201,81,0.95)] hover:text-[rgb(237,201,81)]' : inactiveItem)}`}>
+        {/* Menu - unified styling for all screen sizes */}
+        <nav className={`flex flex-col gap-2 ${useMobileHeader ? 'pt-3 px-3' : 'px-3 py-2'}`}>
+          <Link href="/Play" onClick={() => handleMenuItemClick('play')} className={`${baseItem} nav-img-play ${itemPadding} ${isActive('play') ? activeItem : inactiveItem}`}>
             <span className="font-semibold tracking-wide">Play</span>
           </Link>
-          <Link href="/Chat" onClick={() => handleMenuItemClick('chat')} className={`${useMobileHeader ? 'nav-tile nav-img-chat px-4 py-3 flex items-center justify-between min-h-[48px]' : `${baseItem} nav-img-chat ${itemPadding}`} ${isActive('chat') ? (useMobileHeader ? 'nav-tile-active text-[rgb(237,201,81)]' : activeItem) : (useMobileHeader ? 'text-[rgba(237,201,81,0.95)] hover:text-[rgb(237,201,81)]' : inactiveItem)}`}>
+          <Link href="/Chat" onClick={() => handleMenuItemClick('chat')} className={`${baseItem} nav-img-chat ${itemPadding} ${isActive('chat') ? activeItem : inactiveItem}`}>
             <span className="font-semibold tracking-wide">Chat</span>
           </Link>
-          <Link href="/Mail" onClick={() => handleMenuItemClick('mail')} className={`${useMobileHeader ? 'nav-tile nav-img-mail px-4 py-3 flex items-center justify-between min-h-[48px]' : `${baseItem} nav-img-mail ${itemPadding}`} ${isActive('mail') ? (useMobileHeader ? 'nav-tile-active text-[rgb(237,201,81)]' : activeItem) : (useMobileHeader ? 'text-[rgba(237,201,81,0.95)] hover:text-[rgb(237,201,81)]' : inactiveItem)}`}>
+          <Link href="/Mail" onClick={() => handleMenuItemClick('mail')} className={`${baseItem} nav-img-mail ${itemPadding} ${isActive('mail') ? activeItem : inactiveItem}`}>
             <span className="font-semibold tracking-wide">Mail</span>
           </Link>
-          <Link href="/Profile" onClick={() => handleMenuItemClick('profile')} className={`${useMobileHeader ? 'nav-tile nav-img-profile px-4 py-3 flex items-center justify-between min-h-[48px]' : `${baseItem} nav-img-profile ${itemPadding}`} ${isActive('profile') ? (useMobileHeader ? 'nav-tile-active text-[rgb(237,201,81)]' : activeItem) : (useMobileHeader ? 'text-[rgba(237,201,81,0.95)] hover:text-[rgb(237,201,81)]' : inactiveItem)}`}>
+          <Link href="/Profile" onClick={() => handleMenuItemClick('profile')} className={`${baseItem} nav-img-profile ${itemPadding} ${isActive('profile') ? activeItem : inactiveItem}`}>
             <span className="font-semibold tracking-wide">Profile</span>
           </Link>
         </nav>
