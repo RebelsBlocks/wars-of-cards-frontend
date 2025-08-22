@@ -41,9 +41,8 @@ export default function Navbar() {
     const checkMobile = () => {
       const isMobile = window.innerWidth <= 768;
       setUseMobileHeader(isMobile);
-      if (!isMobile) {
-        setIsMenuOpen(true); // Desktop: sidebar always open
-      }
+      // Allow both mobile and desktop to start with sidebar closed
+      // Users can toggle it as needed
     };
     checkMobile();
     window.addEventListener('resize', checkMobile);
@@ -58,7 +57,7 @@ export default function Navbar() {
   // Sync active menu item with route changes
   useEffect(() => {
     setActiveMenuItem(getActiveMenuItem());
-    // Close mobile menu on route change (but keep desktop sidebar open)
+    // Close mobile menu on route change (desktop users can choose to keep it open or closed)
     if (useMobileHeader) {
       setIsMenuOpen(false);
     }
@@ -93,16 +92,14 @@ export default function Navbar() {
       >
         {/* Logo section - responsive height */}
         <div className="relative border-b border-[rgba(237,201,81,0.3)] w-full h-[80px] sm:h-[100px] md:h-[140px] lg:h-[160px] bg-[rgba(8,35,17,0.4)] flex-shrink-0">
-          {/* Close button - only show on mobile */}
-          {useMobileHeader && (
-            <button
-              className="absolute top-2 right-2 z-10 w-6 h-6 bg-[rgba(8,35,17,0.8)] border border-[rgba(237,201,81,0.3)] rounded flex items-center justify-center hover:bg-[rgba(237,201,81,0.1)] transition-all duration-300"
-              onClick={() => setIsMenuOpen(false)}
-              aria-label="Close menu"
-            >
-              <span className="text-[rgb(237,201,81)] text-sm leading-none">×</span>
-            </button>
-          )}
+          {/* Close button - show on both mobile and desktop */}
+          <button
+            className="absolute top-2 right-2 z-10 w-6 h-6 bg-[rgba(8,35,17,0.8)] border border-[rgba(237,201,81,0.3)] rounded flex items-center justify-center hover:bg-[rgba(237,201,81,0.1)] transition-all duration-300"
+            onClick={() => setIsMenuOpen(false)}
+            aria-label="Close menu"
+          >
+            <span className="text-[rgb(237,201,81)] text-sm leading-none">×</span>
+          </button>
           <Link href="/" onClick={() => handleMenuItemClick('home')} className="block w-full h-full cursor-pointer relative overflow-hidden">
             <Image
               src="/logo_load.png"
