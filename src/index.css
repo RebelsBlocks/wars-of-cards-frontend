@@ -118,7 +118,8 @@ body {
   body {
     background: transparent !important;
     color: rgb(var(--text-primary));
-    min-height: 100vh;
+    height: 100vh;
+    overflow: hidden;
     color-scheme: light !important;
   }
   
