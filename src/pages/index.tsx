@@ -2,7 +2,7 @@ import type { NextPage } from 'next';
 
 const HomePage: NextPage = () => {
   return (
-    <section className="mx-auto flex min-h-screen max-w-4xl md:max-w-5xl flex-col items-center justify-center px-3 md:px-4 text-center">
+    <section className="mx-auto flex h-full max-w-4xl md:max-w-5xl flex-col items-center justify-center px-3 md:px-4 text-center">
       <h1 className="mb-3 text-4xl font-extrabold tracking-tight gradient-text sm:text-5xl">
         Welcome to Wars of Cards
       </h1>
