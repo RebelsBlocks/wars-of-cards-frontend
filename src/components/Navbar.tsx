@@ -106,6 +106,7 @@ export default function Navbar() {
               src="/logo_load.png"
               alt="Wars of Cards"
               fill
+              sizes="(max-width: 768px) 220px, 200px"
               className="object-cover object-center hover:opacity-90 transition-opacity duration-200"
               priority
             />
