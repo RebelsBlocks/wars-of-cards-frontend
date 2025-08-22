@@ -30,12 +30,14 @@ export default function App({ children }: { children: ReactNode }) {
 
   return (
     <NearWalletProvider>
-      <div className="relative min-h-screen overflow-x-hidden">
+      <div className="relative h-screen overflow-hidden">
         <CasinoTexture />
-        <div className="relative z-10">
+        <div className="relative z-10 h-full flex flex-col">
           <Navbar />
-          <main className={`min-h-screen bg-transparent transition-all duration-300 ${getMainMargin()}`}>
-            {children}
+          <main className={`flex-1 bg-transparent transition-all duration-300 ${getMainMargin()} overflow-y-auto`}>
+            <div className="h-full p-4">
+              {children}
+            </div>
           </main>
         </div>
       </div>
