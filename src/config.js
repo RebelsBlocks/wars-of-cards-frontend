@@ -1,5 +1,5 @@
-// Network configuration
-const NETWORK_ID = 'mainnet';
+// Network configuration - can be overridden by environment variable
+const NETWORK_ID = process.env.NEXT_PUBLIC_NETWORK_ID || 'mainnet';
 
 // Chains for EVM Wallets 
 const EVM_WALLET_CHAINS = {
@@ -15,6 +15,20 @@ const EVM_WALLET_CHAINS = {
     explorer: "https://eth-explorer-testnet.near.org",
     rpc: "https://eth-rpc.testnet.near.org",
   },
+};
+
+// Contract configuration
+const CONTRACT_INFO = {
+  mainnet: {
+    crans: 'crans.tkn.near',
+    refFinance: 'v2.ref-finance.near',
+    chat: 'chat.near', // placeholder for mainnet
+  },
+  testnet: {
+    crans: 'crans.testnet',
+    refFinance: 'v2.ref-finance.testnet',
+    chat: 'chatty.testnet',
+  }
 };
 
 // NEAR Configuration
@@ -33,21 +47,9 @@ const NEAR_CONFIG = {
 const REF_SDK_CONFIG = {
   apiKey: '', // Optional: API key for REF-Finance API (if required)
   networkId: NETWORK_ID,
-  nodeUrl: 'https://free.rpc.fastnear.com',
+  nodeUrl: NEAR_CONFIG.nodeUrl,
   // Set a custom contract ID if needed
-  contractId: 'v2.ref-finance.near'
-};
-
-// Contract configuration
-const CONTRACT_INFO = {
-  mainnet: {
-    crans: 'crans.near',
-    refFinance: 'v2.ref-finance.near',
-  },
-  testnet: {
-    crans: 'crans.testnet',
-    refFinance: 'v2.ref-finance.testnet',
-  }
+  contractId: CONTRACT_INFO[NETWORK_ID].refFinance
 };
 
 // CRANS Token Configuration
@@ -68,13 +70,15 @@ const CONFIG = {
   CRANS_CONTRACT_ID: CONTRACT_INFO[NETWORK_ID].crans,
   CRANS_TICKER_SYMBOL: 'CRANS',
   REF_EXCHANGE_CONTRACT_ID: CONTRACT_INFO[NETWORK_ID].refFinance,
+  CHAT_CONTRACT_ID: CONTRACT_INFO[NETWORK_ID].chat,
   
-  // Always use this RPC for NEAR
-  RPC_URL: 'https://free.rpc.fastnear.com'
+  // Use network-specific RPC
+  RPC_URL: NEAR_CONFIG.nodeUrl
 };
 
 // Export for both default and named imports
 export const NetworkId = NETWORK_ID;
-export const NEAR_RPC_URL = 'https://free.rpc.fastnear.com';
+export const NEAR_RPC_URL = NEAR_CONFIG.nodeUrl;
+export const CHAT_CONTRACT_ID = CONTRACT_INFO[NETWORK_ID].chat;
 
 export default CONFIG;
