@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import Header from './Header';
 import TokenPriceDisplay from './TokenPriceDisplay';
 
-export type MenuItem = 'home' | 'play' | 'chat' | 'mail' | 'profile';
+export type MenuItem = 'home' | 'play' | 'chat' | 'mail' | 'profile' | 'vanessa';
 
 export default function Navbar() {
   const router = useRouter();
@@ -34,6 +34,7 @@ export default function Navbar() {
     if (path === '/Chat') return 'chat';
     if (path === '/Mail') return 'mail';
     if (path === '/Profile') return 'profile';
+    if (path === '/Vanessa') return 'vanessa';
     return 'home';
   };
 
@@ -81,10 +82,11 @@ export default function Navbar() {
   // Universal layout - header always visible, sidebar for mobile and desktop
   return (
     <>
-      {/* Header with fade animation - fades out when sidebar opens */}
+      {/* Header with slide animation - slides to side when sidebar opens on desktop */}
       <Header 
         isMenuOpen={isMenuOpen} 
-        onMenuToggle={() => setIsMenuOpen(!isMenuOpen)} 
+        onMenuToggle={() => setIsMenuOpen(!isMenuOpen)}
+        isMobile={useMobileHeader}
       />
 
       {/* Universal sidebar - responsive for all screen sizes */}
@@ -128,6 +130,9 @@ export default function Navbar() {
             </Link>
             <Link href="/Profile" onClick={() => handleMenuItemClick('profile')} className={`${baseItem} nav-img-profile ${itemPadding} ${isActive('profile') ? activeItem : inactiveItem}`}>
               <span className="font-semibold tracking-wide">Profile</span>
+            </Link>
+            <Link href="/Vanessa" onClick={() => handleMenuItemClick('vanessa')} className={`${baseItem} nav-img-chat ${itemPadding} ${isActive('vanessa') ? activeItem : inactiveItem}`}>
+              <span className="font-semibold tracking-wide">Vanessa</span>
             </Link>
           </nav>
 
