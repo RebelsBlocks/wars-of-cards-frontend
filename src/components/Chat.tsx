@@ -68,9 +68,9 @@ const Chat: React.FC = () => {
           setStorageBalance(balance);
           setHasCheckedStorage(true);
           
-          // Check if storage is insufficient (less than 0.1 NEAR)
+          // Check if storage is insufficient (less than 0.01 NEAR)
           const balanceInNear = parseFloat(formatNearAmount(balance));
-          if (balanceInNear < 0.1) {
+          if (balanceInNear < 0.01) {
             setShowStorageModal(true);
           } else {
             // Close modal if we have sufficient balance
@@ -115,7 +115,7 @@ const Chat: React.FC = () => {
         const balance = await chatContract.getStorageBalance(accountId, wallet);
         const balanceInNear = parseFloat(formatNearAmount(balance));
         
-        if (balanceInNear >= 0.1) {
+        if (balanceInNear >= 0.01) {
           setShowStorageModal(false);
           setStorageBalance(balance);
         }
@@ -187,7 +187,7 @@ const Chat: React.FC = () => {
       
       // Check if we now have enough storage and close modal
       const balanceInNear = parseFloat(formatNearAmount(balance));
-      if (balanceInNear >= 0.1) {
+      if (balanceInNear >= 0.01) {
         setShowStorageModal(false);
       }
     } catch (error) {
@@ -513,7 +513,7 @@ const Chat: React.FC = () => {
             <div className="mb-4">
               <h3 className="text-xl font-semibold text-[rgb(237,201,81)] mb-2">Chat Storage Required</h3>
               <p className="text-sm text-[rgba(237,201,81,0.7)] mb-4">
-                You need at least 0.1 NEAR in chat storage to send messages. Current balance: {formatNearAmount(storageBalance)} NEAR
+                You need more NEAR in chat storage to send messages. Current balance: {formatNearAmount(storageBalance)} NEAR
               </p>
             </div>
 
