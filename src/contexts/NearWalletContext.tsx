@@ -5,6 +5,7 @@ import type { Network, WalletSelector, Wallet, Transaction, Action, FunctionCall
 import { setupModal } from '@near-wallet-selector/modal-ui';
 import type { WalletSelectorModal } from '@near-wallet-selector/modal-ui';
 import { setupMeteorWallet } from '@near-wallet-selector/meteor-wallet';
+import { useNetwork, getNetworkConfig } from './NetworkContext';
 
 // Add wallet selector styles
 import '@near-wallet-selector/modal-ui/styles.css';
@@ -71,14 +72,7 @@ interface Props {
   children: ReactNode;
 }
 
-export const NETWORK_CONFIG = {
-  networkId: 'mainnet',
-  nodeUrl: 'https://free.rpc.fastnear.com',
-  helperUrl: 'https://helper.mainnet.near.org',
-  explorerUrl: 'https://nearblocks.io',
-  indexerUrl: 'https://api.kitwallet.app',
-  cransContractId: 'crans.tkn.near'
-} as ExtendedNetwork;
+// We'll get network config dynamically from context
 
 // Helper function to detect Firefox browser
 const isFirefox = (): boolean => {
@@ -107,6 +101,7 @@ const isUserCancellation = (error: any): boolean => {
 };
 
 function NearWalletProviderComponent({ children }: Props) {
+  const { networkId } = useNetwork();
   const [selector, setSelector] = useState<WalletSelector | null>(null);
   const [modal, setModal] = useState<WalletSelectorModal | null>(null);
   const [accounts, setAccounts] = useState<Array<any>>([]);
@@ -121,22 +116,37 @@ function NearWalletProviderComponent({ children }: Props) {
   }, []);
 
   useEffect(() => {
+    let isInitializing = false;
+    
     const initNear = async () => {
+      // Prevent multiple initializations
+      if (isInitializing || selector) return;
+      isInitializing = true;
+      
       try {
-        console.log('Initializing NEAR wallet with network:', NETWORK_CONFIG.networkId);
-        console.log('Browser detected:', isFirefox() ? 'Firefox' : 'Other');
+        const networkConfig = getNetworkConfig(networkId);
+        console.log('Initializing NEAR wallet with network:', networkConfig.networkId);
+        
+        const extendedNetworkConfig = {
+          networkId: networkConfig.networkId,
+          nodeUrl: networkConfig.nodeUrl,
+          helperUrl: networkConfig.helperUrl,
+          explorerUrl: networkConfig.explorerUrl,
+          indexerUrl: 'https://api.kitwallet.app',
+          cransContractId: networkConfig.contracts.crans
+        } as ExtendedNetwork;
         
         const selector = await setupWalletSelector({
-          network: NETWORK_CONFIG,
+          network: extendedNetworkConfig,
           modules: [
             setupMeteorWallet() as WalletModuleFactory
           ]
         });
 
         const modal = setupModal(selector, {
-          contractId: 'warsofcards.near',
+          contractId: networkConfig.chatContractId,
           theme: 'dark',
-          description: 'Please select a wallet to play Wars of Cards'
+          description: `Please select a wallet to connect to Chat (${networkConfig.networkId})`
         });
 
         const state = selector.store.getState();
@@ -173,11 +183,19 @@ function NearWalletProviderComponent({ children }: Props) {
           setError(err);
         }
         setIsLoading(false);
+      } finally {
+        isInitializing = false;
       }
     };
 
-    initNear();
-  }, [clearError]);
+    // Small delay to prevent React Strict Mode double calls
+    const timeoutId = setTimeout(initNear, 100);
+    
+    return () => {
+      clearTimeout(timeoutId);
+      isInitializing = false;
+    };
+  }, [networkId]); // Usuń clearError dependency żeby nie tworzyć pętli
 
   const disconnect = async () => {
     if (!selector) return;
@@ -445,8 +463,9 @@ function NearWalletProviderComponent({ children }: Props) {
   }) => {
     try {
       clearError();
+      const networkConfig = getNetworkConfig(networkId);
       const provider = new providers.JsonRpcProvider({
-        url: NETWORK_CONFIG.nodeUrl
+        url: networkConfig.nodeUrl
       });
       
       const rawResult = await (provider as any).query({
