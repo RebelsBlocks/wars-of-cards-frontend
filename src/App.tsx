@@ -1,4 +1,5 @@
 import { NearWalletProvider } from '@/contexts/NearWalletContext';
+import { NetworkProvider } from '@/contexts/NetworkContext';
 import CasinoTexture from '@/components/CasinoTexture';
 import Navbar from '@/components/Navbar';
 import type { ReactNode } from 'react';
@@ -29,19 +30,21 @@ export default function App({ children }: { children: ReactNode }) {
   };
 
   return (
-    <NearWalletProvider>
-      <div className="relative h-screen overflow-hidden">
-        <CasinoTexture />
-        <div className="relative z-10 h-full flex flex-col">
-          <Navbar />
-          <main className={`flex-1 bg-transparent transition-all duration-300 ${getMainMargin()} overflow-y-auto`}>
-            <div className="h-full p-4">
-              {children}
-            </div>
-          </main>
+    <NetworkProvider>
+      <NearWalletProvider>
+        <div className="relative h-screen overflow-hidden">
+          <CasinoTexture />
+          <div className="relative z-10 h-full flex flex-col">
+            <Navbar />
+            <main className={`flex-1 bg-transparent transition-all duration-300 ${getMainMargin()} overflow-y-auto`}>
+              <div className="h-full p-4">
+                {children}
+              </div>
+            </main>
+          </div>
         </div>
-      </div>
-    </NearWalletProvider>
+      </NearWalletProvider>
+    </NetworkProvider>
   );
 }
 
