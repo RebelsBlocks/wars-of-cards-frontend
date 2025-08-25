@@ -20,52 +20,6 @@ function formatTokenAmount(amount: string): string {
   return `${wholePart}.${decimalPlaces}`;
 }
 
-// Helper function to format terra points in a more readable way
-function formatTerraPoints(terraAmount: string): string {
-  try {
-    const amount = new BN(terraAmount);
-    if (amount.isZero()) return "0";
-
-    // No need to divide by 10^20 anymore as we're dealing with raw bytes
-    return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  } catch (error) {
-    return "0";
-  }
-}
-
-// Helper function to calculate NEAR from terra points with 4 decimal places
-function calculateNearAmount(terraAmount: string): string {
-  try {
-    // Each byte costs 0.00001 NEAR
-    const bytesToNear = new BN("10000000000000000000"); // 0.00001 in yoctoNEAR
-    const amountBN = new BN(terraAmount);
-    const nearAmount = amountBN.mul(bytesToNear);
-    
-    const yoctoToNear = new BN("1000000000000000000000000");
-    const wholePart = nearAmount.div(yoctoToNear);
-    const fractionalPart = nearAmount.mod(yoctoToNear);
-    
-    // Convert fractional part to 4 decimal places
-    const fractionalStr = fractionalPart.toString().padStart(24, '0');
-    const decimalPlaces = fractionalStr.slice(0, 4);
-    
-    return `${wholePart}.${decimalPlaces}`;
-  } catch (error) {
-    return "0";
-  }
-}
-
-// Helper function to convert bytes to yoctoNEAR
-function bytesToYoctoNEAR(bytes: string): string {
-  try {
-    const bytesToNear = new BN("10000000000000000000"); // 0.00001 NEAR in yoctoNEAR
-    const bytesAmount = new BN(bytes);
-    return bytesAmount.mul(bytesToNear).toString();
-  } catch (error) {
-    return "0";
-  }
-}
-
 // Add new helper function for wallet name truncation
 function truncateWalletName(accountId: string): string {
   if (!accountId.endsWith('.near')) return accountId;
@@ -80,8 +34,6 @@ const ProfilePage: NextPage = () => {
   const networkConfig = getNetworkConfig(networkId);
   const { accountId, selector, connect, isConnected } = wallet;
   const [balances, setBalances] = useState({ near: "0", crans: "0" });
-  const [socialStorage, setSocialStorage] = useState<string | null>(null);
-  const [isClaimingPoints, setIsClaimingPoints] = useState(false);
   
   // Chat Storage State
   const [storageBalance, setStorageBalance] = useState<string>('0');
@@ -94,83 +46,12 @@ const ProfilePage: NextPage = () => {
 
   const fetchBalances = async () => {
     console.log("Fetching balances for account:", accountId);
-    const [nearBalance, cransBalance, socialStorageBalance] = await Promise.all([
+    const [nearBalance, cransBalance] = await Promise.all([
       fetchAccountDetails(accountId!),
-      fetchCRANSBalance(accountId!),
-      fetchSocialStorageBalance(accountId!)
+      fetchCRANSBalance(accountId!)
     ]);
-    console.log("Fetched social storage balance:", socialStorageBalance);
     setBalances({ near: nearBalance, crans: cransBalance });
-    setSocialStorage(socialStorageBalance);
   };
-
-  async function fetchSocialStorageBalance(accountId: string) {
-    try {
-      if (!selector) return null;
-      
-      const result = await wallet.viewFunction({
-        contractId: 'social.near',
-        methodName: 'get_account_storage',
-        args: { account_id: accountId }
-      });
-
-      console.log("Social storage data:", result);
-
-      if (result) {
-        // We focus on available_bytes as these are the points that can be withdrawn
-        const availableBytes = result.available_bytes || 0;
-        console.log("Available bytes:", availableBytes);
-        return availableBytes.toString();
-      }
-      return "0";
-    } catch (error) {
-      console.error("Error fetching social storage data:", error);
-      return null;
-    }
-  }
-
-  async function handleClaimPoints() {
-    if (!accountId || !socialStorage || isClaimingPoints) return;
-    
-    setIsClaimingPoints(true);
-    try {
-      // Get current available bytes before withdrawal
-      const currentStorage = await fetchSocialStorageBalance(accountId);
-      if (!currentStorage) {
-        throw new Error("Could not fetch current storage balance");
-      }
-
-      // Convert bytes to yoctoNEAR for withdrawal
-      const withdrawAmount = bytesToYoctoNEAR(currentStorage);
-      console.log("Withdrawing amount in yoctoNEAR:", withdrawAmount);
-
-      await wallet.executeTransaction({
-        contractId: 'social.near',
-        methodName: 'storage_withdraw',
-        args: { amount: withdrawAmount },
-        gas: '30000000000000',
-        deposit: '1',
-        callbackUrl: window.location.href
-      });
-
-      // Perform 3 refresh attempts with 2-second intervals
-      for (let i = 1; i <= 3; i++) {
-        setTimeout(async () => {
-          console.log(`Refresh attempt ${i}/3`);
-          const newSocialBalance = await fetchSocialStorageBalance(accountId);
-          setSocialStorage(newSocialBalance);
-          
-          const newNearBalance = await fetchAccountDetails(accountId);
-          setBalances(prev => ({ ...prev, near: newNearBalance }));
-        }, i * 2000); // 2000ms = 2 seconds
-      }
-
-    } catch (error) {
-      console.error("Error claiming points:", error);
-    } finally {
-      setIsClaimingPoints(false);
-    }
-  }
 
   async function fetchCRANSBalance(accountId: string) {
     try {
@@ -353,47 +234,66 @@ const ProfilePage: NextPage = () => {
   };
 
   return (
-    <div className="mx-auto max-w-4xl md:max-w-5xl px-3 md:px-4 py-6">
+    <div className="mx-auto max-w-4xl px-4 py-6">
       <div className="card">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-semibold text-[rgb(237,201,81)]">
-            {accountId ? truncateWalletName(accountId) : 'Profile'}
-          </h2>
+        {/* Header Section */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+          <div className="flex items-center gap-4">
+            {accountId && (
+              <img 
+                src={`https://i.near.social/magic/thumbnail/https://near.social/magic/img/account/${accountId}`}
+                alt={accountId}
+                className="w-12 h-12 rounded-full border-2 border-[rgb(237,201,81)]"
+              />
+            )}
+            <div>
+              <h2 className="text-xl font-semibold text-[rgb(237,201,81)]">
+                {accountId ? truncateWalletName(accountId) : 'Profile'}
+              </h2>
+              {accountId && (
+                <a 
+                  href={`https://near.social/mob.near/widget/ProfilePage?accountId=${accountId}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-[rgba(237,201,81,0.7)] hover:text-[rgb(237,201,81)] transition-colors"
+                >
+                  View on NEAR Social →
+                </a>
+              )}
+            </div>
+          </div>
+          
           <div className="flex gap-2">
             {accountId && (
               <button 
                 onClick={() => {
                   if (accountId && selector) {
-                    setIsClaimingPoints(true);
-                    fetchBalances().finally(() => setIsClaimingPoints(false));
+                    fetchBalances();
+                    refreshStorageBalance();
                   }
                 }}
-                disabled={isClaimingPoints}
-                className="px-3 py-2 bg-[rgba(237,201,81,0.2)] text-[rgb(237,201,81)] rounded hover:bg-[rgba(237,201,81,0.3)] transition-colors disabled:opacity-50"
-                title="Refresh balances"
+                className="px-3 py-2 bg-[rgba(237,201,81,0.2)] text-[rgb(237,201,81)] rounded hover:bg-[rgba(237,201,81,0.3)] transition-colors"
+                title="Refresh all balances"
               >
                 <svg 
-                  className={`w-5 h-5 ${isClaimingPoints ? 'animate-spin' : ''}`}
+                  className="w-4 h-4"
                   fill="none" 
                   stroke="currentColor" 
-                  strokeWidth="2" 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round"
+                  strokeWidth="1.5" 
+                  viewBox="0 0 24 24"
                 >
-                  <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/>
+                  <path d="M1 4v6h6M23 20v-6h-6M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
                 </svg>
               </button>
             )}
             {accountId && (
               <button 
-                onClick={() => {
-                  wallet.disconnect();
-                }}
+                onClick={() => wallet.disconnect()}
                 className="px-3 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
                 title="Log out"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                  <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>
                 </svg>
               </button>
             )}
@@ -401,106 +301,108 @@ const ProfilePage: NextPage = () => {
         </div>
 
         {accountId ? (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Profile Picture */}
+          <div className="space-y-6">
+            {/* Balances Section */}
             <div className="bg-[rgba(0,0,0,0.3)] rounded-lg p-4 border border-[rgba(237,201,81,0.25)]">
-              <div className="text-sm text-[rgba(237,201,81,0.7)] mb-2">Profile Picture</div>
-              <div className="flex flex-col items-center">
-                <img 
-                  src={`https://i.near.social/magic/thumbnail/https://near.social/magic/img/account/${accountId}`}
-                  alt={accountId}
-                  className="w-16 h-16 rounded-full border-2 border-[rgb(237,201,81)] mb-3"
-                />
-                <a 
-                  href={`https://near.social/mob.near/widget/ProfilePage?accountId=${accountId}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-4 py-2 bg-[rgb(237,201,81)] text-black font-semibold rounded hover:bg-[rgba(237,201,81,0.9)] transition-colors text-sm"
-                >
-                  View Profile
-                </a>
+              <h3 className="text-sm font-medium text-[rgba(237,201,81,0.8)] mb-4">Balances</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="flex items-center justify-between p-3 bg-[rgba(0,0,0,0.2)] rounded border border-[rgba(237,201,81,0.15)]">
+                  <div>
+                    <div className="text-xs text-[rgba(237,201,81,0.6)]">NEAR</div>
+                    <div className="text-lg font-bold text-[rgb(237,201,81)]">{balances.near}</div>
+                  </div>
+                  <div className="text-2xl">Ⓝ</div>
+                </div>
+                
+                <div className="flex items-center justify-between p-3 bg-[rgba(0,0,0,0.2)] rounded border border-[rgba(237,201,81,0.15)]">
+                  <div>
+                    <div className="text-xs text-[rgba(237,201,81,0.6)]">CRANS</div>
+                    <div className="text-lg font-bold text-[rgb(237,201,81)]">{balances.crans}</div>
+                  </div>
+                  <div className="text-lg font-bold text-[rgb(237,201,81)]">CRANS</div>
+                </div>
+                
+                <div className="flex items-center justify-between p-3 bg-[rgba(0,0,0,0.2)] rounded border border-[rgba(237,201,81,0.15)]">
+                  <div>
+                    <div className="text-xs text-[rgba(237,201,81,0.6)]">Storage</div>
+                    <div className="text-lg font-bold text-[rgb(237,201,81)]">
+                      {isLoadingBalance ? '...' : formatNearAmount(storageBalance)}
+                    </div>
+                  </div>
+                  <div className="text-lg font-bold text-[rgb(237,201,81)]">Ⓝ</div>
+                </div>
               </div>
             </div>
 
-            {/* Balances */}
+            {/* Storage Management Section */}
             <div className="bg-[rgba(0,0,0,0.3)] rounded-lg p-4 border border-[rgba(237,201,81,0.25)]">
-              <div className="text-sm text-[rgba(237,201,81,0.7)] mb-4">Balances</div>
-              
-              {/* NEAR Balance */}
               <div className="mb-4">
-                <div className="text-xs text-[rgba(237,201,81,0.6)] mb-1">NEAR Balance</div>
-                <div className="text-lg font-bold text-[rgb(237,201,81)]">{balances.near} Ⓝ</div>
-              </div>
-
-              {/* CRANS Balance */}
-              <div>
-                <div className="text-xs text-[rgba(237,201,81,0.6)] mb-1">CRANS Balance</div>
-                <div className="text-lg font-bold text-[rgb(237,201,81)]">{balances.crans} CRANS</div>
-              </div>
-            </div>
-
-            {/* Chat Storage Management */}
-            <div className="bg-[rgba(0,0,0,0.3)] rounded-lg p-4 border border-[rgba(237,201,81,0.25)]">
-              <div className="text-sm text-[rgba(237,201,81,0.7)] mb-2">Chat Storage</div>
-              <div className="text-xs text-[rgba(237,201,81,0.5)] mb-4">
-                Contract: {getChatContractId()}
-              </div>
-              
-              {/* Storage Balance */}
-              <div className="mb-4">
-                <div className="text-xs text-[rgba(237,201,81,0.6)] mb-1">Storage Balance</div>
-                <div className="text-lg font-bold text-[rgb(237,201,81)] mb-2">
-                  {isLoadingBalance ? 'Loading...' : `${formatNearAmount(storageBalance)} NEAR`}
-                </div>
-                <button
-                  onClick={refreshStorageBalance}
-                  disabled={isLoadingBalance || isAnyTransactionPending}
-                  className="text-xs px-2 py-1 bg-[rgba(237,201,81,0.2)] text-[rgb(237,201,81)] rounded hover:bg-[rgba(237,201,81,0.3)] transition-colors disabled:opacity-50"
-                  title="Refresh storage balance"
-                >
-                  {isLoadingBalance ? '⟳' : '↻'} Refresh
-                </button>
-              </div>
-
-              {/* Deposit Storage */}
-              <div className="mb-4">
-                <div className="text-xs text-[rgba(237,201,81,0.6)] mb-2">Deposit Storage</div>
-                <div className="grid grid-cols-2 gap-2 mb-2">
-                  {['0.1', '0.3', '0.5', '1'].map((amount) => (
-                    <button
-                      key={amount}
-                      onClick={() => depositStorage(amount)}
-                      disabled={isDepositing || isWithdrawing}
-                      className="px-2 py-1 bg-[rgb(237,201,81)] text-black font-semibold rounded hover:bg-[rgba(237,201,81,0.9)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-xs"
-                      title={`Deposit ${amount} NEAR for storage`}
-                    >
-                      {isDepositing ? '⟳' : `${amount} Ⓝ`}
-                    </button>
-                  ))}
+                <h3 className="text-sm font-medium text-[rgba(237,201,81,0.8)]">
+                  Chat Storage Management
+                </h3>
+                <div className="text-xs text-[rgba(237,201,81,0.6)] mt-1">
+                  {getChatContractId()}
                 </div>
               </div>
+              
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                {/* Deposit Section */}
+                <div>
+                  <div className="text-xs text-[rgba(237,201,81,0.6)] mb-3">Deposit Storage</div>
+                  <div className="grid grid-cols-2 gap-2">
+                    {['0.1', '0.3', '0.5', '1'].map((amount) => (
+                      <button
+                        key={amount}
+                        onClick={() => depositStorage(amount)}
+                        disabled={isDepositing || isWithdrawing}
+                        className="px-3 py-2 bg-[rgb(237,201,81)] text-black font-semibold rounded hover:bg-[rgba(237,201,81,0.9)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                        title={`Deposit ${amount} NEAR for storage`}
+                      >
+                        {isDepositing ? '⟳' : `${amount} Ⓝ`}
+                      </button>
+                    ))}
+                  </div>
+                </div>
 
-              {/* Withdraw Storage */}
-              <div>
-                <div className="text-xs text-[rgba(237,201,81,0.6)] mb-2">Withdraw Storage</div>
-                <button
-                  onClick={withdrawRemainingStorage}
-                  disabled={isWithdrawing || isDepositing || storageBalance === '0' || parseFloat(formatNearAmount(storageBalance)) === 0}
-                  className="w-full px-3 py-2 bg-orange-600 text-white font-semibold rounded hover:bg-orange-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-                  title="Withdraw all remaining storage balance"
-                >
-                  {isWithdrawing ? 'Withdrawing...' : 'Withdraw All'}
-                </button>
+                {/* Withdraw Section */}
+                <div>
+                  <div className="text-xs text-[rgba(237,201,81,0.6)] mb-3">Withdraw Storage</div>
+                  <button
+                    onClick={withdrawRemainingStorage}
+                    disabled={isWithdrawing || isDepositing || storageBalance === '0' || parseFloat(formatNearAmount(storageBalance)) === 0}
+                    className="w-full px-4 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white font-semibold rounded hover:from-red-700 hover:to-red-800 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                    title="Withdraw all remaining storage balance"
+                  >
+                    {isWithdrawing ? (
+                      <>
+                        <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                          <path d="M1 4v6h6M23 20v-6h-6M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
+                        </svg>
+                        Withdrawing...
+                      </>
+                    ) : (
+                      <>
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                          <path d="M12 2v13m0 0l4-4m-4 4l-4-4"/>
+                        </svg>
+                        Withdraw All Storage
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         ) : (
-          <div className="text-center py-8">
-            <div className="text-[rgba(237,201,81,0.8)] mb-4">
+          <div className="text-center py-12">
+            <div className="text-[rgba(237,201,81,0.8)] mb-6">
               Connect your NEAR wallet to view your profile and balances
             </div>
-            <button onClick={connect} className="px-6 py-3 bg-[rgb(237,201,81)] text-black font-semibold rounded-lg hover:bg-[rgba(237,201,81,0.9)] transition-colors">
-              <svg className="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" strokeWidth="2">
+            <button 
+              onClick={connect} 
+              className="px-6 py-3 bg-[rgb(237,201,81)] text-black font-semibold rounded-lg hover:bg-[rgba(237,201,81,0.9)] transition-colors flex items-center gap-2 mx-auto"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
               Connect Wallet
