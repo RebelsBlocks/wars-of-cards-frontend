@@ -508,27 +508,27 @@ const Chat: React.FC = () => {
 
       {/* Storage Deposit Modal */}
       {showStorageModal && (
-        <div className="absolute inset-0 bg-black/70 z-50 backdrop-blur-sm flex items-center justify-center p-4 rounded-lg">
-          <div className="bg-[rgba(8,35,17,0.95)] border border-[rgba(237,201,81,0.3)] rounded-lg max-w-md w-full p-6 backdrop-blur">
-            <div className="mb-4">
-              <h3 className="text-xl font-semibold text-[rgb(237,201,81)] mb-2">Chat Storage Required</h3>
-              <p className="text-sm text-[rgba(237,201,81,0.7)] mb-4">
+        <div className="absolute inset-0 bg-black/70 z-10 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-[rgba(8,35,17,0.95)] border border-[rgba(237,201,81,0.3)] rounded-lg max-w-md w-full p-4 backdrop-blur max-h-[60vh] overflow-y-auto">
+            <div className="mb-3">
+              <h3 className="text-lg font-semibold text-[rgb(237,201,81)] mb-2">Chat Storage Required</h3>
+              <p className="text-xs text-[rgba(237,201,81,0.7)] mb-3">
                 You need more NEAR in chat storage to send messages. Current balance: {formatNearAmount(storageBalance)} NEAR
               </p>
             </div>
 
             {/* Storage Balance */}
-            <div className="mb-4">
+            <div className="mb-3">
               <div className="text-xs text-[rgba(237,201,81,0.6)] mb-1">Current Storage Balance</div>
-              <div className="text-lg font-bold text-[rgb(237,201,81)]">
+              <div className="text-base font-bold text-[rgb(237,201,81)]">
                 {isLoadingBalance ? 'Loading...' : `${formatNearAmount(storageBalance)} NEAR`}
               </div>
             </div>
 
             {/* Deposit Storage */}
-            <div className="mb-6">
+            <div className="mb-4">
               <div className="text-xs text-[rgba(237,201,81,0.6)] mb-2">Deposit Storage</div>
-              <div className="grid grid-cols-2 gap-2 mb-2">
+              <div className="grid grid-cols-2 gap-2">
                 {['0.1', '0.3', '0.5', '1'].map((amount) => (
                   <button
                     key={amount}
@@ -542,11 +542,10 @@ const Chat: React.FC = () => {
                 ))}
               </div>
             </div>
-
-
           </div>
         </div>
       )}
+
     </div>
   );
 };
