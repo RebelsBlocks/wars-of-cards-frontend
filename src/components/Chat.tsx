@@ -354,9 +354,9 @@ const Chat: React.FC = () => {
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-3 md:px-4 py-4 relative">
+    <div className="mx-auto max-w-6xl px-3 md:px-4 py-2 sm:py-4 relative h-[calc(100vh-80px)]">
             {/* Main Chat Layout */}
-      <div className="h-[calc(100vh-56px)]">
+      <div className="h-full">
         
         {/* Chat Messages - Full width */}
         <div className="flex flex-col h-full">
@@ -377,7 +377,7 @@ const Chat: React.FC = () => {
             ) : (
               <>
                 {/* Messages Header */}
-                <div className="px-4 py-2 bg-[rgba(0,0,0,0.4)] border-b border-[rgba(237,201,81,0.25)] flex items-center justify-between">
+                <div className="px-2 sm:px-4 py-2 bg-[rgba(0,0,0,0.4)] border-b border-[rgba(237,201,81,0.25)] flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     {/* Info icon with tooltip */}
                     <div className="relative group">
@@ -402,7 +402,7 @@ const Chat: React.FC = () => {
                 </div>
 
                                  {/* Messages List */}
-                 <div className="flex-1 overflow-y-auto p-4 min-h-0">
+                 <div className="flex-1 overflow-y-auto p-2 sm:p-4 min-h-0">
                   {isLoadingMessages ? (
                     <div className="flex items-center justify-center h-full">
                       <div className="text-[rgba(237,201,81,0.6)]">Loading messages...</div>
@@ -461,7 +461,7 @@ const Chat: React.FC = () => {
                 </div>
 
                                  {/* Message Input */}
-                 <div className="p-4 border-t border-[rgba(237,201,81,0.25)] bg-[rgba(0,0,0,0.2)] flex-shrink-0">
+                 <div className="p-2 sm:p-4 border-t border-[rgba(237,201,81,0.25)] bg-[rgba(0,0,0,0.2)] flex-shrink-0">
                   <div className="flex gap-2 mb-2">
                                          <input
                        type="text"
@@ -495,23 +495,23 @@ const Chat: React.FC = () => {
 
       {/* Error Display */}
       {error && (
-        <div className="card mb-6 bg-red-900/20 border-red-500/30">
-          <div className="text-red-400">{error}</div>
+        <div className="absolute top-2 left-1/2 transform -translate-x-1/2 z-20 bg-red-900/90 border border-red-500/50 rounded-lg p-3 max-w-md w-full mx-4">
+          <div className="text-red-400 text-sm">{error}</div>
           <button
             onClick={() => setError(null)}
-            className="ml-4 text-sm text-red-300 hover:text-red-200"
+            className="absolute top-1 right-1 text-xs text-red-300 hover:text-red-200"
           >
-            Dismiss
+            ×
           </button>
         </div>
       )}
 
       {/* Storage Deposit Modal */}
       {showStorageModal && (
-        <div className="absolute inset-0 bg-black/70 z-10 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[rgba(0,0,0,0.95)] border border-[rgba(237,201,81,0.3)] rounded-lg max-w-md w-full p-4 backdrop-blur max-h-[60vh] overflow-y-auto">
+        <div className="absolute inset-0 bg-black/70 z-10 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4">
+          <div className="bg-[rgba(0,0,0,0.95)] border border-[rgba(237,201,81,0.3)] rounded-lg w-full max-w-sm sm:max-w-md mx-4 p-3 sm:p-4 backdrop-blur">
             <div className="mb-3">
-              <h3 className="text-lg font-semibold text-[rgb(237,201,81)] mb-2">Chat Storage Required</h3>
+              <h3 className="text-base sm:text-lg font-semibold text-[rgb(237,201,81)] mb-2">Chat Storage Required</h3>
               <p className="text-xs text-[rgba(237,201,81,0.7)] mb-3">
                 You need more NEAR in chat storage to send messages. Current balance: {formatNearAmount(storageBalance)} NEAR
               </p>
@@ -520,13 +520,13 @@ const Chat: React.FC = () => {
             {/* Storage Balance */}
             <div className="mb-3">
               <div className="text-xs text-[rgba(237,201,81,0.6)] mb-1">Current Storage Balance</div>
-              <div className="text-base font-bold text-[rgb(237,201,81)]">
+              <div className="text-sm sm:text-base font-bold text-[rgb(237,201,81)]">
                 {isLoadingBalance ? 'Loading...' : `${formatNearAmount(storageBalance)} NEAR`}
               </div>
             </div>
 
             {/* Deposit Storage */}
-            <div className="mb-4">
+            <div className="mb-3">
               <div className="text-xs text-[rgba(237,201,81,0.6)] mb-2">Deposit Storage</div>
               <div className="grid grid-cols-2 gap-2">
                 {['0.1', '0.3', '0.5', '1'].map((amount) => (
@@ -534,7 +534,7 @@ const Chat: React.FC = () => {
                     key={amount}
                     onClick={() => depositStorage(amount)}
                     disabled={isDepositing || isWithdrawing}
-                    className="px-2 py-1 bg-[rgb(237,201,81)] text-black font-semibold rounded hover:bg-[rgba(237,201,81,0.9)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-xs"
+                    className="px-2 py-2 sm:py-1 bg-[rgb(237,201,81)] text-black font-semibold rounded hover:bg-[rgba(237,201,81,0.9)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-xs"
                     title={`Deposit ${amount} NEAR for storage`}
                   >
                     {isDepositing ? '⟳' : `${amount} Ⓝ`}
