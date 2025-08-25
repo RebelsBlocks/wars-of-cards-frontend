@@ -33,25 +33,42 @@ interface SocialData {
 const LoadingSpinner = () => (
   <div className="flex flex-col items-center justify-center py-8">
     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[rgb(237,201,81)]"></div>
-    <p className="mt-2 text-[rgba(237,201,81,0.8)]">Loading community posts...</p>
+    <p className="mt-2 text-[rgba(237,201,81,0.8)] text-sm text-center px-4">Loading community posts...</p>
   </div>
 );
 
 const IPFSImage = ({ hash }: { hash: string }) => {
   const [imageError, setImageError] = useState(false);
+  const [imageLoading, setImageLoading] = useState(true);
 
   if (imageError) {
-    return <div className="text-[rgba(237,201,81,0.6)] text-sm">Failed to load image</div>;
+    return (
+      <div className="mt-3 p-4 bg-gray-800 rounded-lg text-center">
+        <div className="text-[rgba(237,201,81,0.6)] text-sm">Failed to load image</div>
+      </div>
+    );
   }
 
   return (
     <div className="mt-3">
+      {imageLoading && (
+        <div className="animate-pulse bg-gray-700 h-48 rounded-lg flex items-center justify-center">
+          <span className="text-[rgba(237,201,81,0.6)] text-sm">Loading image...</span>
+        </div>
+      )}
       <img 
         src={`https://ipfs.near.social/ipfs/${hash}`}
         alt="Post image"
-        className="max-w-full h-auto rounded-lg"
-        onError={() => setImageError(true)}
+        className={`w-full max-w-full h-auto rounded-lg transition-opacity duration-300 ${
+          imageLoading ? 'opacity-0 absolute' : 'opacity-100'
+        }`}
+        onError={() => {
+          setImageError(true);
+          setImageLoading(false);
+        }}
+        onLoad={() => setImageLoading(false)}
         loading="lazy"
+        style={{ maxHeight: '500px', objectFit: 'contain' }}
       />
     </div>
   );
@@ -141,47 +158,138 @@ const Community: React.FC = () => {
       setLoading(false);
       setIsRefreshing(false);
     }
-  }, []); // No dependencies - socialClient is now stable
+  }, []);
 
   useEffect(() => {
     fetchPosts();
-  }, []); // Empty dependency array - run only once on mount
+  }, []);
+
+  const handleRefresh = () => {
+    if (!isRefreshing) {
+      fetchPosts();
+    }
+  };
 
   if (loading && posts.length === 0) return <LoadingSpinner />;
-  if (error) return <div className="text-red-400">Error: {error}</div>;
+  
+  if (error) return (
+    <div className="mx-auto max-w-4xl md:max-w-5xl px-3 md:px-4 py-6">
+      <div className="card">
+        <div className="text-red-400 text-center">
+          <p className="font-semibold">Error loading posts</p>
+          <p className="text-sm mt-2 text-red-300">{error}</p>
+          <button 
+            onClick={handleRefresh}
+            className="mt-4 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition-colors"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
-    <div className="mx-auto max-w-4xl md:max-w-5xl px-3 md:px-4 py-6">
-      
-      <div className="space-y-4">
-        {posts.length === 0 ? (
-          <div className="card">
-            <p className="text-[rgba(237,201,81,0.8)]">No community posts yet.</p>
-          </div>
-        ) : (
-          posts.map((post) => (
-            <div key={post.id} className="card">
-              <div className="flex items-center gap-3 mb-3">
-                <img 
-                  src={`https://i.near.social/magic/thumbnail/https://near.social/magic/img/account/${post.accountId}`}
-                  alt={post.accountId}
-                  className="w-10 h-10 rounded-full"
-                />
-                <div>
-                  <div className="font-medium text-[rgb(237,201,81)]">{post.accountId}</div>
-                  <div className="text-sm text-[rgba(237,201,81,0.6)]">{post.timestamp}</div>
-                </div>
+    <div className="w-full min-h-screen">
+      <div className="mx-auto max-w-4xl md:max-w-5xl px-3 md:px-4 lg:px-6 py-6">
+        <div className="space-y-4 md:space-y-6">
+          {posts.length === 0 ? (
+            <div className="card">
+              <div className="text-center py-8">
+                <p className="text-[rgba(237,201,81,0.8)]">No community posts yet.</p>
+                <button 
+                  onClick={handleRefresh}
+                  className="mt-4 px-4 py-2 bg-[rgb(237,201,81)] bg-opacity-20 hover:bg-opacity-30 text-[rgb(237,201,81)] rounded-lg transition-colors"
+                >
+                  Check Again
+                </button>
               </div>
-              
-              <div className="text-[rgba(237,201,81,0.9)]">
-                <ReactMarkdown>{post.content}</ReactMarkdown>
-              </div>
-              
-              {post.imageIPFSHash && (
-                <IPFSImage hash={post.imageIPFSHash} />
-              )}
             </div>
-          ))
+          ) : (
+            posts.map((post) => (
+              <article key={post.id} className="card overflow-hidden">
+                {/* Post Header */}
+                <header className="flex items-center gap-3 mb-4">
+                  <div className="flex-shrink-0">
+                    <img 
+                      src={`https://i.near.social/magic/thumbnail/https://near.social/magic/img/account/${post.accountId}`}
+                      alt={`${post.accountId} avatar`}
+                      className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="font-medium text-[rgb(237,201,81)] truncate">
+                      {post.accountId}
+                    </div>
+                    <time className="text-xs md:text-sm text-[rgba(237,201,81,0.6)]">
+                      {post.timestamp}
+                    </time>
+                  </div>
+                </header>
+                
+                {/* Post Content */}
+                <div className="text-[rgba(237,201,81,0.9)] prose prose-sm md:prose-base max-w-none break-words overflow-wrap-anywhere">
+                  <div className="markdown-content">
+                    <ReactMarkdown
+                      components={{
+                        // Zapewnienie responsywności dla różnych elementów markdown
+                        p: ({ children }) => (
+                          <p className="mb-3 break-words overflow-wrap-anywhere hyphens-auto">
+                            {children}
+                          </p>
+                        ),
+                        a: ({ href, children }) => (
+                          <a 
+                            href={href} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-[rgb(237,201,81)] hover:text-[rgba(237,201,81,0.8)] underline break-all"
+                          >
+                            {children}
+                          </a>
+                        ),
+                        code: ({ children }) => (
+                          <code className="bg-gray-800 px-2 py-1 rounded text-sm break-all overflow-x-auto inline-block max-w-full">
+                            {children}
+                          </code>
+                        ),
+                        pre: ({ children }) => (
+                          <pre className="bg-gray-800 p-4 rounded-lg overflow-x-auto text-sm">
+                            {children}
+                          </pre>
+                        ),
+                        blockquote: ({ children }) => (
+                          <blockquote className="border-l-4 border-[rgb(237,201,81)] pl-4 italic my-4 break-words">
+                            {children}
+                          </blockquote>
+                        )
+                      }}
+                    >
+                      {post.content}
+                    </ReactMarkdown>
+                  </div>
+                </div>
+                
+                {/* Post Image */}
+                {post.imageIPFSHash && (
+                  <div className="mt-4">
+                    <IPFSImage hash={post.imageIPFSHash} />
+                  </div>
+                )}
+              </article>
+            ))
+          )}
+        </div>
+        
+        {/* Loading indicator during refresh */}
+        {isRefreshing && posts.length > 0 && (
+          <div className="text-center mt-6">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[rgb(237,201,81)] bg-opacity-20 rounded-lg">
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[rgb(237,201,81)]"></div>
+              <span className="text-[rgba(237,201,81,0.8)] text-sm">Refreshing posts...</span>
+            </div>
+          </div>
         )}
       </div>
     </div>
