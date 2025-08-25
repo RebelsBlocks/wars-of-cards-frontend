@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import Header from './Header';
 import TokenPriceDisplay from './TokenPriceDisplay';
 
-export type MenuItem = 'home' | 'play' | 'chat' | 'mail' | 'profile' | 'vanessa';
+export type MenuItem = 'home' | 'play' | 'chat' | 'mail' | 'vanessa';
 
 export default function Navbar() {
   const router = useRouter();
@@ -31,7 +31,6 @@ export default function Navbar() {
     if (path === '/Play') return 'play';
     if (path === '/Chat') return 'chat';
     if (path === '/Mail') return 'mail';
-    if (path === '/Profile') return 'profile';
     if (path === '/Vanessa') return 'vanessa';
     return 'home';
   };
@@ -82,8 +81,8 @@ export default function Navbar() {
   );
 
   const PlayIcon = () => (
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M12 2.4 C12 2.4, 6 8.4, 6 12 C6 14.88, 8.4 16.8, 12 15.6 C15.6 16.8, 18 14.88, 18 12 C18 8.4, 12 2.4, 12 2.4 Z M10.8 15.6 L10.8 19.2 L9.6 20.4 L14.4 20.4 L13.2 19.2 L13.2 15.6" />
     </svg>
   );
 
@@ -162,7 +161,7 @@ export default function Navbar() {
             </Link>
             <Link href="/Play" onClick={() => handleMenuItemClick('play')} className={`${baseItem} ${isActive('play') ? activeItem : inactiveItem}`}>
               <PlayIcon />
-              <span className="font-medium">Play</span>
+              <span className="font-medium">Blackjack</span>
             </Link>
             <Link href="/Chat" onClick={() => handleMenuItemClick('chat')} className={`${baseItem} ${isActive('chat') ? activeItem : inactiveItem}`}>
               <ChatIcon />
@@ -171,10 +170,6 @@ export default function Navbar() {
             <Link href="/Mail" onClick={() => handleMenuItemClick('mail')} className={`${baseItem} ${isActive('mail') ? activeItem : inactiveItem}`}>
               <MailIcon />
               <span className="font-medium">Mail</span>
-            </Link>
-            <Link href="/Profile" onClick={() => handleMenuItemClick('profile')} className={`${baseItem} ${isActive('profile') ? activeItem : inactiveItem}`}>
-              <ProfileIcon />
-              <span className="font-medium">Profile</span>
             </Link>
             <Link href="/Vanessa" onClick={() => handleMenuItemClick('vanessa')} className={`${baseItem} ${isActive('vanessa') ? activeItem : inactiveItem}`}>
               <VanessaIcon />
