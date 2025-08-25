@@ -74,7 +74,7 @@ export default function Header({ isMenuOpen, onMenuToggle, isMobile }: HeaderPro
         {/* NEAR Wallet Section */}
         {wallet.isConnected ? (
           <div className="flex items-center gap-2">
-            {/* Account ID and profile picture first */}
+            {/* Account ID and profile picture */}
             <button
               onClick={() => router.push('/Profile')}
               className="flex items-center gap-2 hover:bg-[rgba(237,201,81,0.1)] rounded-lg px-2 py-1 transition-colors duration-200 group"
@@ -92,13 +92,6 @@ export default function Header({ isMenuOpen, onMenuToggle, isMobile }: HeaderPro
               <span className="text-sm text-[rgb(237,201,81)] font-medium group-hover:text-[rgba(237,201,81,0.8)] transition-colors duration-200">
                 {wallet.accountId || 'Unknown'}
               </span>
-            </button>
-            {/* Logout button after account info */}
-            <button
-              onClick={wallet.disconnect}
-              className="px-3 py-1 text-xs bg-[rgba(237,201,81,0.1)] border border-[rgba(237,201,81,0.3)] rounded hover:bg-[rgba(237,201,81,0.2)] transition-colors duration-200 text-[rgb(237,201,81)]"
-            >
-              Sign Out
             </button>
           </div>
         ) : (
