@@ -751,7 +751,7 @@ IMPORTANT: You must allow popups for successful transactions. First-time transac
 
   return (
     <div className="w-full h-full max-h-[calc(100vh-56px-60px)] flex flex-col overflow-hidden p-2 md:p-4 box-border relative">
-      <div className="w-full h-[calc(100vh-116px)] max-h-[calc(100vh-116px)] flex flex-col overflow-hidden border-none bg-gradient-to-br from-[rgba(8,35,17,0.92)] to-[rgba(0,32,0,0.95)] rounded-lg border border-[rgba(237,201,81,0.3)] shadow-[0_4px_16px_rgba(0,0,0,0.2),_0_0_24px_rgba(237,201,81,0.1)] backdrop-blur-[10px] p-3 md:p-5 box-border">
+      <div className="w-full h-[calc(100vh-116px)] max-h-[calc(100vh-116px)] flex flex-col overflow-hidden border-none bg-gradient-to-br from-[rgba(0,0,0,0.92)] to-[rgba(0,0,0,0.95)] rounded-lg border border-[rgba(237,201,81,0.3)] shadow-[0_4px_16px_rgba(0,0,0,0.2),_0_0_24px_rgba(237,201,81,0.1)] backdrop-blur-[10px] p-3 md:p-5 box-border">
         <div id={messagesContainerId} className="flex-1 overflow-y-auto p-3 flex flex-col bg-[rgba(0,0,0,0.2)] min-h-0 max-h-[calc(100vh-220px)] w-full mb-4 rounded-lg border border-[rgba(237,201,81,0.15)] scrollbar-thin scrollbar-thumb-[rgba(237,201,81,0.3)] scrollbar-track-[rgba(0,0,0,0.1)] hover:scrollbar-thumb-[rgba(237,201,81,0.5)]">
           <div className="flex flex-col gap-2 h-auto w-full pb-2">
             {messages.map((msg) => (
@@ -759,7 +759,7 @@ IMPORTANT: You must allow popups for successful transactions. First-time transac
                 key={msg.id} 
                 className={`flex flex-col w-full animate-[fadeIn_0.3s_ease-out] m-0 ${msg.role === 'user' ? 'self-end w-fit max-w-[85%]' : 'self-stretch w-full'}`}
               >
-                <div className="bg-cover bg-center border border-[rgba(237,201,81,0.25)] rounded-lg overflow-hidden w-full shadow-[0_2px_8px_rgba(0,0,0,0.1)] opacity-0 translate-y-[10px] animate-[slideIn_0.3s_ease-out_forwards] bg-gradient-to-br from-[rgba(0,0,0,0.3)] to-[rgba(0,32,0,0.3)]">
+                <div className="bg-cover bg-center border border-[rgba(237,201,81,0.25)] rounded-lg overflow-hidden w-full shadow-[0_2px_8px_rgba(0,0,0,0.1)] opacity-0 translate-y-[10px] animate-[slideIn_0.3s_ease-out_forwards] bg-gradient-to-br from-[rgba(0,0,0,0.3)] to-[rgba(0,0,0,0.3)]">
                   <div className="p-2 md:p-3 bg-[rgba(0,0,0,0.4)] border-b border-[rgba(237,201,81,0.25)] flex items-center gap-3 justify-between">
                     <div className="flex items-center gap-3">
                       <img 
@@ -775,7 +775,7 @@ IMPORTANT: You must allow popups for successful transactions. First-time transac
                       {formatMessageTime(msg.timestamp)}
                     </span>
                   </div>
-                  <div className={`p-3 text-white leading-6 text-[0.95rem] text-shadow-[0_1px_1px_rgba(0,0,0,0.3)] ${msg.role === 'user' ? 'bg-[rgba(237,201,81,0.1)] font-medium shadow-[0_4px_15px_rgba(0,0,0,0.2),_0_2px_5px_rgba(237,201,81,0.1)]' : 'bg-[rgba(0,32,0,0.3)] font-normal shadow-[0_4px_15px_rgba(0,0,0,0.2),_0_2px_5px_rgba(237,201,81,0.1)]'}`}>
+                  <div className={`p-3 text-white leading-6 text-[0.95rem] text-shadow-[0_1px_1px_rgba(0,0,0,0.3)] ${msg.role === 'user' ? 'bg-[rgba(237,201,81,0.1)] font-medium shadow-[0_4px_15px_rgba(0,0,0,0.2),_0_2px_5px_rgba(237,201,81,0.1)]' : 'bg-[rgba(0,0,0,0.3)] font-normal shadow-[0_4px_15px_rgba(0,0,0,0.2),_0_2px_5px_rgba(237,201,81,0.1)]'}`}>
                     {msg.role === 'user' ? (
                       msg.content.split('\n').map((line, i) => (
                         <span key={i}>
@@ -834,7 +834,7 @@ IMPORTANT: You must allow popups for successful transactions. First-time transac
             
             {isLoading && (
               <div className="flex flex-col w-full animate-[fadeIn_0.3s_ease-out] m-0 self-stretch">
-                <div className="bg-cover bg-center border border-[rgba(237,201,81,0.25)] rounded-lg overflow-hidden w-full shadow-[0_2px_8px_rgba(0,0,0,0.1)] opacity-0 translate-y-[10px] animate-[slideIn_0.3s_ease-out_forwards] bg-gradient-to-br from-[rgba(0,0,0,0.3)] to-[rgba(0,32,0,0.3)]">
+                <div className="bg-cover bg-center border border-[rgba(237,201,81,0.25)] rounded-lg overflow-hidden w-full shadow-[0_2px_8px_rgba(0,0,0,0.1)] opacity-0 translate-y-[10px] animate-[slideIn_0.3s_ease-out_forwards] bg-gradient-to-br from-[rgba(0,0,0,0.3)] to-[rgba(0,0,0,0.3)]">
                   <div className="p-2 md:p-3 bg-[rgba(0,0,0,0.4)] border-b border-[rgba(237,201,81,0.25)] flex items-center gap-3">
                     <img 
                       src="https://i.near.social/magic/thumbnail/https://near.social/magic/img/account/warsofcards.near"
@@ -843,7 +843,7 @@ IMPORTANT: You must allow popups for successful transactions. First-time transac
                     />
                     <span className="text-sm text-[rgb(237,201,81)] font-semibold">Vanessa</span>
                   </div>
-                  <div className="p-3 text-white leading-6 text-[0.95rem] bg-[rgba(0,32,0,0.3)] text-shadow-[0_1px_1px_rgba(0,0,0,0.3)]">
+                  <div className="p-3 text-white leading-6 text-[0.95rem] bg-[rgba(0,0,0,0.3)] text-shadow-[0_1px_1px_rgba(0,0,0,0.3)]">
                     <TypewriterText text="..." speed={500} />
                   </div>
                 </div>
@@ -865,7 +865,7 @@ IMPORTANT: You must allow popups for successful transactions. First-time transac
           <button 
             onClick={handleSendMessage}
             disabled={isLoading || !inputValue.trim()} 
-            className="h-[40px] min-w-[80px] px-4 rounded-md border border-[rgb(237,201,81)] bg-[rgba(0,0,0,0.4)] text-[rgb(237,201,81)] cursor-pointer font-semibold text-[15px] flex items-center justify-center box-border transition-all duration-200 hover:bg-[rgb(237,201,81)] hover:text-[rgb(0,32,0)] disabled:opacity-50 disabled:cursor-not-allowed"
+            className="h-[40px] min-w-[80px] px-4 rounded-md border border-[rgb(237,201,81)] bg-[rgba(0,0,0,0.4)] text-[rgb(237,201,81)] cursor-pointer font-semibold text-[15px] flex items-center justify-center box-border transition-all duration-200 hover:bg-[rgb(237,201,81)] hover:text-[rgb(0,0,0)] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Send
           </button>
