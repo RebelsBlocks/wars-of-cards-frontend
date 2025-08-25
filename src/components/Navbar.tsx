@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import Header from './Header';
 import TokenPriceDisplay from './TokenPriceDisplay';
 
-export type MenuItem = 'home' | 'play' | 'chat' | 'mail' | 'vanessa';
+export type MenuItem = 'home' | 'play' | 'chat' | 'community' | 'vanessa';
 
 export default function Navbar() {
   const router = useRouter();
@@ -30,7 +30,7 @@ export default function Navbar() {
     if (path === '/') return 'home';
     if (path === '/Play') return 'play';
     if (path === '/Chat') return 'chat';
-    if (path === '/Mail') return 'mail';
+    if (path === '/Community') return 'community';
     if (path === '/Vanessa') return 'vanessa';
     return 'home';
   };
@@ -92,9 +92,9 @@ export default function Navbar() {
     </svg>
   );
 
-  const MailIcon = () => (
+  const CommunityIcon = () => (
     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
     </svg>
   );
 
@@ -158,9 +158,9 @@ export default function Navbar() {
               <ChatIcon />
               <span className="font-medium">Chat</span>
             </Link>
-            <Link href="/Mail" onClick={() => handleMenuItemClick('mail')} className={`${baseItem} ${isActive('mail') ? activeItem : inactiveItem}`}>
-              <MailIcon />
-              <span className="font-medium">Mail</span>
+            <Link href="/Community" onClick={() => handleMenuItemClick('community')} className={`${baseItem} ${isActive('community') ? activeItem : inactiveItem}`}>
+              <CommunityIcon />
+              <span className="font-medium">Community</span>
             </Link>
             <Link href="/Vanessa" onClick={() => handleMenuItemClick('vanessa')} className={`${baseItem} ${isActive('vanessa') ? activeItem : inactiveItem}`}>
               <VanessaIcon />
