@@ -24,7 +24,7 @@ export default function App({ children }: { children: ReactNode }) {
       return 'ml-0'; // Mobile doesn't push content
     }
     if (sidebarState.isOpen) {
-      return 'ml-[200px]'; // Reduced to match new sidebar width
+      return 'ml-[240px]'; // Updated to match new sidebar width
     }
     return 'ml-0';
   };
