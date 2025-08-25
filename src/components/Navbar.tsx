@@ -139,16 +139,7 @@ export default function Navbar() {
           {/* App title */}
           <span className="text-[rgb(237,201,81)] font-semibold text-sm">Wars of Cards</span>
           
-          {/* Close button for mobile */}
-          {useMobileHeader && (
-            <button
-              className="w-6 h-6 bg-[rgba(0,0,0,0.8)] border border-[rgba(237,201,81,0.3)] rounded flex items-center justify-center hover:bg-[rgba(237,201,81,0.1)] transition-all duration-300"
-              onClick={() => setIsMenuOpen(false)}
-              aria-label="Close menu"
-            >
-              <span className="text-[rgb(237,201,81)] text-sm leading-none">×</span>
-            </button>
-          )}
+
         </div>
 
         {/* Main content area */}
