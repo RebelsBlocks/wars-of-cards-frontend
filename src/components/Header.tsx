@@ -25,7 +25,7 @@ export default function Header({ isMenuOpen, onMenuToggle, isMobile }: HeaderPro
       // On desktop, header slides to the right when sidebar opens
       if (isMenuOpen) {
         return {
-          left: '200px', // Width of sidebar
+          left: '240px', // Updated to match new sidebar width
           right: '0',
           opacity: 1,
           width: 'auto'
@@ -48,7 +48,7 @@ export default function Header({ isMenuOpen, onMenuToggle, isMobile }: HeaderPro
 
   return (
     <header 
-      className="fixed top-0 z-20 h-14 bg-[rgba(8,35,17,0.95)] border-b border-[rgba(237,201,81,0.3)] backdrop-blur flex items-center justify-between px-3 transition-all duration-300"
+      className="fixed top-0 z-20 h-14 bg-[rgba(0,0,0,0.95)] border-b border-[rgba(237,201,81,0.3)] backdrop-blur flex items-center justify-between px-3 transition-all duration-300"
       style={headerStyles}
     >
       {/* Left side - Menu toggle (hidden when condensed) */}
@@ -59,7 +59,7 @@ export default function Header({ isMenuOpen, onMenuToggle, isMobile }: HeaderPro
           aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
         >
           {/* Casino-style hamburger icon */}
-          <div className="relative w-8 h-8 flex flex-col justify-center items-center bg-[rgba(13,56,27,0.6)] border border-[rgba(237,201,81,0.4)] rounded-md group-hover:border-[rgba(237,201,81,0.6)] group-hover:bg-[rgba(13,56,27,0.8)] transition-all duration-200">
+          <div className="relative w-8 h-8 flex flex-col justify-center items-center bg-[rgba(0,0,0,0.6)] border border-[rgba(237,201,81,0.4)] rounded-md group-hover:border-[rgba(237,201,81,0.6)] group-hover:bg-[rgba(0,0,0,0.8)] transition-all duration-200">
             <div className="w-5 h-0.5 bg-[rgb(237,201,81)] rounded-full mb-1 group-hover:shadow-sm transition-all duration-200"></div>
             <div className="w-5 h-0.5 bg-[rgb(237,201,81)] rounded-full mb-1 group-hover:shadow-sm transition-all duration-200"></div>
             <div className="w-5 h-0.5 bg-[rgb(237,201,81)] rounded-full group-hover:shadow-sm transition-all duration-200"></div>
@@ -104,7 +104,7 @@ export default function Header({ isMenuOpen, onMenuToggle, isMobile }: HeaderPro
         ) : (
           <button
             onClick={wallet.connect}
-            className="px-3 py-1 text-sm bg-[rgb(237,201,81)] text-[rgb(8,35,17)] rounded hover:bg-[rgba(237,201,81,0.9)] transition-colors duration-200 font-medium"
+            className="px-3 py-1 text-sm bg-[rgb(237,201,81)] text-[rgb(0,0,0)] rounded hover:bg-[rgba(237,201,81,0.9)] transition-colors duration-200 font-medium"
           >
             Connect NEAR
           </button>
