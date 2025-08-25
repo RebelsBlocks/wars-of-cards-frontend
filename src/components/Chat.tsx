@@ -356,7 +356,7 @@ const Chat: React.FC = () => {
   return (
     <div className="mx-auto max-w-6xl px-3 md:px-4 py-4 relative">
             {/* Main Chat Layout */}
-      <div className="h-[calc(100vh-200px)]">
+      <div className="h-[calc(100vh-56px)]">
         
         {/* Chat Messages - Full width */}
         <div className="flex flex-col h-full">
@@ -447,7 +447,7 @@ const Chat: React.FC = () => {
                               </div>
                               
                               {/* Message Content */}
-                              <div className="px-4 py-3 bg-[rgba(0,32,0,0.3)]">
+                              <div className="px-4 py-3 bg-[rgba(0,0,0,0.3)]">
                                 <div className="text-[rgb(237,201,81)] text-sm leading-relaxed">
                                   {message.message}
                                 </div>
@@ -509,7 +509,7 @@ const Chat: React.FC = () => {
       {/* Storage Deposit Modal */}
       {showStorageModal && (
         <div className="absolute inset-0 bg-black/70 z-10 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[rgba(8,35,17,0.95)] border border-[rgba(237,201,81,0.3)] rounded-lg max-w-md w-full p-4 backdrop-blur max-h-[60vh] overflow-y-auto">
+          <div className="bg-[rgba(0,0,0,0.95)] border border-[rgba(237,201,81,0.3)] rounded-lg max-w-md w-full p-4 backdrop-blur max-h-[60vh] overflow-y-auto">
             <div className="mb-3">
               <h3 className="text-lg font-semibold text-[rgb(237,201,81)] mb-2">Chat Storage Required</h3>
               <p className="text-xs text-[rgba(237,201,81,0.7)] mb-3">
