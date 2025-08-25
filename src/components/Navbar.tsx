@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 import Header from './Header';
 import TokenPriceDisplay from './TokenPriceDisplay';
@@ -11,15 +10,14 @@ export default function Navbar() {
   const router = useRouter();
   const [activeMenuItem, setActiveMenuItem] = useState<MenuItem>('home');
   const [useMobileHeader, setUseMobileHeader] = useState(false);
-
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // mobile: dropdown open
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Dispatch sidebar state changes to App.tsx
   const dispatchSidebarState = useCallback(() => {
     const event = new CustomEvent('sidebarStateChange', {
       detail: {
         isOpen: isMenuOpen,
-        isCollapsed: false, // Always full width now
+        isCollapsed: false,
         isMobile: useMobileHeader
       }
     });
@@ -43,8 +41,6 @@ export default function Navbar() {
     const checkMobile = () => {
       const isMobile = window.innerWidth <= 768;
       setUseMobileHeader(isMobile);
-      // Allow both mobile and desktop to start with sidebar closed
-      // Users can toggle it as needed
     };
     checkMobile();
     window.addEventListener('resize', checkMobile);
@@ -59,7 +55,6 @@ export default function Navbar() {
   // Sync active menu item with route changes
   useEffect(() => {
     setActiveMenuItem(getActiveMenuItem());
-    // Close mobile menu on route change (desktop users can choose to keep it open or closed)
     if (useMobileHeader) {
       setIsMenuOpen(false);
     }
@@ -72,74 +67,115 @@ export default function Navbar() {
 
   const isActive = (menuItem: MenuItem) => activeMenuItem === menuItem;
 
-  const baseItem = 'rounded-md transition-all duration-300 nav-tile';
-  const itemPadding = 'px-4 py-3 flex items-center justify-between min-h-[48px]';
+  // Simplified styling without PNG icons
+  const baseItem = 'rounded-md transition-all duration-300 flex items-center gap-3 px-3 py-2.5';
   const inactiveItem = 'text-[rgb(237,201,81)] hover:text-[rgba(237,201,81,0.8)] hover:bg-[rgba(237,201,81,0.1)]';
-  const activeItem = 'text-[rgb(237,201,81)] nav-tile-active bg-[rgba(237,201,81,0.15)] border-[rgba(237,201,81,0.5)]';
+  const activeItem = 'text-[rgb(237,201,81)] bg-[rgba(237,201,81,0.15)] border-[rgba(237,201,81,0.3)]';
 
-  const sidebarWidthClass = 'w-[200px]'; // Reduced width to eliminate green strips around logo
+  const sidebarWidthClass = 'w-[240px]'; // Slightly wider for better readability
 
-  // Universal layout - header always visible, sidebar for mobile and desktop
+  // Icon components for menu items
+  const PlayIcon = () => (
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+  );
+
+  const ChatIcon = () => (
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+    </svg>
+  );
+
+  const MailIcon = () => (
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+    </svg>
+  );
+
+  const ProfileIcon = () => (
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+    </svg>
+  );
+
+  const VanessaIcon = () => (
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+    </svg>
+  );
+
   return (
     <>
-      {/* Header with slide animation - slides to side when sidebar opens on desktop */}
+      {/* Header with toggle functionality */}
       <Header 
         isMenuOpen={isMenuOpen} 
         onMenuToggle={() => setIsMenuOpen(!isMenuOpen)}
         isMobile={useMobileHeader}
       />
 
-      {/* Universal sidebar - responsive for all screen sizes */}
+      {/* Sidebar with toggle behavior */}
       <aside
-        className={`fixed left-0 top-0 bottom-0 z-20 ${useMobileHeader ? 'w-[220px]' : sidebarWidthClass} bg-[rgba(8,35,17,0.95)] border-r border-[rgba(237,201,81,0.3)] backdrop-blur transition-all duration-300 ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'} flex flex-col`}
+        className={`fixed left-0 top-0 bottom-0 z-20 ${useMobileHeader ? 'w-[240px]' : sidebarWidthClass} bg-[rgba(0,0,0,0.95)] border-r border-[rgba(237,201,81,0.3)] backdrop-blur transition-all duration-300 ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'} flex flex-col`}
       >
-        {/* Logo section - responsive height */}
-        <div className="relative border-b border-[rgba(237,201,81,0.3)] w-full h-[80px] sm:h-[100px] md:h-[140px] lg:h-[160px] bg-[rgba(8,35,17,0.4)] flex-shrink-0">
-          {/* Close button - show on both mobile and desktop */}
+        {/* Header spacer - matches header height */}
+        <div className="h-14 border-b border-[rgba(237,201,81,0.3)] bg-[rgba(0,0,0,0.4)] flex-shrink-0 flex items-center justify-between px-3">
+          {/* Toggle button - similar to Claude */}
           <button
-            className="absolute top-2 right-2 z-10 w-6 h-6 bg-[rgba(8,35,17,0.8)] border border-[rgba(237,201,81,0.3)] rounded flex items-center justify-center hover:bg-[rgba(237,201,81,0.1)] transition-all duration-300"
+            className="w-8 h-8 flex items-center justify-center text-[rgb(237,201,81)] hover:bg-[rgba(237,201,81,0.1)] rounded transition-all duration-200"
             onClick={() => setIsMenuOpen(false)}
-            aria-label="Close menu"
+            aria-label="Toggle sidebar"
           >
-            <span className="text-[rgb(237,201,81)] text-sm leading-none">×</span>
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
           </button>
-          <Link href="/" onClick={() => handleMenuItemClick('home')} className="block w-full h-full cursor-pointer relative overflow-hidden">
-            <Image
-              src="/logo_load.png"
-              alt="Wars of Cards"
-              fill
-              sizes="(max-width: 768px) 220px, 200px"
-              className="object-cover object-center hover:opacity-90 transition-opacity duration-200"
-              priority
-            />
-          </Link>
+          
+          {/* App title */}
+          <span className="text-[rgb(237,201,81)] font-semibold text-sm">Wars of Cards</span>
+          
+          {/* Close button for mobile */}
+          {useMobileHeader && (
+            <button
+              className="w-6 h-6 bg-[rgba(0,0,0,0.8)] border border-[rgba(237,201,81,0.3)] rounded flex items-center justify-center hover:bg-[rgba(237,201,81,0.1)] transition-all duration-300"
+              onClick={() => setIsMenuOpen(false)}
+              aria-label="Close menu"
+            >
+              <span className="text-[rgb(237,201,81)] text-sm leading-none">×</span>
+            </button>
+          )}
         </div>
 
-        {/* Main content area - grows to fill available space */}
+        {/* Main content area */}
         <div className="flex-1 flex flex-col min-h-0">
-          {/* Menu - unified styling for all screen sizes */}
-          <nav className={`flex flex-col gap-2 ${useMobileHeader ? 'pt-3 px-3' : 'px-3 py-2'} flex-shrink-0`}>
-            <Link href="/Play" onClick={() => handleMenuItemClick('play')} className={`${baseItem} nav-img-play ${itemPadding} ${isActive('play') ? activeItem : inactiveItem}`}>
-              <span className="font-semibold tracking-wide">Play</span>
+          {/* Menu items with clean icons */}
+          <nav className="flex flex-col gap-1 px-3 py-4 flex-shrink-0">
+            <Link href="/Play" onClick={() => handleMenuItemClick('play')} className={`${baseItem} ${isActive('play') ? activeItem : inactiveItem}`}>
+              <PlayIcon />
+              <span className="font-medium">Play</span>
             </Link>
-            <Link href="/Chat" onClick={() => handleMenuItemClick('chat')} className={`${baseItem} nav-img-chat ${itemPadding} ${isActive('chat') ? activeItem : inactiveItem}`}>
-              <span className="font-semibold tracking-wide">Chat</span>
+            <Link href="/Chat" onClick={() => handleMenuItemClick('chat')} className={`${baseItem} ${isActive('chat') ? activeItem : inactiveItem}`}>
+              <ChatIcon />
+              <span className="font-medium">Chat</span>
             </Link>
-            <Link href="/Mail" onClick={() => handleMenuItemClick('mail')} className={`${baseItem} nav-img-mail ${itemPadding} ${isActive('mail') ? activeItem : inactiveItem}`}>
-              <span className="font-semibold tracking-wide">Mail</span>
+            <Link href="/Mail" onClick={() => handleMenuItemClick('mail')} className={`${baseItem} ${isActive('mail') ? activeItem : inactiveItem}`}>
+              <MailIcon />
+              <span className="font-medium">Mail</span>
             </Link>
-            <Link href="/Profile" onClick={() => handleMenuItemClick('profile')} className={`${baseItem} nav-img-profile ${itemPadding} ${isActive('profile') ? activeItem : inactiveItem}`}>
-              <span className="font-semibold tracking-wide">Profile</span>
+            <Link href="/Profile" onClick={() => handleMenuItemClick('profile')} className={`${baseItem} ${isActive('profile') ? activeItem : inactiveItem}`}>
+              <ProfileIcon />
+              <span className="font-medium">Profile</span>
             </Link>
-            <Link href="/Vanessa" onClick={() => handleMenuItemClick('vanessa')} className={`${baseItem} nav-img-chat ${itemPadding} ${isActive('vanessa') ? activeItem : inactiveItem}`}>
-              <span className="font-semibold tracking-wide">Vanessa</span>
+            <Link href="/Vanessa" onClick={() => handleMenuItemClick('vanessa')} className={`${baseItem} ${isActive('vanessa') ? activeItem : inactiveItem}`}>
+              <VanessaIcon />
+              <span className="font-medium">Vanessa</span>
             </Link>
           </nav>
 
-          {/* Spacer to push footer down */}
+          {/* Spacer */}
           <div className="flex-1"></div>
 
-          {/* Footer section - always at bottom */}
+          {/* Footer section */}
           <div className="flex-shrink-0">
             {/* Token prices section */}
             <div className="px-3 py-3 space-y-3">
@@ -156,7 +192,9 @@ export default function Navbar() {
                   rel="noopener noreferrer" 
                   className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[rgba(237,201,81,0.1)] transition-all duration-200 group opacity-70 hover:opacity-100"
                 >
-                  <Image src="/telegram.png" alt="Telegram" width={18} height={18} className="group-hover:scale-110 transition-transform duration-200" />
+                  <svg className="w-4 h-4 text-[rgb(237,201,81)]" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                  </svg>
                 </a>
                 <a 
                   href="https://x.com/rebelsblocks" 
@@ -164,7 +202,9 @@ export default function Navbar() {
                   rel="noopener noreferrer" 
                   className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[rgba(237,201,81,0.1)] transition-all duration-200 group opacity-70 hover:opacity-100"
                 >
-                  <Image src="/x.png" alt="X" width={16} height={16} className="group-hover:scale-110 transition-transform duration-200" />
+                  <svg className="w-4 h-4 text-[rgb(237,201,81)]" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                  </svg>
                 </a>
               </div>
             </div>
@@ -172,7 +212,7 @@ export default function Navbar() {
         </div>
       </aside>
 
-      {/* Header spacer so content is not under the header - always needed */}
+      {/* Header spacer */}
       <div className="h-14" />
 
       {/* Overlay - only for mobile */}
