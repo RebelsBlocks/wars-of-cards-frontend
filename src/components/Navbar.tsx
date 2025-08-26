@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import Header from './Header';
 import TokenPriceDisplay from './TokenPriceDisplay';
 
-export type MenuItem = 'home' | 'play' | 'chat' | 'community' | 'vanessa';
+export type MenuItem = 'home' | 'play' | 'community' | 'vanessa';
 
 export default function Navbar() {
   const router = useRouter();
@@ -29,7 +29,6 @@ export default function Navbar() {
     const path = router.pathname;
     if (path === '/') return 'home';
     if (path === '/Play') return 'play';
-    if (path === '/Chat') return 'chat';
     if (path === '/Community') return 'community';
     if (path === '/Vanessa') return 'vanessa';
     return 'home';
@@ -86,11 +85,7 @@ export default function Navbar() {
     </svg>
   );
 
-  const ChatIcon = () => (
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-    </svg>
-  );
+
 
   const CommunityIcon = () => (
     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -153,10 +148,6 @@ export default function Navbar() {
             <Link href="/Play" onClick={() => handleMenuItemClick('play')} className={`${baseItem} ${isActive('play') ? activeItem : inactiveItem}`}>
               <PlayIcon />
               <span className="font-medium">Blackjack</span>
-            </Link>
-            <Link href="/Chat" onClick={() => handleMenuItemClick('chat')} className={`${baseItem} ${isActive('chat') ? activeItem : inactiveItem}`}>
-              <ChatIcon />
-              <span className="font-medium">Chat</span>
             </Link>
             <Link href="/Community" onClick={() => handleMenuItemClick('community')} className={`${baseItem} ${isActive('community') ? activeItem : inactiveItem}`}>
               <CommunityIcon />
