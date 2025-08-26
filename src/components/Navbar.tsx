@@ -142,19 +142,19 @@ export default function Navbar() {
           {/* Menu items with clean icons */}
           <nav className="flex flex-col gap-1 px-3 py-4 flex-shrink-0">
             <Link href="/" onClick={() => handleMenuItemClick('home')} className={`${baseItem} ${isActive('home') ? activeItem : inactiveItem}`}>
-              <HomeIcon />
+              <img src="/home.png" alt="Home" className="w-5 h-5 object-contain" />
               <span className="font-medium">Home</span>
             </Link>
             <Link href="/Vanessa" onClick={() => handleMenuItemClick('vanessa')} className={`${baseItem} ${isActive('vanessa') ? activeItem : inactiveItem}`}>
-              <VanessaIcon />
+              <img src="/vanessa.png" alt="Vanessa" className="w-5 h-5 object-contain" />
               <span className="font-medium">Vanessa</span>
             </Link>
             <Link href="/Community" onClick={() => handleMenuItemClick('community')} className={`${baseItem} ${isActive('community') ? activeItem : inactiveItem}`}>
-              <CommunityIcon />
+              <img src="/community.png" alt="Community" className="w-5 h-5 object-contain" />
               <span className="font-medium">Community</span>
             </Link>
             <Link href="/Play" onClick={() => handleMenuItemClick('play')} className={`${baseItem} ${isActive('play') ? activeItem : inactiveItem}`}>
-              <PlayIcon />
+              <img src="/blackjack.png" alt="Blackjack" className="w-5 h-5 object-contain" />
               <span className="font-medium">Blackjack</span>
             </Link>
           </nav>
