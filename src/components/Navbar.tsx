@@ -146,8 +146,8 @@ export default function Navbar() {
               <span className="font-medium">Home</span>
             </Link>
             <Link href="/Vanessa" onClick={() => handleMenuItemClick('vanessa')} className={`${baseItem} ${isActive('vanessa') ? activeItem : inactiveItem}`}>
-              <img src="/vanessa.png" alt="Vanessa" className="w-5 h-5 object-contain" />
-              <span className="font-medium">Vanessa</span>
+              <img src="/vanessa.png" alt="Vanessa AI" className="w-5 h-5 object-contain" />
+              <span className="font-medium">Vanessa AI</span>
             </Link>
             <Link href="/Community" onClick={() => handleMenuItemClick('community')} className={`${baseItem} ${isActive('community') ? activeItem : inactiveItem}`}>
               <img src="/community.png" alt="Community" className="w-5 h-5 object-contain" />
