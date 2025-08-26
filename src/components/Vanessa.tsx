@@ -1,11 +1,8 @@
 import React from 'react';
 import { useNearWallet } from '@/contexts/NearWalletContext';
-import { providers } from 'near-api-js';
-import { getNetworkConfig, useNetwork } from '@/contexts/NetworkContext';
+import { useNetwork } from '@/contexts/NetworkContext';
 import { useTokenPrices } from './TokenPriceDisplay';
-import { BN } from 'bn.js';
-import { JsonRpcProvider } from 'near-api-js/lib/providers';
-import { Big } from 'big.js';
+
 
 import { getVanessaResponse, formatConversationHistory, ChatMessage } from '../utils/openai';
 
@@ -25,76 +22,19 @@ function truncateWalletName(accountId: string | null): string {
   return `${name.slice(0, 4)}...${name.slice(-4)}.near`;
 }
 
-// Add helper function for token amounts
-function formatTokenAmount(amount: string): string {
-  const yoctoToToken = new BN("1000000000000000000000000");
-  const amountBN = new BN(amount);
-  const wholePart = amountBN.div(yoctoToToken);
-  const fractionalPart = amountBN.mod(yoctoToToken);
-  
-  // Convert fractional part to 2 decimal places
-  const fractionalStr = fractionalPart.toString().padStart(24, '0');
-  const decimalPlaces = fractionalStr.slice(0, 2);
-  
-  return `${wholePart}.${decimalPlaces}`;
-}
-
-// Add balance fetching functions
-async function fetchNearBalance(accountId: string, wallet: any, networkId: string): Promise<string> {
-  try {
-    if (!wallet.selector) return "0";
-    
-    const networkConfig = getNetworkConfig(networkId as any);
-    const provider = new providers.JsonRpcProvider({ url: networkConfig.nodeUrl }) as any;
-    const account = await provider.query({
-      request_type: 'view_account',
-      account_id: accountId,
-      finality: 'final'
-    });
-
-    if (account.amount) {
-      return formatTokenAmount(account.amount);
-    }
-    return "0";
-  } catch (error) {
-    console.error("Error fetching NEAR balance:", error);
-    return "0";
-  }
-}
-
-async function fetchCransBalance(accountId: string, wallet: any, networkId: string): Promise<string> {
-  try {
-    if (!wallet.selector) return "0";
-    
-    const networkConfig = getNetworkConfig(networkId as any);
-    const result = await wallet.viewFunction({
-      contractId: networkConfig.contracts.crans,
-      methodName: "ft_balance_of",
-      args: { account_id: accountId }
-    });
-
-    if (result) {
-      return formatTokenAmount(result);
-    }
-    return "0";
-  } catch (error) {
-    console.error("Error fetching CRANS balance:", error);
-    return "0";
-  }
-}
 
 // Simple welcome messages for different states
 const getWelcomeMessage = (accountId: string | null): string => {
   if (accountId) {
     const userName = truncateWalletName(accountId);
     const messages = [
-      `${userName}, welcome back. Wars Of Cards is ready for you. How can I assist today?`,
-      `${userName}, perfect timing. What area of the platform would you like to explore?`,
-      `${userName}, good to see you. What would you like to focus on first?` 
+      `Welcome back, ${userName}! 🎴 The tables are calling your name. What shall we explore today, darling?`,
+      `${userName}, perfect timing! The cards are fresh and the community is buzzing. What's on your mind?`,
+      `Ah, ${userName}! So good to see you again. Ready to dive into some Web3 magic or shall we chat strategy?` 
     ];
     return messages[Math.floor(Math.random() * messages.length)];
   } else {
-    return "I'm Vanessa, your dedicated platform guide. I'm here to help you maximize your experience. \n\nAllow pop-ups in your browser and for the smoothest gameplay, use Chrome browser. Also, make sure to turn off VPN to avoid any issues. \n\nReady to log in and get started?";
+    return "Hello there, darling! I'm Vanessa, your charming guide through the exciting world of Wars of Cards. ✨\n\nI'm here to make your Web3 gaming journey as smooth as silk. \n\nReady to join the most welcoming card room in Web3? Let's get you logged in!";
   }
 };
 
@@ -284,11 +224,11 @@ export function Vanessa() {
                     <div className="flex items-center gap-3">
                       <img 
                         src={msg.role === 'user' ? `https://i.near.social/magic/thumbnail/https://near.social/magic/img/account/${wallet.accountId}` : '/vanessa.png'}
-                        alt={msg.role === 'user' ? truncateWalletName(wallet.accountId) : 'Vanessa'}
+                        alt={msg.role === 'user' ? truncateWalletName(wallet.accountId) : 'Vanessa AI Host'}
                         className={`w-8 h-8 rounded-full border-2 border-[rgb(237,201,81)] object-cover ${msg.role === 'user' && !wallet.accountId ? 'blur-[5px] opacity-70' : ''}`}
                       />
                       <span className="text-sm text-[rgb(237,201,81)] font-semibold text-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
-                        {msg.role === 'user' ? truncateWalletName(wallet.accountId) : 'Vanessa'}
+                        {msg.role === 'user' ? truncateWalletName(wallet.accountId) : 'Vanessa AI Host'}
                       </span>
                     </div>
                     <span className="text-xs text-[rgba(237,201,81,0.7)] ml-auto font-normal text-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
@@ -342,7 +282,7 @@ export function Vanessa() {
                       alt="Vanessa"
                       className="w-8 h-8 rounded-full border-2 border-[rgb(237,201,81)] object-cover"
                     />
-                    <span className="text-sm text-[rgb(237,201,81)] font-semibold">Vanessa</span>
+                    <span className="text-sm text-[rgb(237,201,81)] font-semibold">Vanessa AI Host</span>
                   </div>
                   <div className="p-3 text-white leading-6 text-[0.95rem] bg-[rgba(0,0,0,0.3)] text-shadow-[0_1px_1px_rgba(0,0,0,0.3)]">
                     <span className="animate-pulse">...</span>
