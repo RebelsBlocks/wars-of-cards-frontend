@@ -763,7 +763,7 @@ IMPORTANT: You must allow popups for successful transactions. First-time transac
                   <div className="p-2 md:p-3 bg-[rgba(0,0,0,0.4)] border-b border-[rgba(237,201,81,0.25)] flex items-center gap-3 justify-between">
                     <div className="flex items-center gap-3">
                       <img 
-                        src={`https://i.near.social/magic/thumbnail/https://near.social/magic/img/account/${msg.role === 'user' ? wallet.accountId : 'warsofcards.near'}`}
+                        src={msg.role === 'user' ? `https://i.near.social/magic/thumbnail/https://near.social/magic/img/account/${wallet.accountId}` : '/vanessa.png'}
                         alt={msg.role === 'user' ? truncateWalletName(wallet.accountId) : 'Vanessa'}
                         className={`w-8 h-8 rounded-full border-2 border-[rgb(237,201,81)] object-cover ${msg.role === 'user' && !wallet.accountId ? 'blur-[5px] opacity-70' : ''}`}
                       />
@@ -837,7 +837,7 @@ IMPORTANT: You must allow popups for successful transactions. First-time transac
                 <div className="bg-cover bg-center border border-[rgba(237,201,81,0.25)] rounded-lg overflow-hidden w-full shadow-[0_2px_8px_rgba(0,0,0,0.1)] opacity-0 translate-y-[10px] animate-[slideIn_0.3s_ease-out_forwards] bg-gradient-to-br from-[rgba(0,0,0,0.3)] to-[rgba(0,0,0,0.3)]">
                   <div className="p-2 md:p-3 bg-[rgba(0,0,0,0.4)] border-b border-[rgba(237,201,81,0.25)] flex items-center gap-3">
                     <img 
-                      src="https://i.near.social/magic/thumbnail/https://near.social/magic/img/account/warsofcards.near"
+                      src="/vanessa.png"
                       alt="Vanessa"
                       className="w-8 h-8 rounded-full border-2 border-[rgb(237,201,81)] object-cover"
                     />
