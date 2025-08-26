@@ -59,6 +59,15 @@ const CRANS_TOKEN_CONFIG = {
   icon: '/logo.svg'
 };
 
+// OpenAI Configuration
+const OPENAI_CONFIG = {
+  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY || process.env.OPENAI_API_KEY,
+  model: 'gpt-4o-mini', // Nano model - najtańszy i najszybszy
+  maxTokens: 500,
+  temperature: 0.7,
+  topP: 0.9,
+};
+
 // Centralized exports with consistent RPC
 const CONFIG = {
   NETWORK_ID,
@@ -67,6 +76,7 @@ const CONFIG = {
   NEAR_CONFIG,
   REF_SDK_CONFIG,
   CRANS_TOKEN_CONFIG,
+  OPENAI_CONFIG,
   CRANS_CONTRACT_ID: CONTRACT_INFO[NETWORK_ID].crans,
   CRANS_TICKER_SYMBOL: 'CRANS',
   REF_EXCHANGE_CONTRACT_ID: CONTRACT_INFO[NETWORK_ID].refFinance,
