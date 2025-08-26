@@ -267,7 +267,13 @@ const Chat: React.FC = () => {
   useEffect(() => {
     const messagesContainer = document.querySelector('.messages-container');
     if (messagesContainer) {
-      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      // Use setTimeout to ensure DOM is updated
+      setTimeout(() => {
+        messagesContainer.scrollTo({
+          top: messagesContainer.scrollHeight,
+          behavior: 'smooth'
+        });
+      }, 100);
     }
   }, [messages]);
 
@@ -354,7 +360,7 @@ const Chat: React.FC = () => {
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-3 md:px-4 py-2 sm:py-4 relative h-[calc(100vh-80px)]">
+    <div className="mx-auto max-w-6xl px-3 md:px-4 py-2 sm:py-4 relative h-[500px]">
             {/* Main Chat Layout */}
       <div className="h-full">
         
@@ -402,7 +408,7 @@ const Chat: React.FC = () => {
                 </div>
 
                                  {/* Messages List */}
-                 <div className="flex-1 overflow-y-auto p-2 sm:p-4 min-h-0">
+                                    <div className="flex-1 overflow-y-auto p-2 sm:p-4 min-h-0 messages-container">
                   {isLoadingMessages ? (
                     <div className="flex items-center justify-center h-full">
                       <div className="text-[rgba(237,201,81,0.6)]">Loading messages...</div>
@@ -463,20 +469,20 @@ const Chat: React.FC = () => {
                                  {/* Message Input */}
                  <div className="p-2 sm:p-4 border-t border-[rgba(237,201,81,0.25)] bg-[rgba(0,0,0,0.2)] flex-shrink-0">
                   <div className="flex gap-2 mb-2">
-                                         <input
-                       type="text"
-                       value={newMessage}
-                       onChange={handleInputChange}
-                       onKeyPress={handleMessageKeyPress}
-                       placeholder="Type your message..."
-                       disabled={isSendingMessage || isAnyTransactionPending}
-                       className="flex-1 px-3 py-2 bg-[rgba(0,0,0,0.3)] border border-[rgba(237,201,81,0.3)] rounded-lg text-[rgb(237,201,81)] placeholder-[rgba(237,201,81,0.5)] focus:outline-none focus:border-[rgb(237,201,81)] disabled:opacity-50"
-                       maxLength={MAX_MESSAGE_LENGTH}
-                     />
+                    <input
+                      type="text"
+                      value={newMessage}
+                      onChange={handleInputChange}
+                      onKeyPress={handleMessageKeyPress}
+                      placeholder="Type your message..."
+                      disabled={isSendingMessage || isAnyTransactionPending}
+                      className="flex-1 min-w-0 px-2 sm:px-3 py-2 bg-[rgba(0,0,0,0.3)] border border-[rgba(237,201,81,0.3)] rounded-lg text-[rgb(237,201,81)] placeholder-[rgba(237,201,81,0.5)] focus:outline-none focus:border-[rgb(237,201,81)] disabled:opacity-50 text-sm"
+                      maxLength={MAX_MESSAGE_LENGTH}
+                    />
                     <button
                       onClick={sendMessage}
                       disabled={isSendingMessage || isAnyTransactionPending || !newMessage.trim()}
-                      className="px-4 py-2 bg-[rgb(237,201,81)] text-black font-semibold rounded-lg hover:bg-[rgba(237,201,81,0.9)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="flex-shrink-0 px-2 sm:px-4 py-2 bg-[rgb(237,201,81)] text-black font-semibold rounded-lg hover:bg-[rgba(237,201,81,0.9)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
                       title="Send message"
                     >
                       {isSendingMessage ? '⟳' : 'Send'}
