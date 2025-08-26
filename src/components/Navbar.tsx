@@ -145,17 +145,17 @@ export default function Navbar() {
               <HomeIcon />
               <span className="font-medium">Home</span>
             </Link>
-            <Link href="/Play" onClick={() => handleMenuItemClick('play')} className={`${baseItem} ${isActive('play') ? activeItem : inactiveItem}`}>
-              <PlayIcon />
-              <span className="font-medium">Blackjack</span>
+            <Link href="/Vanessa" onClick={() => handleMenuItemClick('vanessa')} className={`${baseItem} ${isActive('vanessa') ? activeItem : inactiveItem}`}>
+              <VanessaIcon />
+              <span className="font-medium">Vanessa</span>
             </Link>
             <Link href="/Community" onClick={() => handleMenuItemClick('community')} className={`${baseItem} ${isActive('community') ? activeItem : inactiveItem}`}>
               <CommunityIcon />
               <span className="font-medium">Community</span>
             </Link>
-            <Link href="/Vanessa" onClick={() => handleMenuItemClick('vanessa')} className={`${baseItem} ${isActive('vanessa') ? activeItem : inactiveItem}`}>
-              <VanessaIcon />
-              <span className="font-medium">Vanessa</span>
+            <Link href="/Play" onClick={() => handleMenuItemClick('play')} className={`${baseItem} ${isActive('play') ? activeItem : inactiveItem}`}>
+              <PlayIcon />
+              <span className="font-medium">Blackjack</span>
             </Link>
           </nav>
 
