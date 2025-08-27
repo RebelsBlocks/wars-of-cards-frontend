@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Social } from '@builddao/near-social-js';
 import ReactMarkdown from 'react-markdown';
 import { fetchTimeByBlockHeight } from '@/utils/timeFormat';
+import HolographicEffect from './HolographicEffect';
 
 const ACCOUNT_ID = 'warsofcards.near';
 const BATCH_SIZE = '10';
@@ -34,8 +35,10 @@ interface SocialData {
 
 const LoadingSpinner = () => (
   <div className="flex flex-col items-center justify-center py-8">
-    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[rgb(237,201,81)]"></div>
-    <p className="mt-2 text-[rgba(237,201,81,0.8)] text-sm text-center px-4">Loading posts...</p>
+    <HolographicEffect type="glow" className="animate-spin rounded-full h-8 w-8 border-b-2 border-[rgb(237,201,81)]">
+      <div></div>
+    </HolographicEffect>
+    <HolographicEffect type="text" intensity="subtle" className="mt-2 text-sm text-center px-4">Loading posts...</HolographicEffect>
   </div>
 );
 
@@ -212,18 +215,20 @@ const Community: React.FC = () => {
   
   if (error) return (
     <div className="mx-auto max-w-4xl md:max-w-5xl px-3 md:px-4 py-6">
-      <div className="card">
+      <HolographicEffect type="border" className="card">
         <div className="text-red-400 text-center">
-          <p className="font-semibold">Error loading posts</p>
-          <p className="text-sm mt-2 text-red-300">{error}</p>
-          <button 
-            onClick={handleRefresh}
-            className="mt-4 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition-colors"
-          >
-            Try Again
-          </button>
+          <HolographicEffect type="text" intensity="strong" className="font-semibold">Error loading posts</HolographicEffect>
+          <HolographicEffect type="text" intensity="subtle" className="text-sm mt-2 text-red-300">{error}</HolographicEffect>
+          <HolographicEffect type="glow">
+            <button 
+              onClick={handleRefresh}
+              className="mt-4 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition-colors"
+            >
+              Try Again
+            </button>
+          </HolographicEffect>
         </div>
-      </div>
+      </HolographicEffect>
     </div>
   );
 
@@ -231,11 +236,11 @@ const Community: React.FC = () => {
     <div className="w-full">
       <div className="mx-auto max-w-6xl px-3 md:px-4 lg:px-6 py-6">
           {posts.length === 0 ? (
-            <div className="card">
+            <HolographicEffect type="border" className="card">
               <div className="text-center py-8">
-                <p className="text-[rgba(237,201,81,0.8)]">No community posts yet.</p>
+                <HolographicEffect type="text" intensity="subtle">No community posts yet.</HolographicEffect>
               </div>
-            </div>
+            </HolographicEffect>
           ) : (
           <div className="relative">
 
@@ -246,36 +251,39 @@ const Community: React.FC = () => {
               className="flex justify-center"
             >
               {posts.length > 0 && (
-                <article 
-                  key={posts[currentIndex]?.id} 
-                  className={`card overflow-hidden w-full ${isTransitioning ? 'post-fade-out' : 'post-fade-in'} cursor-pointer hover:bg-[rgba(237,201,81,0.05)] transition-colors duration-200`}
-                  onClick={() => openPostModal(posts[currentIndex])}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      openPostModal(posts[currentIndex]);
-                    }
-                  }}
-                >
+                <HolographicEffect type="border" className={`card overflow-hidden w-full ${isTransitioning ? 'post-fade-out' : 'post-fade-in'} cursor-pointer hover:bg-[rgba(237,201,81,0.05)] transition-colors duration-200`}>
+                  <article 
+                    key={posts[currentIndex]?.id} 
+                    className="w-full"
+                    onClick={() => openPostModal(posts[currentIndex])}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        openPostModal(posts[currentIndex]);
+                      }
+                    }}
+                  >
                 {/* Enhanced Post Header with Better Layout */}
                 <header className="flex items-start gap-3 mb-3">
                   <div className="flex-shrink-0">
-                    <img 
-                        src={`https://i.near.social/magic/thumbnail/https://near.social/magic/img/account/${posts[currentIndex].accountId}`}
-                        alt={`${posts[currentIndex].accountId} avatar`}
-                      className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover border-2 border-[rgba(237,201,81,0.3)]"
-                      loading="lazy"
-                    />
+                    <HolographicEffect type="glow" className="w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden">
+                      <img 
+                          src={`https://i.near.social/magic/thumbnail/https://near.social/magic/img/account/${posts[currentIndex].accountId}`}
+                          alt={`${posts[currentIndex].accountId} avatar`}
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    </HolographicEffect>
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="font-semibold text-[rgb(237,201,81)] text-sm md:text-base truncate">
+                    <HolographicEffect type="text" intensity="subtle" className="font-semibold text-sm md:text-base truncate">
                         {posts[currentIndex].accountId}
-                    </div>
-                    <time className="text-xs text-[rgba(237,201,81,0.7)] block mt-1">
+                    </HolographicEffect>
+                    <HolographicEffect type="text" intensity="subtle" className="text-xs block mt-1">
                         {posts[currentIndex].timestamp}
-                    </time>
+                    </HolographicEffect>
                   </div>
                 </header>
                 
@@ -284,12 +292,14 @@ const Community: React.FC = () => {
                   {/* Image Preview - Top Right Corner */}
                   {posts[currentIndex].imageIPFSHash && (
                     <div className="absolute -top-16 -right-1 z-0">
-                      <img 
-                        src={`https://ipfs.near.social/ipfs/${posts[currentIndex].imageIPFSHash}`}
-                        alt="Post preview"
-                        className="w-20 h-20 md:w-24 md:h-24 object-cover rounded-lg opacity-80 hover:opacity-100 transition-opacity duration-200"
-                        loading="lazy"
-                      />
+                      <HolographicEffect type="glow" className="w-20 h-20 md:w-24 md:h-24 rounded-lg overflow-hidden">
+                        <img 
+                          src={`https://ipfs.near.social/ipfs/${posts[currentIndex].imageIPFSHash}`}
+                          alt="Post preview"
+                          className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity duration-200"
+                          loading="lazy"
+                        />
+                      </HolographicEffect>
                     </div>
                   )}
                   
@@ -300,9 +310,9 @@ const Community: React.FC = () => {
                         <ReactMarkdown
                           components={{
                             p: ({ children }) => (
-                              <span className="break-words overflow-wrap-anywhere hyphens-auto text-sm md:text-base leading-relaxed">
+                              <HolographicEffect type="text" intensity="subtle" className="break-words overflow-wrap-anywhere hyphens-auto text-sm md:text-base leading-relaxed">
                                 {children}
-                              </span>
+                              </HolographicEffect>
                             ),
                             a: ({ href, children }) => (
                               <a 
@@ -342,7 +352,8 @@ const Community: React.FC = () => {
                 </div>
                   
 
-                </article>
+                  </article>
+                </HolographicEffect>
               )}
             </div>
 
@@ -353,10 +364,12 @@ const Community: React.FC = () => {
         {/* Loading indicator during refresh */}
         {isRefreshing && posts.length > 0 && (
           <div className="text-center mt-6">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[rgb(237,201,81)] bg-opacity-20 rounded-lg">
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[rgb(237,201,81)]"></div>
-              <span className="text-[rgba(237,201,81,0.8)] text-sm">Refreshing posts...</span>
-            </div>
+            <HolographicEffect type="glow" className="inline-flex items-center gap-2 px-4 py-2 bg-[rgb(237,201,81)] bg-opacity-20 rounded-lg">
+              <HolographicEffect type="glow" className="animate-spin rounded-full h-4 w-4 border-b-2 border-[rgb(237,201,81)]">
+                <div></div>
+              </HolographicEffect>
+              <HolographicEffect type="text" intensity="subtle" className="text-sm">Refreshing posts...</HolographicEffect>
+            </HolographicEffect>
           </div>
         )}
       </div>
@@ -364,37 +377,39 @@ const Community: React.FC = () => {
       {/* Post Modal */}
       {showPostModal && selectedPost && (
         <div className="fixed inset-0 bg-black/80 z-50 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4">
-          <div className="bg-[rgba(0,0,0,0.95)] border border-[rgba(237,201,81,0.3)] rounded-lg w-full max-w-2xl mx-4 backdrop-blur flex flex-col max-h-[90vh]">
+          <HolographicEffect type="border" className="bg-[rgba(0,0,0,0.95)] rounded-lg w-full max-w-2xl mx-4 backdrop-blur flex flex-col max-h-[90vh]">
             {/* Modal Header - Always Visible */}
             <div className="flex items-center p-4 sm:p-6 pb-3 border-b border-[rgba(237,201,81,0.25)] flex-shrink-0">
               <div className="flex items-center gap-3 min-w-0 flex-1">
-                <img 
-                  src={`https://i.near.social/magic/thumbnail/https://near.social/magic/img/account/${selectedPost.accountId}`}
-                  alt={selectedPost.accountId}
-                  className="w-12 h-12 rounded-full border-2 border-[rgb(237,201,81)] object-cover flex-shrink-0"
-                  onError={(e) => {
-                    e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedPost.accountId)}&background=edc951&color=000&size=48`;
-                  }}
-                />
+                <HolographicEffect type="glow" className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
+                  <img 
+                    src={`https://i.near.social/magic/thumbnail/https://near.social/magic/img/account/${selectedPost.accountId}`}
+                    alt={selectedPost.accountId}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedPost.accountId)}&background=edc951&color=000&size=48`;
+                    }}
+                  />
+                </HolographicEffect>
                 <div className="min-w-0 flex-1">
-                  <div className="text-[rgb(237,201,81)] font-semibold text-lg truncate">
+                  <HolographicEffect type="text" intensity="normal" className="font-semibold text-lg truncate">
                     {selectedPost.accountId}
-                  </div>
-                  <time className="text-sm text-[rgba(237,201,81,0.7)] block mt-1">
+                  </HolographicEffect>
+                  <HolographicEffect type="text" intensity="normal" className="text-sm block mt-1">
                     {selectedPost.timestamp}
-                  </time>
+                  </HolographicEffect>
                 </div>
               </div>
             </div>
 
             {/* Modal Content - Scrollable */}
             <div className="flex-1 overflow-y-auto p-4 sm:p-6">
-              <div className="text-[rgba(237,201,81,0.9)] prose prose-sm md:prose-base max-w-none break-words overflow-wrap-anywhere">
+              <div className="prose prose-sm md:prose-base max-w-none break-words overflow-wrap-anywhere">
                 <div className="markdown-content">
                   <ReactMarkdown
                     components={{
                       p: ({ children }) => (
-                        <p className="mb-3 break-words overflow-wrap-anywhere hyphens-auto">
+                        <p className="mb-3 break-words overflow-wrap-anywhere hyphens-auto text-[rgb(237,201,81)]">
                           {children}
                         </p>
                       ),
@@ -409,19 +424,59 @@ const Community: React.FC = () => {
                         </a>
                       ),
                       code: ({ children }) => (
-                        <code className="bg-gray-800 px-2 py-1 rounded text-sm break-all overflow-x-auto inline-block max-w-full">
+                        <code className="bg-gray-800 px-2 py-1 rounded text-sm break-all overflow-x-auto inline-block max-w-full text-[rgb(237,201,81)]">
                           {children}
                         </code>
                       ),
                       pre: ({ children }) => (
-                        <pre className="bg-gray-800 p-4 rounded-lg overflow-x-auto text-sm">
+                        <pre className="bg-gray-800 p-4 rounded-lg overflow-x-auto text-sm text-[rgb(237,201,81)]">
                           {children}
                         </pre>
                       ),
                       blockquote: ({ children }) => (
-                        <blockquote className="border-l-4 border-[rgb(237,201,81)] pl-4 italic my-4 break-words">
+                        <blockquote className="border-l-4 border-[rgb(237,201,81)] pl-4 italic my-4 break-words text-[rgb(237,201,81)]">
                           {children}
                         </blockquote>
+                      ),
+                      h1: ({ children }) => (
+                        <h1 className="text-xl font-bold mb-3 break-words text-[rgb(237,201,81)]">
+                          {children}
+                        </h1>
+                      ),
+                      h2: ({ children }) => (
+                        <h2 className="text-lg font-bold mb-2 break-words text-[rgb(237,201,81)]">
+                          {children}
+                        </h2>
+                      ),
+                      h3: ({ children }) => (
+                        <h3 className="text-base font-bold mb-2 break-words text-[rgb(237,201,81)]">
+                          {children}
+                        </h3>
+                      ),
+                      strong: ({ children }) => (
+                        <strong className="font-bold text-[rgb(237,201,81)]">
+                          {children}
+                        </strong>
+                      ),
+                      em: ({ children }) => (
+                        <em className="italic text-[rgb(237,201,81)]">
+                          {children}
+                        </em>
+                      ),
+                      ul: ({ children }) => (
+                        <ul className="list-disc list-inside mb-3 break-words text-[rgb(237,201,81)]">
+                          {children}
+                        </ul>
+                      ),
+                      ol: ({ children }) => (
+                        <ol className="list-decimal list-inside mb-3 break-words text-[rgb(237,201,81)]">
+                          {children}
+                        </ol>
+                      ),
+                      li: ({ children }) => (
+                        <li className="break-words text-[rgb(237,201,81)]">
+                          {children}
+                        </li>
                       )
                     }}
                   >
@@ -442,12 +497,12 @@ const Community: React.FC = () => {
             <div className="p-4 sm:p-6 pt-3 border-t border-[rgba(237,201,81,0.25)] flex justify-end flex-shrink-0">
               <button
                 onClick={closePostModal}
-                className="px-6 py-2 bg-[rgb(237,201,81)] text-black font-semibold rounded-lg hover:bg-[rgba(237,201,81,0.9)] transition-colors"
+                className="px-6 py-2 bg-[rgb(237,201,81)] text-black font-semibold rounded-lg hover:bg-[rgba(237,201,81,0.9)] transition-colors shadow-[0_0_20px_rgba(237,201,81,0.3)]"
               >
                 Close
               </button>
             </div>
-          </div>
+          </HolographicEffect>
         </div>
       )}
     </div>
