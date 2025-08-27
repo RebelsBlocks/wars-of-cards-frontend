@@ -20,12 +20,10 @@ const EVM_WALLET_CHAINS = {
 // Contract configuration
 const CONTRACT_INFO = {
   mainnet: {
-    crans: 'crans.tkn.near',
     refFinance: 'v2.ref-finance.near',
     chat: 'chat.near', // placeholder for mainnet
   },
   testnet: {
-    crans: 'crans.testnet',
     refFinance: 'v2.ref-finance.testnet',
     chat: 'chatty.testnet',
   }
@@ -52,13 +50,6 @@ const REF_SDK_CONFIG = {
   contractId: CONTRACT_INFO[NETWORK_ID].refFinance
 };
 
-// CRANS Token Configuration
-const CRANS_TOKEN_CONFIG = {
-  contractId: CONTRACT_INFO[NETWORK_ID].crans, 
-  decimals: 18,
-  icon: '/logo.svg'
-};
-
 // OpenAI Configuration
 const OPENAI_CONFIG = {
   apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY || process.env.OPENAI_API_KEY,
@@ -75,10 +66,7 @@ const CONFIG = {
   EVM_WALLET_CHAIN: EVM_WALLET_CHAINS[NETWORK_ID],
   NEAR_CONFIG,
   REF_SDK_CONFIG,
-  CRANS_TOKEN_CONFIG,
   OPENAI_CONFIG,
-  CRANS_CONTRACT_ID: CONTRACT_INFO[NETWORK_ID].crans,
-  CRANS_TICKER_SYMBOL: 'CRANS',
   REF_EXCHANGE_CONTRACT_ID: CONTRACT_INFO[NETWORK_ID].refFinance,
   CHAT_CONTRACT_ID: CONTRACT_INFO[NETWORK_ID].chat,
   
