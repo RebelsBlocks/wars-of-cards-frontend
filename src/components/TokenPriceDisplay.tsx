@@ -3,17 +3,11 @@ import { JsonRpcProvider } from 'near-api-js/lib/providers';
 import { Big } from 'big.js';
 
 // Essential constants from TokenPrices.tsx
-const POOLS = {
-  CRANS_NEAR: 5423,      // CRANS/NEAR pool
-};
-
 const TOKENS = {
-  CRANS: "crans.tkn.near",
   NEAR: "wrap.near",
 };
 
 const TOKEN_DECIMALS = {
-  [TOKENS.CRANS]: 24,    // CRANS has 24 decimals with 1M total supply
   [TOKENS.NEAR]: 24,
 };
 
@@ -89,48 +83,9 @@ const getNearPriceInUSDC = async (): Promise<Big> => {
   }
 };
 
-// Get CRANS per NEAR
-const getCransPerNear = async (): Promise<Big> => {
-  try {
-    const cransForOneNear = await getReturn({
-      pool_id: POOLS.CRANS_NEAR,
-      token_in: TOKENS.NEAR,
-      token_out: TOKENS.CRANS,
-      amount_in: '1000000000000000000000000' // 1 NEAR (24 decimals)
-    });
-
-    if (cransForOneNear) {
-      return new Big(cransForOneNear).div(new Big(10).pow(TOKEN_DECIMALS[TOKENS.CRANS]));
-    }
-    
-    return new Big(0);
-  } catch (error) {
-    console.error('Error getting CRANS per NEAR:', error);
-    return new Big(0);
-  }
-};
-
-// Get CRANS price in USDC
-const getCransPriceInUSDC = async (): Promise<Big> => {
-  try {
-    const nearPriceInUSDC = await getNearPriceInUSDC();
-    const cransPerNear = await getCransPerNear();
-    
-    if (nearPriceInUSDC.gt(0) && cransPerNear.gt(0)) {
-      return nearPriceInUSDC.div(cransPerNear);
-    }
-    
-    return new Big(0);
-  } catch (error) {
-    console.error('Error calculating CRANS price in USDC:', error);
-    return new Big(0);
-  }
-};
-
 // Hook for token prices - optimized for Navbar display
 export function useTokenPrices() {
   const [nearInUsdc, setNearInUsdc] = useState<string>('—');
-  const [cransPriceUsdc, setCransPriceUsdc] = useState<string>('—');
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -146,18 +101,11 @@ export function useTokenPrices() {
           setNearInUsdc(nearPrice.toFixed(2));
         }
 
-        // Get CRANS price in USDC
-        const cransPriceValue = await getCransPriceInUSDC();
-        if (cransPriceValue.gt(0)) {
-          setCransPriceUsdc(cransPriceValue.toFixed(6));
-        }
-
       } catch (err: any) {
         console.error('Failed to fetch token prices:', err);
         setError(err.message || 'Failed to fetch prices');
         // Keep showing "—" on error
         setNearInUsdc('—');
-        setCransPriceUsdc('—');
       } finally {
         setIsLoading(false);
       }
@@ -175,7 +123,6 @@ export function useTokenPrices() {
 
   return { 
     nearInUsdc: isLoading ? '—' : nearInUsdc, 
-    cransPriceUsdc: isLoading ? '—' : cransPriceUsdc, 
     isLoading, 
     error 
   };
@@ -183,7 +130,7 @@ export function useTokenPrices() {
 
 // Component for displaying token prices in Navbar
 export default function TokenPriceDisplay() {
-  const { nearInUsdc, cransPriceUsdc, isLoading } = useTokenPrices();
+  const { nearInUsdc, isLoading } = useTokenPrices();
 
   return (
     <div className="space-y-2">
@@ -191,12 +138,6 @@ export default function TokenPriceDisplay() {
         <span className="text-sm font-bold text-[rgb(237,201,81)] tracking-wide">NEAR</span>
         <span className="text-sm text-[rgb(237,201,81)] font-semibold">
           {nearInUsdc === '—' ? '—' : `$${nearInUsdc}`}
-        </span>
-      </div>
-      <div className="flex items-center justify-between rounded-lg border border-[rgba(237,201,81,0.4)] bg-gradient-to-r from-[rgba(237,201,81,0.08)] to-[rgba(237,201,81,0.12)] px-3 py-2.5 hover:bg-gradient-to-r hover:from-[rgba(237,201,81,0.12)] hover:to-[rgba(237,201,81,0.16)] transition-all duration-200">
-        <span className="text-sm font-bold text-[rgb(237,201,81)] tracking-wide">CRANS</span>
-        <span className="text-sm text-[rgb(237,201,81)] font-semibold">
-          {cransPriceUsdc === '—' ? '—' : `$${cransPriceUsdc}`}
         </span>
       </div>
     </div>
