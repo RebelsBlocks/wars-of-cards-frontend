@@ -247,7 +247,7 @@ const ProfilePage: NextPage = () => {
               />
             )}
             <div>
-              <h2 className="text-xl font-semibold text-[rgb(237,201,81)]">
+              <h2 className="text-xl font-semibold holographic-heading">
                 {accountId ? truncateWalletName(accountId) : 'Profile'}
               </h2>
               {accountId && (
@@ -255,7 +255,7 @@ const ProfilePage: NextPage = () => {
                   href={`https://near.social/mob.near/widget/ProfilePage?accountId=${accountId}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm text-[rgba(237,201,81,0.7)] hover:text-[rgb(237,201,81)] transition-colors"
+                  className="text-sm holographic-text-subtle hover:holographic-text transition-all duration-300"
                 >
                   View on NEAR Social →
                 </a>
@@ -304,12 +304,12 @@ const ProfilePage: NextPage = () => {
           <div className="space-y-6">
             {/* Balances Section */}
             <div className="bg-[rgba(0,0,0,0.3)] rounded-lg p-4 border border-[rgba(237,201,81,0.25)]">
-              <h3 className="text-sm font-medium text-[rgba(237,201,81,0.8)] mb-4">Balances</h3>
+              <h3 className="text-sm font-medium holographic-text mb-4">Balances</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div className="flex items-center justify-between p-3 bg-[rgba(0,0,0,0.2)] rounded border border-[rgba(237,201,81,0.15)]">
                   <div>
                     <div className="text-xs text-[rgba(237,201,81,0.6)]">NEAR</div>
-                    <div className="text-lg font-bold text-[rgb(237,201,81)]">{balances.near}</div>
+                    <div className="text-lg font-bold holographic-text-strong">{balances.near}</div>
                   </div>
                   <div className="text-2xl">Ⓝ</div>
                 </div>
@@ -317,7 +317,7 @@ const ProfilePage: NextPage = () => {
                 <div className="flex items-center justify-between p-3 bg-[rgba(0,0,0,0.2)] rounded border border-[rgba(237,201,81,0.15)]">
                   <div>
                     <div className="text-xs text-[rgba(237,201,81,0.6)]">CRANS</div>
-                    <div className="text-lg font-bold text-[rgb(237,201,81)]">{balances.crans}</div>
+                    <div className="text-lg font-bold holographic-text-strong">{balances.crans}</div>
                   </div>
                   <div className="text-lg font-bold text-[rgb(237,201,81)]">CRANS</div>
                 </div>
@@ -325,7 +325,7 @@ const ProfilePage: NextPage = () => {
                 <div className="flex items-center justify-between p-3 bg-[rgba(0,0,0,0.2)] rounded border border-[rgba(237,201,81,0.15)]">
                   <div>
                     <div className="text-xs text-[rgba(237,201,81,0.6)]">Storage</div>
-                    <div className="text-lg font-bold text-[rgb(237,201,81)]">
+                    <div className="text-lg font-bold holographic-text-strong">
                       {isLoadingBalance ? '...' : formatNearAmount(storageBalance)}
                     </div>
                   </div>
@@ -337,7 +337,7 @@ const ProfilePage: NextPage = () => {
             {/* Storage Management Section */}
             <div className="bg-[rgba(0,0,0,0.3)] rounded-lg p-4 border border-[rgba(237,201,81,0.25)]">
               <div className="mb-4">
-                <h3 className="text-sm font-medium text-[rgba(237,201,81,0.8)]">
+                <h3 className="text-sm font-medium holographic-text">
                   Chat Storage Management
                 </h3>
                 <div className="text-xs text-[rgba(237,201,81,0.6)] mt-1">
@@ -395,7 +395,7 @@ const ProfilePage: NextPage = () => {
           </div>
         ) : (
           <div className="text-center py-12">
-            <div className="text-[rgba(237,201,81,0.8)] mb-6">
+            <div className="holographic-text mb-6">
               Connect your NEAR wallet to view your profile and balances
             </div>
             <button 
