@@ -131,8 +131,10 @@ export default function Navbar() {
             </svg>
           </button>
           
-          {/* App title */}
-          <img src="/brief.png" alt="Wars of Cards" className="h-5 w-auto object-contain" />
+          {/* App title - clickable to go home */}
+          <Link href="/" onClick={() => handleMenuItemClick('home')}>
+            <img src="/brief.png" alt="Wars of Cards" className="h-5 w-auto object-contain cursor-pointer hover:opacity-80 transition-opacity duration-200" />
+          </Link>
           
 
         </div>
