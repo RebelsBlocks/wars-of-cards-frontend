@@ -224,11 +224,12 @@ export function Vanessa() {
                     <div className="flex items-center gap-3">
                       <img 
                         src={msg.role === 'user' ? `https://i.near.social/magic/thumbnail/https://near.social/magic/img/account/${wallet.accountId}` : '/vanessa.png'}
-                        alt={msg.role === 'user' ? truncateWalletName(wallet.accountId) : 'Vanessa AI Host'}
-                        className={`w-8 h-8 rounded-full border-2 border-[rgb(237,201,81)] object-cover ${msg.role === 'user' && !wallet.accountId ? 'blur-[5px] opacity-70' : ''}`}
+                        alt={msg.role === 'user' ? truncateWalletName(wallet.accountId) : 'Vanessa AI'}
+                        className={`w-8 h-8 ${msg.role === 'user' ? 'rounded-full border-2 border-[rgb(237,201,81)]' : ''} object-contain bg-[rgba(0,0,0,0.2)] ${msg.role === 'user' && !wallet.accountId ? 'blur-[5px] opacity-70' : ''}`}
+                        style={{ imageRendering: 'auto' }}
                       />
                       <span className="text-sm text-[rgb(237,201,81)] font-semibold text-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
-                        {msg.role === 'user' ? truncateWalletName(wallet.accountId) : 'Vanessa AI Host'}
+                        {msg.role === 'user' ? truncateWalletName(wallet.accountId) : 'Vanessa AI'}
                       </span>
                     </div>
                     <span className="text-xs text-[rgba(237,201,81,0.7)] ml-auto font-normal text-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
@@ -280,9 +281,10 @@ export function Vanessa() {
                     <img 
                       src="/vanessa.png"
                       alt="Vanessa"
-                      className="w-8 h-8 rounded-full border-2 border-[rgb(237,201,81)] object-cover"
+                      className="w-8 h-8 object-contain bg-[rgba(0,0,0,0.2)]"
+                      style={{ imageRendering: 'auto' }}
                     />
-                    <span className="text-sm text-[rgb(237,201,81)] font-semibold">Vanessa AI Host</span>
+                    <span className="text-sm text-[rgb(237,201,81)] font-semibold">Vanessa AI</span>
                   </div>
                   <div className="p-3 text-white leading-6 text-[0.95rem] bg-[rgba(0,0,0,0.3)] text-shadow-[0_1px_1px_rgba(0,0,0,0.3)]">
                     <span className="animate-pulse">...</span>
