@@ -341,7 +341,7 @@ const Chat: React.FC = () => {
     return (
       <div className="mx-auto max-w-4xl md:max-w-5xl px-3 md:px-4 py-6">
         <div className="flex items-center justify-center h-64">
-          <div className="text-[rgba(237,201,81,0.8)]">Loading...</div>
+          <div className="holographic-text">Loading...</div>
         </div>
       </div>
     );
@@ -359,7 +359,7 @@ const Chat: React.FC = () => {
             {!isConnected ? (
               <div className="flex items-center justify-center h-full">
                 <div className="text-center">
-                  <div className="text-[rgba(237,201,81,0.6)] mb-4">Connect your wallet to start chatting</div>
+                  <div className="holographic-text mb-4">Connect your wallet to start chatting</div>
                   <button
                     onClick={connect}
                     className="px-6 py-3 bg-[rgb(237,201,81)] text-black font-semibold rounded-lg hover:bg-[rgba(237,201,81,0.9)] transition-colors"
@@ -401,18 +401,18 @@ const Chat: React.FC = () => {
                                       e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(message.account_id)}&background=edc951&color=000&size=32`;
                                     }}
                                   />
-                                  <span className="text-[rgb(237,201,81)] font-semibold text-sm truncate">
+                                  <span className="holographic-text font-semibold text-sm truncate">
                                     {message.account_id}
                                   </span>
                                 </div>
-                                <span className="text-[rgba(237,201,81,0.7)] text-xs flex-shrink-0 ml-2">
+                                <span className="holographic-text-subtle text-xs flex-shrink-0 ml-2">
                                   {formatTimestamp(message.timestamp)}
                                 </span>
                               </div>
                               
                               {/* Message Content */}
                               <div className="px-4 py-3 bg-[rgba(0,0,0,0.3)]">
-                                <div className="text-[rgb(237,201,81)] text-sm leading-relaxed">
+                                <div className="holographic-text-subtle text-sm leading-relaxed">
                                   {message.message}
                                 </div>
                               </div>
@@ -432,6 +432,10 @@ const Chat: React.FC = () => {
                       onChange={handleInputChange}
                       onKeyPress={handleMessageKeyPress}
                       placeholder="Type your message..."
+                      style={{
+                        '--placeholder-color': 'rgba(237,201,81,0.5)',
+                        '--placeholder-holographic': 'linear-gradient(45deg, rgba(237,201,81,0.5) 0%, rgba(255,215,0,0.4) 25%, rgba(255,182,193,0.3) 50%, rgba(173,216,230,0.3) 75%, rgba(237,201,81,0.5) 100%)'
+                      } as React.CSSProperties}
                       disabled={isSendingMessage || isAnyTransactionPending}
                       className="flex-1 min-w-0 px-2 sm:px-3 py-2 bg-[rgba(0,0,0,0.3)] border border-[rgba(237,201,81,0.3)] rounded-lg text-[rgb(237,201,81)] placeholder-[rgba(237,201,81,0.5)] focus:outline-none focus:border-[rgb(237,201,81)] disabled:opacity-50 text-sm"
                       maxLength={MAX_MESSAGE_LENGTH}
@@ -457,7 +461,7 @@ const Chat: React.FC = () => {
                         <div className="absolute right-full top-1/2 transform -translate-y-1/2 w-0 h-0 border-t-2 border-b-2 border-r-2 border-transparent border-r-[rgba(237,201,81,0.3)]"></div>
                       </div>
                     </div>
-                    <span>{newMessage.length}/{MAX_MESSAGE_LENGTH}</span>
+                    <span className="holographic-text-subtle">{newMessage.length}/{MAX_MESSAGE_LENGTH}</span>
                   </div>
                 </div>
               </>
@@ -469,7 +473,7 @@ const Chat: React.FC = () => {
       {/* Error Display */}
       {error && (
         <div className="absolute top-2 left-1/2 transform -translate-x-1/2 z-20 bg-red-900/90 border border-red-500/50 rounded-lg p-3 max-w-md w-full mx-4 animate-fadeIn">
-          <div className="text-red-400 text-sm">{error}</div>
+          <div className="holographic-error text-sm">{error}</div>
           <button
             onClick={() => setError(null)}
             className="absolute top-1 right-1 text-xs text-red-300 hover:text-red-200"
@@ -484,7 +488,7 @@ const Chat: React.FC = () => {
         <div className="absolute inset-0 bg-black/70 z-10 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 animate-fadeIn">
           <div className="bg-[rgba(0,0,0,0.95)] border border-[rgba(237,201,81,0.3)] rounded-lg w-full max-w-sm sm:max-w-md mx-4 p-3 sm:p-4 backdrop-blur">
             <div className="mb-3">
-              <h3 className="text-base sm:text-lg font-semibold text-[rgb(237,201,81)] mb-2">Chat Storage Required</h3>
+              <h3 className="text-base sm:text-lg font-semibold holographic-heading mb-2">Chat Storage Required</h3>
               <p className="text-xs text-[rgba(237,201,81,0.7)] mb-3">
                 You need more NEAR in chat storage to send messages. Current balance: {formatNearAmount(storageBalance)} NEAR
               </p>
@@ -493,7 +497,7 @@ const Chat: React.FC = () => {
             {/* Storage Balance */}
             <div className="mb-3">
               <div className="text-xs text-[rgba(237,201,81,0.6)] mb-1">Current Storage Balance</div>
-              <div className="text-sm sm:text-base font-bold text-[rgb(237,201,81)]">
+              <div className="text-sm sm:text-base font-bold holographic-text-strong">
                 {isLoadingBalance ? 'Loading...' : `${formatNearAmount(storageBalance)} NEAR`}
               </div>
             </div>
