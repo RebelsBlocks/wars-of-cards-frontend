@@ -268,14 +268,14 @@ const Community: React.FC = () => {
                 {/* Enhanced Post Header with Better Layout */}
                 <header className="flex items-start gap-3 mb-3">
                   <div className="flex-shrink-0">
-                    <HolographicEffect type="glow" className="w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden">
+                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden">
                       <img 
                           src={`https://i.near.social/magic/thumbnail/https://near.social/magic/img/account/${posts[currentIndex].accountId}`}
                           alt={`${posts[currentIndex].accountId} avatar`}
                         className="w-full h-full object-cover"
                         loading="lazy"
                       />
-                    </HolographicEffect>
+                    </div>
                   </div>
                   <div className="min-w-0 flex-1">
                     <HolographicEffect type="text" intensity="subtle" className="font-semibold text-sm md:text-base truncate">
