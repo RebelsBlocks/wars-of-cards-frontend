@@ -370,23 +370,6 @@ const Chat: React.FC = () => {
               </div>
             ) : (
               <>
-                {/* Messages Header */}
-                <div className="px-2 sm:px-4 py-2 bg-[rgba(0,0,0,0.4)] border-b border-[rgba(237,201,81,0.25)] flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    {/* Info icon with tooltip */}
-                    <div className="relative group">
-                      <div className="w-5 h-5 bg-[rgb(237,201,81)] text-black rounded-full flex items-center justify-center text-xs font-bold cursor-help">
-                        !
-                      </div>
-                      {/* Tooltip - positioned to the right */}
-                      <div className="absolute left-full top-1/2 transform -translate-y-1/2 ml-2 px-3 py-2 bg-[rgba(0,0,0,0.9)] text-[rgb(237,201,81)] text-xs rounded-lg border border-[rgba(237,201,81,0.3)] opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
-                        You can deposit or withdraw storage in your profile
-                        <div className="absolute right-full top-1/2 transform -translate-y-1/2 w-0 h-0 border-t-2 border-b-2 border-r-2 border-transparent border-r-[rgba(237,201,81,0.3)]"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
                                  {/* Messages List */}
                                     <div className={`flex-1 overflow-y-auto p-2 sm:p-4 min-h-0 messages-container flex flex-col-reverse transition-all duration-300 ${isLoadingMessages ? 'animate-pulse' : ''}`}>
                   <div className={`space-y-3 flex flex-col-reverse transition-opacity duration-500 ${isLoadingMessages ? 'opacity-50' : 'opacity-100'}`}>
@@ -463,7 +446,17 @@ const Chat: React.FC = () => {
                     </button>
                   </div>
                   <div className="flex justify-between items-center text-xs text-[rgba(237,201,81,0.5)]">
-                    <span>Press Enter to send</span>
+                    {/* Info icon with tooltip */}
+                    <div className="relative group">
+                      <div className="w-5 h-5 bg-[rgb(237,201,81)] text-black rounded-full flex items-center justify-center text-xs font-bold cursor-help">
+                        !
+                      </div>
+                      {/* Tooltip - positioned to the right */}
+                      <div className="absolute left-full top-1/2 transform -translate-y-1/2 ml-2 px-3 py-2 bg-[rgba(0,0,0,0.9)] text-[rgb(237,201,81)] text-xs rounded-lg border border-[rgba(237,201,81,0.3)] opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
+                        You can deposit or withdraw storage in your profile
+                        <div className="absolute right-full top-1/2 transform -translate-y-1/2 w-0 h-0 border-t-2 border-b-2 border-r-2 border-transparent border-r-[rgba(237,201,81,0.3)]"></div>
+                      </div>
+                    </div>
                     <span>{newMessage.length}/{MAX_MESSAGE_LENGTH}</span>
                   </div>
                 </div>
