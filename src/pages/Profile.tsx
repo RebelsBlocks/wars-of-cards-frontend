@@ -34,7 +34,7 @@ const ProfilePage: NextPage = () => {
   const { networkId } = useNetwork();
   const networkConfig = getNetworkConfig(networkId);
   const { accountId, selector, connect, isConnected } = wallet;
-  const [balances, setBalances] = useState({ near: "0", crans: "0" });
+  const [balances, setBalances] = useState({ near: "0" });
   
   // Chat Storage State
   const [storageBalance, setStorageBalance] = useState<string>('0');
@@ -47,40 +47,9 @@ const ProfilePage: NextPage = () => {
 
   const fetchBalances = async () => {
     console.log("Fetching balances for account:", accountId);
-    const [nearBalance, cransBalance] = await Promise.all([
-      fetchAccountDetails(accountId!),
-      fetchCRANSBalance(accountId!)
-    ]);
-    setBalances({ near: nearBalance, crans: cransBalance });
+    const nearBalance = await fetchAccountDetails(accountId!);
+    setBalances({ near: nearBalance });
   };
-
-  async function fetchCRANSBalance(accountId: string) {
-    try {
-      if (!selector) return "0";
-      
-      console.log("Fetching CRANS balance from contract:", networkConfig.contracts.crans);
-      
-      const result = await wallet.viewFunction({
-        contractId: networkConfig.contracts.crans,
-        methodName: "ft_balance_of",
-        args: { account_id: accountId }
-      });
-
-      console.log("Raw CRANS token data:", result);
-
-      if (result) {
-        return formatTokenAmount(result);
-      }
-      return "0";
-    } catch (error: any) {
-      console.error("Error fetching CRANS balance:", error);
-      // Return a more user-friendly message
-      if (error.message && error.message.includes('Deserialization')) {
-        return "Contract Error";
-      }
-      return "N/A";
-    }
-  }
 
   async function fetchAccountDetails(accountId: string) {
     try {
@@ -319,16 +288,6 @@ const ProfilePage: NextPage = () => {
                     </div>
                   </div>
 
-                </HolographicEffect>
-                
-                <HolographicEffect type="background" className="flex items-center justify-between p-3 rounded">
-                  <div>
-                    <div className="text-xs text-[rgba(237,201,81,0.6)]">CRANS</div>
-                    <div className="text-lg font-bold holographic-text-strong">
-                      {balances.crans}
-                    </div>
-                  </div>
-                  <div className="text-lg font-bold text-[rgb(237,201,81)]">CRANS</div>
                 </HolographicEffect>
                 
                 <HolographicEffect type="background" className="flex items-center justify-between p-3 rounded">
