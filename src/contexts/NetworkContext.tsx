@@ -51,7 +51,6 @@ export const useNetwork = (): NetworkContextType => {
 export const getNetworkConfig = (networkId: NetworkId) => {
   const CONTRACT_INFO = {
     mainnet: {
-      crans: 'crans.tkn.near',
       refFinance: 'v2.ref-finance.near',
       chat: 'warsofcards-chat.near',
     }
