@@ -166,7 +166,6 @@ export default function Navbar() {
           <div className="flex-shrink-0">
             {/* Token prices section */}
             <div className="px-3 py-3 space-y-3">
-              <div className="text-xs text-[rgba(237,201,81,0.7)] font-medium tracking-wider uppercase mb-2">Token Prices</div>
               <TokenPriceDisplay />
             </div>
 
