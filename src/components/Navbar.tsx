@@ -132,7 +132,7 @@ export default function Navbar() {
           </button>
           
           {/* App title */}
-          <span className="text-[rgb(237,201,81)] font-semibold text-sm">Wars of Cards</span>
+          <img src="/brief.png" alt="Wars of Cards" className="h-5 w-auto object-contain" />
           
 
         </div>
