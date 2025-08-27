@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNearWallet } from '../contexts/NearWalletContext';
 import { useNetwork } from '../contexts/NetworkContext';
+import HolographicEffect from './HolographicEffect';
 
 import { getChatContractId, chatContract, formatNearAmount, parseNearAmount, formatTimestamp, type ChatMessage } from '../utils/chatContract';
 
@@ -341,7 +342,9 @@ const Chat: React.FC = () => {
     return (
       <div className="mx-auto max-w-4xl md:max-w-5xl px-3 md:px-4 py-6">
         <div className="flex items-center justify-center h-64">
-          <div className="holographic-text">Loading...</div>
+          <HolographicEffect type="text" intensity="strong">
+            Loading...
+          </HolographicEffect>
         </div>
       </div>
     );
@@ -355,17 +358,21 @@ const Chat: React.FC = () => {
         {/* Chat Messages - Full width */}
         <div className="flex flex-col h-full">
            {/* Messages Container */}
-           <div className="flex-1 bg-[rgba(0,0,0,0.3)] rounded-lg border border-[rgba(237,201,81,0.2)] overflow-hidden flex flex-col">
+           <HolographicEffect type="border" className="flex-1 bg-[rgba(0,0,0,0.3)] rounded-lg overflow-hidden flex flex-col">
             {!isConnected ? (
               <div className="flex items-center justify-center h-full">
                 <div className="text-center">
-                  <div className="holographic-text mb-4">Connect your wallet to start chatting</div>
-                  <button
-                    onClick={connect}
-                    className="px-6 py-3 bg-[rgb(237,201,81)] text-black font-semibold rounded-lg hover:bg-[rgba(237,201,81,0.9)] transition-colors"
-                  >
-                    Connect Wallet
-                  </button>
+                  <HolographicEffect type="text" intensity="strong" className="mb-4">
+                    Connect your wallet to start chatting
+                  </HolographicEffect>
+                  <HolographicEffect type="glow">
+                    <button
+                      onClick={connect}
+                      className="px-6 py-3 bg-[rgb(237,201,81)] text-black font-semibold rounded-lg hover:bg-[rgba(237,201,81,0.9)] transition-colors"
+                    >
+                      Connect Wallet
+                    </button>
+                  </HolographicEffect>
                 </div>
               </div>
             ) : (
@@ -388,35 +395,37 @@ const Chat: React.FC = () => {
                             message.account_id === accountId ? 'max-w-md' : 'w-full'
                           }`}>
                             {/* Message Box with Header */}
-                            <div className="bg-[rgba(0,0,0,0.3)] border border-[rgba(237,201,81,0.25)] rounded-lg overflow-hidden shadow-lg">
+                            <HolographicEffect type="border" className="bg-[rgba(0,0,0,0.3)] rounded-lg overflow-hidden shadow-lg">
                               {/* Message Header */}
                               <div className="px-3 py-2 bg-[rgba(0,0,0,0.4)] border-b border-[rgba(237,201,81,0.25)] flex items-center justify-between">
                                 <div className="flex items-center gap-3 min-w-0 flex-1">
-                                  <img 
-                                    src={`https://i.near.social/magic/thumbnail/https://near.social/magic/img/account/${message.account_id}`}
-                                    alt={message.account_id}
-                                    className="w-8 h-8 rounded-full border-2 border-[rgb(237,201,81)] object-cover flex-shrink-0"
-                                    onError={(e) => {
-                                      // Fallback to a default avatar if image fails to load
-                                      e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(message.account_id)}&background=edc951&color=000&size=32`;
-                                    }}
-                                  />
-                                  <span className="holographic-text font-semibold text-sm truncate">
+                                  <HolographicEffect type="glow" className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
+                                    <img 
+                                      src={`https://i.near.social/magic/thumbnail/https://near.social/magic/img/account/${message.account_id}`}
+                                      alt={message.account_id}
+                                      className="w-full h-full object-cover"
+                                      onError={(e) => {
+                                        // Fallback to a default avatar if image fails to load
+                                        e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(message.account_id)}&background=edc951&color=000&size=32`;
+                                      }}
+                                    />
+                                  </HolographicEffect>
+                                  <HolographicEffect type="text" intensity="strong" className="font-semibold text-sm truncate">
                                     {message.account_id}
-                                  </span>
+                                  </HolographicEffect>
                                 </div>
-                                <span className="holographic-text-subtle text-xs flex-shrink-0 ml-2">
+                                <HolographicEffect type="text" intensity="subtle" className="text-xs flex-shrink-0 ml-2">
                                   {formatTimestamp(message.timestamp)}
-                                </span>
+                                </HolographicEffect>
                               </div>
                               
                               {/* Message Content */}
                               <div className="px-4 py-3 bg-[rgba(0,0,0,0.3)]">
-                                <div className="holographic-text-subtle text-sm leading-relaxed">
+                                <HolographicEffect type="text" intensity="subtle" className="text-sm leading-relaxed">
                                   {message.message}
-                                </div>
+                                </HolographicEffect>
                               </div>
-                            </div>
+                            </HolographicEffect>
                           </div>
                         </div>
                       ))}
@@ -424,7 +433,7 @@ const Chat: React.FC = () => {
                 </div>
 
                                  {/* Message Input */}
-                 <div className="p-2 sm:p-4 border-t border-[rgba(237,201,81,0.25)] bg-[rgba(0,0,0,0.2)] flex-shrink-0">
+                 <HolographicEffect type="border" className="p-2 sm:p-4 border-t border-[rgba(237,201,81,0.25)] bg-[rgba(0,0,0,0.2)] flex-shrink-0">
                   <div className="flex gap-2 mb-2">
                     <input
                       type="text"
@@ -452,28 +461,32 @@ const Chat: React.FC = () => {
                   <div className="flex justify-between items-center text-xs text-[rgba(237,201,81,0.5)]">
                     {/* Info icon with tooltip */}
                     <div className="relative group">
-                      <div className="w-5 h-5 bg-[rgb(237,201,81)] text-black rounded-full flex items-center justify-center text-xs font-bold cursor-help">
+                      <HolographicEffect type="glow" className="w-5 h-5 bg-[rgb(237,201,81)] text-black rounded-full flex items-center justify-center text-xs font-bold cursor-help">
                         !
-                      </div>
+                      </HolographicEffect>
                       {/* Tooltip - positioned to the right */}
                       <div className="absolute left-full top-1/2 transform -translate-y-1/2 ml-2 px-3 py-2 bg-[rgba(0,0,0,0.9)] text-[rgb(237,201,81)] text-xs rounded-lg border border-[rgba(237,201,81,0.3)] opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
                         You can deposit or withdraw storage in your profile
                         <div className="absolute right-full top-1/2 transform -translate-y-1/2 w-0 h-0 border-t-2 border-b-2 border-r-2 border-transparent border-r-[rgba(237,201,81,0.3)]"></div>
                       </div>
                     </div>
-                    <span className="holographic-text-subtle">{newMessage.length}/{MAX_MESSAGE_LENGTH}</span>
+                    <HolographicEffect type="text" intensity="subtle">
+                      {newMessage.length}/{MAX_MESSAGE_LENGTH}
+                    </HolographicEffect>
                   </div>
-                </div>
+                </HolographicEffect>
               </>
             )}
-          </div>
+          </HolographicEffect>
         </div>
       </div>
 
       {/* Error Display */}
       {error && (
         <div className="absolute top-2 left-1/2 transform -translate-x-1/2 z-20 bg-red-900/90 border border-red-500/50 rounded-lg p-3 max-w-md w-full mx-4 animate-fadeIn">
-          <div className="holographic-error text-sm">{error}</div>
+          <HolographicEffect type="text" intensity="strong" className="text-sm text-red-300">
+            {error}
+          </HolographicEffect>
           <button
             onClick={() => setError(null)}
             className="absolute top-1 right-1 text-xs text-red-300 hover:text-red-200"
@@ -486,20 +499,22 @@ const Chat: React.FC = () => {
       {/* Storage Deposit Modal */}
       {showStorageModal && (
         <div className="absolute inset-0 bg-black/70 z-10 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 animate-fadeIn">
-          <div className="bg-[rgba(0,0,0,0.95)] border border-[rgba(237,201,81,0.3)] rounded-lg w-full max-w-sm sm:max-w-md mx-4 p-3 sm:p-4 backdrop-blur">
+          <HolographicEffect type="border" className="bg-[rgba(0,0,0,0.95)] rounded-lg w-full max-w-sm sm:max-w-md mx-4 p-3 sm:p-4 backdrop-blur">
             <div className="mb-3">
-              <h3 className="text-base sm:text-lg font-semibold holographic-heading mb-2">Chat Storage Required</h3>
-              <p className="text-xs text-[rgba(237,201,81,0.7)] mb-3">
+              <HolographicEffect type="text" intensity="strong" className="text-base sm:text-lg font-semibold mb-2">
+                Chat Storage Required
+              </HolographicEffect>
+              <HolographicEffect type="text" intensity="subtle" className="text-xs mb-3">
                 You need more NEAR in chat storage to send messages. Current balance: {formatNearAmount(storageBalance)} NEAR
-              </p>
+              </HolographicEffect>
             </div>
 
             {/* Storage Balance */}
             <div className="mb-3">
               <div className="text-xs text-[rgba(237,201,81,0.6)] mb-1">Current Storage Balance</div>
-              <div className="text-sm sm:text-base font-bold holographic-text-strong">
+              <HolographicEffect type="text" intensity="strong" className="text-sm sm:text-base font-bold">
                 {isLoadingBalance ? 'Loading...' : `${formatNearAmount(storageBalance)} NEAR`}
-              </div>
+              </HolographicEffect>
             </div>
 
             {/* Deposit Storage */}
@@ -507,19 +522,20 @@ const Chat: React.FC = () => {
               <div className="text-xs text-[rgba(237,201,81,0.6)] mb-2">Deposit Storage</div>
               <div className="grid grid-cols-2 gap-2">
                 {['0.1', '0.3', '0.5', '1'].map((amount) => (
-                  <button
-                    key={amount}
-                    onClick={() => depositStorage(amount)}
-                    disabled={isDepositing || isWithdrawing}
-                    className="px-2 py-2 sm:py-1 bg-[rgb(237,201,81)] text-black font-semibold rounded hover:bg-[rgba(237,201,81,0.9)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-xs"
-                    title={`Deposit ${amount} NEAR for storage`}
-                  >
-                    {isDepositing ? '⟳' : `${amount} Ⓝ`}
-                  </button>
+                  <HolographicEffect key={amount} type="glow">
+                    <button
+                      onClick={() => depositStorage(amount)}
+                      disabled={isDepositing || isWithdrawing}
+                      className="px-2 py-2 sm:py-1 bg-[rgb(237,201,81)] text-black font-semibold rounded hover:bg-[rgba(237,201,81,0.9)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-xs"
+                      title={`Deposit ${amount} NEAR for storage`}
+                    >
+                      {isDepositing ? '⟳' : `${amount} Ⓝ`}
+                    </button>
+                  </HolographicEffect>
                 ))}
               </div>
             </div>
-          </div>
+          </HolographicEffect>
         </div>
       )}
 
