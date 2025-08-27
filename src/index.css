@@ -596,4 +596,188 @@ body {
     line-clamp: 5;
   }
 
+  /* Holographic Text Effects - Gentle and Subtle */
+  .holographic-text {
+    background: linear-gradient(
+      45deg,
+      rgb(var(--gold-accent)) 0%,
+      rgba(255, 215, 0, 0.9) 15%,
+      rgba(255, 182, 193, 0.8) 30%,
+      rgba(173, 216, 230, 0.8) 45%,
+      rgba(144, 238, 144, 0.8) 60%,
+      rgba(255, 182, 193, 0.8) 75%,
+      rgba(255, 215, 0, 0.9) 90%,
+      rgb(var(--gold-accent)) 100%
+    );
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: holographic-shimmer 3s ease-in-out infinite;
+    text-shadow: 0 0 1px rgba(var(--gold-accent), 0.3);
+  }
+
+  .holographic-text-strong {
+    background: linear-gradient(
+      45deg,
+      rgb(var(--gold-accent)) 0%,
+      rgba(255, 215, 0, 0.95) 12%,
+      rgba(255, 182, 193, 0.85) 25%,
+      rgba(173, 216, 230, 0.85) 38%,
+      rgba(144, 238, 144, 0.85) 50%,
+      rgba(255, 182, 193, 0.85) 62%,
+      rgba(255, 215, 0, 0.95) 75%,
+      rgba(255, 165, 0, 0.9) 88%,
+      rgb(var(--gold-accent)) 100%
+    );
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: holographic-shimmer-strong 4s ease-in-out infinite;
+    text-shadow: 0 0 2px rgba(var(--gold-accent), 0.4);
+  }
+
+  .holographic-text-subtle {
+    background: linear-gradient(
+      45deg,
+      rgb(var(--gold-accent)) 0%,
+      rgba(255, 215, 0, 0.8) 20%,
+      rgba(255, 182, 193, 0.6) 40%,
+      rgba(173, 216, 230, 0.6) 60%,
+      rgba(255, 182, 193, 0.6) 80%,
+      rgb(var(--gold-accent)) 100%
+    );
+    background-size: 150% 150%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: holographic-shimmer-subtle 5s ease-in-out infinite;
+    text-shadow: 0 0 1px rgba(var(--gold-accent), 0.2);
+  }
+
+  /* Holographic shimmer animations */
+  @keyframes holographic-shimmer {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  @keyframes holographic-shimmer-strong {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    25% {
+      background-position: 100% 25%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    75% {
+      background-position: 0% 75%;
+    }
+  }
+
+  @keyframes holographic-shimmer-subtle {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  /* Holographic text with glow effect */
+  .holographic-glow {
+    background: linear-gradient(
+      45deg,
+      rgb(var(--gold-accent)) 0%,
+      rgba(255, 215, 0, 0.9) 15%,
+      rgba(255, 182, 193, 0.8) 30%,
+      rgba(173, 216, 230, 0.8) 45%,
+      rgba(144, 238, 144, 0.8) 60%,
+      rgba(255, 182, 193, 0.8) 75%,
+      rgba(255, 215, 0, 0.9) 90%,
+      rgb(var(--gold-accent)) 100%
+    );
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: holographic-shimmer 3s ease-in-out infinite;
+    text-shadow: 
+      0 0 5px rgba(var(--gold-accent), 0.5),
+      0 0 10px rgba(var(--gold-accent), 0.3),
+      0 0 15px rgba(var(--gold-accent), 0.2);
+  }
+
+  /* Holographic text for specific elements */
+  .holographic-heading {
+    background: linear-gradient(
+      45deg,
+      rgb(var(--gold-accent)) 0%,
+      rgba(255, 215, 0, 0.9) 15%,
+      rgba(255, 182, 193, 0.8) 30%,
+      rgba(173, 216, 230, 0.8) 45%,
+      rgba(144, 238, 144, 0.8) 60%,
+      rgba(255, 182, 193, 0.8) 75%,
+      rgba(255, 215, 0, 0.9) 90%,
+      rgb(var(--gold-accent)) 100%
+    );
+    background-size: 250% 250%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: holographic-shimmer 4s ease-in-out infinite;
+    text-shadow: 0 0 3px rgba(var(--gold-accent), 0.4);
+  }
+
+  .holographic-accent {
+    background: linear-gradient(
+      45deg,
+      rgb(var(--gold-accent)) 0%,
+      rgba(255, 102, 0, 0.8) 25%,
+      rgba(255, 182, 193, 0.7) 50%,
+      rgba(255, 102, 0, 0.8) 75%,
+      rgb(var(--gold-accent)) 100%
+    );
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: holographic-shimmer 3.5s ease-in-out infinite;
+    text-shadow: 0 0 2px rgba(var(--gold-accent), 0.3);
+  }
+
+  /* Holographic placeholder effect */
+  input::placeholder {
+    background: var(--placeholder-holographic, linear-gradient(45deg, rgba(237,201,81,0.5) 0%, rgba(255,215,0,0.4) 25%, rgba(255,182,193,0.3) 50%, rgba(173,216,230,0.3) 75%, rgba(237,201,81,0.5) 100%));
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: holographic-shimmer-subtle 6s ease-in-out infinite;
+  }
+
+  /* Holographic text for error messages */
+  .holographic-error {
+    background: linear-gradient(
+      45deg,
+      rgb(var(--card-red)) 0%,
+      rgba(255, 182, 193, 0.8) 25%,
+      rgba(255, 215, 0, 0.7) 50%,
+      rgba(255, 182, 193, 0.8) 75%,
+      rgb(var(--card-red)) 100%
+    );
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: holographic-shimmer 2.5s ease-in-out infinite;
+    text-shadow: 0 0 3px rgba(var(--card-red), 0.4);
+  }
+
 }
