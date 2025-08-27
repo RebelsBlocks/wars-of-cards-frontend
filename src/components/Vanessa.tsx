@@ -228,15 +228,15 @@ export function Vanessa() {
                         className={`w-8 h-8 ${msg.role === 'user' ? 'rounded-full border-2 border-[rgb(237,201,81)]' : ''} object-contain bg-[rgba(0,0,0,0.2)] ${msg.role === 'user' && !wallet.accountId ? 'blur-[5px] opacity-70' : ''}`}
                         style={{ imageRendering: 'auto' }}
                       />
-                      <span className="text-sm text-[rgb(237,201,81)] font-semibold text-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
+                      <span className="text-sm holographic-text font-semibold text-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
                         {msg.role === 'user' ? truncateWalletName(wallet.accountId) : 'Vanessa AI'}
                       </span>
                     </div>
-                    <span className="text-xs text-[rgba(237,201,81,0.7)] ml-auto font-normal text-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
+                    <span className="text-xs holographic-text-subtle ml-auto font-normal text-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
                       {formatMessageTime(msg.timestamp)}
                     </span>
                   </div>
-                  <div className={`p-3 text-white leading-6 text-[0.95rem] text-shadow-[0_1px_1px_rgba(0,0,0,0.3)] ${msg.role === 'user' ? 'bg-[rgba(237,201,81,0.1)] font-medium shadow-[0_4px_15px_rgba(0,0,0,0.2),_0_2px_5px_rgba(237,201,81,0.1)]' : 'bg-[rgba(0,0,0,0.3)] font-normal shadow-[0_4px_15px_rgba(0,0,0,0.2),_0_2px_5px_rgba(237,201,81,0.1)]'}`}>
+                  <div className={`p-3 leading-6 text-[0.95rem] text-shadow-[0_1px_1px_rgba(0,0,0,0.3)] ${msg.role === 'user' ? 'bg-[rgba(237,201,81,0.1)] font-medium shadow-[0_4px_15px_rgba(0,0,0,0.2),_0_2px_5px_rgba(237,201,81,0.1)] holographic-text-subtle' : 'bg-[rgba(0,0,0,0.3)] font-normal shadow-[0_4px_15px_rgba(0,0,0,0.2),_0_2px_5px_rgba(237,201,81,0.1)] text-white'}`}>
                     {msg.role === 'user' ? (
                       msg.content.split('\n').map((line, i) => (
                         <span key={i}>
@@ -262,7 +262,7 @@ export function Vanessa() {
                      !wallet.accountId && (
                       <div className="flex flex-wrap gap-2 mt-4 justify-start">
                         <button
-                          className="px-3 py-2 bg-[rgba(237,201,81,0.4)] border-2 border-[rgba(237,201,81,0.7)] rounded-md text-[rgb(237,201,81)] text-sm cursor-pointer transition-all duration-200 whitespace-nowrap text-center font-semibold animate-[blinkingButton_2s_infinite]"
+                          className="px-3 py-2 bg-[rgba(237,201,81,0.4)] border-2 border-[rgba(237,201,81,0.7)] rounded-md holographic-text-strong text-sm cursor-pointer transition-all duration-200 whitespace-nowrap text-center font-semibold animate-[blinkingButton_2s_infinite]"
                           onClick={() => wallet.connect()}
                         >
                           Log In
@@ -284,7 +284,7 @@ export function Vanessa() {
                       className="w-8 h-8 object-contain bg-[rgba(0,0,0,0.2)]"
                       style={{ imageRendering: 'auto' }}
                     />
-                    <span className="text-sm text-[rgb(237,201,81)] font-semibold">Vanessa AI</span>
+                    <span className="text-sm holographic-text font-semibold">Vanessa AI</span>
                   </div>
                   <div className="p-3 text-white leading-6 text-[0.95rem] bg-[rgba(0,0,0,0.3)] text-shadow-[0_1px_1px_rgba(0,0,0,0.3)]">
                     <span className="animate-pulse">...</span>
@@ -302,6 +302,10 @@ export function Vanessa() {
             onChange={handleTextareaChange}
             onKeyDown={handleKeyDown}
             placeholder={wallet.accountId ? "Type your message here..." : "Log in to chat with Vanessa..."}
+            style={{
+              '--placeholder-color': 'rgba(255,255,255,0.5)',
+              '--placeholder-holographic': 'linear-gradient(45deg, rgba(237,201,81,0.5) 0%, rgba(255,215,0,0.4) 25%, rgba(255,182,193,0.3) 50%, rgba(173,216,230,0.3) 75%, rgba(237,201,81,0.5) 100%)'
+            } as React.CSSProperties}
             className="flex-1 p-3 px-4 rounded-md border border-[rgba(237,201,81,0.7)] bg-[rgba(0,0,0,0.4)] text-white text-[15px] resize-none font-inherit min-h-[40px] max-h-[80px] box-border focus:outline-none focus:border-[rgb(237,201,81)] placeholder:text-[rgba(255,255,255,0.5)]"
             rows={1}
           />
