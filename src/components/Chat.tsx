@@ -263,19 +263,7 @@ const Chat: React.FC = () => {
     }
   };
 
-  // Auto-scroll to bottom when messages change
-  useEffect(() => {
-    const messagesContainer = document.querySelector('.messages-container');
-    if (messagesContainer) {
-      // Use setTimeout to ensure DOM is updated
-      setTimeout(() => {
-        messagesContainer.scrollTo({
-          top: messagesContainer.scrollHeight,
-          behavior: 'smooth'
-        });
-      }, 100);
-    }
-  }, [messages]);
+
 
   // Deposit storage with specific amount - optimized
   const depositStorage = async (nearAmount: string) => {
@@ -400,7 +388,7 @@ const Chat: React.FC = () => {
                   <button
                     onClick={refreshMessages}
                     disabled={isLoadingMessages || isAnyTransactionPending}
-                    className="text-xs px-2 py-1 bg-[rgba(237,201,81,0.2)] text-[rgb(237,201,81)] rounded hover:bg-[rgba(237,201,81,0.3)] transition-colors disabled:opacity-50"
+                    className={`text-xs px-2 py-1 bg-[rgba(237,201,81,0.2)] text-[rgb(237,201,81)] rounded hover:bg-[rgba(237,201,81,0.3)] transition-all duration-300 disabled:opacity-50 ${isLoadingMessages ? 'animate-spin' : ''}`}
                     title="Refresh messages"
                   >
                     {isLoadingMessages ? '⟳' : '↻'}
@@ -408,23 +396,18 @@ const Chat: React.FC = () => {
                 </div>
 
                                  {/* Messages List */}
-                                    <div className="flex-1 overflow-y-auto p-2 sm:p-4 min-h-0 messages-container">
-                  {isLoadingMessages ? (
-                    <div className="flex items-center justify-center h-full">
-                      <div className="text-[rgba(237,201,81,0.6)]">Loading messages...</div>
-                    </div>
-                  ) : messages.length === 0 ? (
-                    <div className="flex items-center justify-center h-full">
-                      <div className="text-[rgba(237,201,81,0.6)]">No messages yet</div>
-                    </div>
-                  ) : (
-                    <div className="space-y-3">
-                      {messages.slice().reverse().map((message, index) => (
+                                    <div className={`flex-1 overflow-y-auto p-2 sm:p-4 min-h-0 messages-container flex flex-col-reverse transition-all duration-300 ${isLoadingMessages ? 'animate-pulse' : ''}`}>
+                  <div className={`space-y-3 flex flex-col-reverse transition-opacity duration-500 ${isLoadingMessages ? 'opacity-50' : 'opacity-100'}`}>
+                    {messages.map((message, index) => (
                         <div
-                          key={index}
-                          className={`w-full ${
+                          key={`${message.account_id}-${message.timestamp}-${index}`}
+                          className={`w-full transition-all duration-300 ease-in-out ${
                             message.account_id === accountId ? 'flex justify-end' : 'flex justify-start'
                           }`}
+                          style={{
+                            animationDelay: `${index * 50}ms`,
+                            animation: 'fadeInUp 0.3s ease-out forwards'
+                          }}
                         >
                           <div className={`${
                             message.account_id === accountId ? 'max-w-md' : 'w-full'
@@ -463,7 +446,6 @@ const Chat: React.FC = () => {
                         </div>
                       ))}
                     </div>
-                  )}
                 </div>
 
                                  {/* Message Input */}
@@ -501,7 +483,7 @@ const Chat: React.FC = () => {
 
       {/* Error Display */}
       {error && (
-        <div className="absolute top-2 left-1/2 transform -translate-x-1/2 z-20 bg-red-900/90 border border-red-500/50 rounded-lg p-3 max-w-md w-full mx-4">
+        <div className="absolute top-2 left-1/2 transform -translate-x-1/2 z-20 bg-red-900/90 border border-red-500/50 rounded-lg p-3 max-w-md w-full mx-4 animate-fadeIn">
           <div className="text-red-400 text-sm">{error}</div>
           <button
             onClick={() => setError(null)}
@@ -514,7 +496,7 @@ const Chat: React.FC = () => {
 
       {/* Storage Deposit Modal */}
       {showStorageModal && (
-        <div className="absolute inset-0 bg-black/70 z-10 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4">
+        <div className="absolute inset-0 bg-black/70 z-10 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 animate-fadeIn">
           <div className="bg-[rgba(0,0,0,0.95)] border border-[rgba(237,201,81,0.3)] rounded-lg w-full max-w-sm sm:max-w-md mx-4 p-3 sm:p-4 backdrop-blur">
             <div className="mb-3">
               <h3 className="text-base sm:text-lg font-semibold text-[rgb(237,201,81)] mb-2">Chat Storage Required</h3>
