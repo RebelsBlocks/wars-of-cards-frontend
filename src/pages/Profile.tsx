@@ -318,7 +318,7 @@ const ProfilePage: NextPage = () => {
                       {balances.near}
                     </div>
                   </div>
-                  <div className="text-2xl">Ⓝ</div>
+
                 </HolographicEffect>
                 
                 <HolographicEffect type="background" className="flex items-center justify-between p-3 rounded">
