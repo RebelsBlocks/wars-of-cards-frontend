@@ -12,7 +12,7 @@ import '@near-wallet-selector/modal-ui/styles.css';
 
 // Extend Network type to include our custom properties
 interface ExtendedNetwork extends Network {
-  cransContractId: string;
+  // Removed cransContractId
 }
 
 interface WalletContextType {
@@ -132,8 +132,7 @@ function NearWalletProviderComponent({ children }: Props) {
           nodeUrl: networkConfig.nodeUrl,
           helperUrl: networkConfig.helperUrl,
           explorerUrl: networkConfig.explorerUrl,
-          indexerUrl: 'https://api.kitwallet.app',
-          cransContractId: networkConfig.contracts.crans
+          indexerUrl: 'https://api.kitwallet.app'
         } as ExtendedNetwork;
         
         const selector = await setupWalletSelector({
