@@ -234,12 +234,6 @@ const Community: React.FC = () => {
             <div className="card">
               <div className="text-center py-8">
                 <p className="text-[rgba(237,201,81,0.8)]">No community posts yet.</p>
-                <button 
-                  onClick={handleRefresh}
-                  className="mt-4 px-4 py-2 bg-[rgb(237,201,81)] bg-opacity-20 hover:bg-opacity-30 text-[rgb(237,201,81)] rounded-lg transition-colors"
-                >
-                  Check Again
-                </button>
               </div>
             </div>
           ) : (
