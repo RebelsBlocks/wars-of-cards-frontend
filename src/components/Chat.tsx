@@ -385,14 +385,6 @@ const Chat: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                  <button
-                    onClick={refreshMessages}
-                    disabled={isLoadingMessages || isAnyTransactionPending}
-                    className={`text-xs px-2 py-1 bg-[rgba(237,201,81,0.2)] text-[rgb(237,201,81)] rounded hover:bg-[rgba(237,201,81,0.3)] transition-all duration-300 disabled:opacity-50 ${isLoadingMessages ? 'animate-spin' : ''}`}
-                    title="Refresh messages"
-                  >
-                    {isLoadingMessages ? '⟳' : '↻'}
-                  </button>
                 </div>
 
                                  {/* Messages List */}
