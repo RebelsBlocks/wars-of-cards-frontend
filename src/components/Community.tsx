@@ -377,7 +377,7 @@ const Community: React.FC = () => {
       {/* Post Modal */}
       {showPostModal && selectedPost && (
         <div className="fixed inset-0 bg-black/80 z-50 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4">
-          <HolographicEffect type="border" className="bg-[rgba(0,0,0,0.95)] rounded-lg w-full max-w-2xl mx-4 backdrop-blur flex flex-col max-h-[90vh]">
+          <div className="bg-[rgba(0,0,0,0.95)] rounded-lg w-full max-w-2xl mx-4 backdrop-blur flex flex-col max-h-[90vh]">
             {/* Modal Header - Always Visible */}
             <div className="flex items-center p-4 sm:p-6 pb-3 border-b border-[rgba(237,201,81,0.25)] flex-shrink-0">
               <div className="flex items-center gap-3 min-w-0 flex-1">
@@ -502,7 +502,7 @@ const Community: React.FC = () => {
                 Close
               </button>
             </div>
-          </HolographicEffect>
+          </div>
         </div>
       )}
     </div>
