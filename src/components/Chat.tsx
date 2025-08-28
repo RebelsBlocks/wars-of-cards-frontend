@@ -457,17 +457,9 @@ const Chat: React.FC = () => {
                     </button>
                   </div>
                   <div className="flex justify-between items-center text-xs text-[rgba(237,201,81,0.5)]">
-                    {/* Info icon with tooltip */}
-                    <div className="relative group">
-                      <HolographicEffect type="glow" className="w-5 h-5 bg-[rgb(237,201,81)] text-black rounded-full flex items-center justify-center text-xs font-bold cursor-help">
-                        !
-                      </HolographicEffect>
-                      {/* Tooltip - positioned to the right */}
-                      <div className="absolute left-full top-1/2 transform -translate-y-1/2 ml-2 px-3 py-2 bg-[rgba(0,0,0,0.9)] text-[rgb(237,201,81)] text-xs rounded-lg border border-[rgba(237,201,81,0.3)] opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
-                        You can deposit or withdraw storage in your profile
-                        <div className="absolute right-full top-1/2 transform -translate-y-1/2 w-0 h-0 border-t-2 border-b-2 border-r-2 border-transparent border-r-[rgba(237,201,81,0.3)]"></div>
-                      </div>
-                    </div>
+                    <HolographicEffect type="text" intensity="subtle" className="text-xs text-[rgba(237,201,81,0.5)]">
+                      You can deposit or withdraw storage in your profile
+                    </HolographicEffect>
                     <HolographicEffect type="text" intensity="subtle">
                       {newMessage.length}/{MAX_MESSAGE_LENGTH}
                     </HolographicEffect>
