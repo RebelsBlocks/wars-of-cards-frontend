@@ -8,6 +8,12 @@ const TypewriterText: React.FC<{ text: string; speed?: number }> = ({ text, spee
   const [displayText, setDisplayText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  // Reset when text changes
+  useEffect(() => {
+    setDisplayText('');
+    setCurrentIndex(0);
+  }, [text]);
+
   useEffect(() => {
     if (currentIndex < text.length) {
       const timer = setTimeout(() => {
@@ -39,14 +45,8 @@ const HomePage: NextPage = () => {
   };
 
   const sections = [
-    {
-      title: "Why is there a one-time deposit?",
-      content: "Smart contracts need storage in NEAR tokens to keep player data. Players cover that cost once through a storage deposit, so afterwards they don't need to manually confirm every transaction."
-    },
-    {
-      title: "Why NEAR?",
-      content: "Because it's fast and cheap, making it easy for new players to join — perfect for casual gaming at scale."
-    }
+    "Web3 gaming platform with Vanessa, an interactive AI host.",
+    "Player data stored with NEAR."
   ];
 
   useEffect(() => {
@@ -62,51 +62,20 @@ const HomePage: NextPage = () => {
   }, [sections.length]);
 
   return (
-    <div className="min-h-screen">
-      {/* Kontener główny z równym podziałem na 2 sekcje */}
-      <div className="min-h-screen grid grid-rows-2">
-        
-        {/* Description Section - Opis */}
-        <div className="flex items-center justify-center px-4 md:px-6">
-          <div className="max-w-4xl mx-auto text-center">
-            <HolographicEffect type="text" intensity="glow">
-              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[rgba(237,201,81,0.95)] leading-tight">
-                <TypewriterText text="Web3 gaming platform with Vanessa, an interactive AI host." speed={60} />
-              </h1>
-            </HolographicEffect>
-          </div>
+    <div className="min-h-screen flex items-center justify-center">
+      {/* Kontener główny z centrowaniem tekstu na środku viewport */}
+      <div className="w-full max-w-4xl mx-auto px-4 md:px-6">
+        <div 
+          className={`text-center transition-opacity duration-500 ${
+            isVisible ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
+          <HolographicEffect type="text" intensity="glow">
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[rgba(237,201,81,0.95)] leading-tight leading-relaxed mx-auto text-center transition-all duration-300 max-w-3xl">
+              <TypewriterText text={sections[currentSection]} speed={60} />
+            </h1>
+          </HolographicEffect>
         </div>
-
-        {/* FAQ Section */}
-        <div id="faq-section" className="flex items-center justify-center px-4 md:px-6">
-          <div className="relative w-full max-w-4xl">
-            <div 
-              className={`bg-[rgba(0,0,0,0.3)] border border-[rgba(237,201,81,0.3)] rounded-lg p-8 md:p-12 mx-auto transition-opacity duration-500 shadow-lg backdrop-blur-sm ${
-                isVisible ? 'opacity-100' : 'opacity-0'
-              }`}
-            >
-              <div className="text-center">
-                <div className="flex flex-col items-center space-y-6">
-                  {/* Zawartość tekstowa */}
-                  <div className="w-full">
-                    <HolographicEffect type="text" intensity="normal">
-                      <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-[rgba(237,201,81,0.95)] leading-tight transition-all duration-300">
-                        {sections[currentSection].title}
-                      </h3>
-                    </HolographicEffect>
-                    
-                    <HolographicEffect type="text" intensity="subtle">
-                      <p className="text-lg md:text-xl lg:text-2xl text-[rgba(237,201,81,0.8)] leading-relaxed mx-auto text-center transition-all duration-300 max-w-3xl">
-                        {sections[currentSection].content}
-                      </p>
-                    </HolographicEffect>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
       </div>
     </div>
   );
