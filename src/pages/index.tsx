@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import HolographicEffect from '../components/HolographicEffect';
 
-// Typewriter effect component
+// Typewriter effect component - simplified with CSS animations
 const TypewriterText: React.FC<{ text: string; speed?: number }> = ({ text, speed = 50 }) => {
   const [displayText, setDisplayText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -27,7 +27,7 @@ const TypewriterText: React.FC<{ text: string; speed?: number }> = ({ text, spee
   return (
     <span>
       {displayText}
-      <span className="animate-pulse">|</span>
+      <span className="typewriter-cursor">|</span>
     </span>
   );
 };
@@ -42,6 +42,12 @@ const HomePage: NextPage = () => {
       setCurrentSection(index);
       setIsVisible(true);
     }, 500);
+  };
+
+  // Function to open navbar
+  const openNavbar = () => {
+    const event = new CustomEvent('openNavbar');
+    window.dispatchEvent(event);
   };
 
   const sections = [
@@ -66,12 +72,14 @@ const HomePage: NextPage = () => {
       {/* Kontener główny z centrowaniem tekstu na środku viewport */}
       <div className="w-full max-w-4xl mx-auto px-4 md:px-6">
         <div 
-          className={`text-center transition-opacity duration-500 ${
-            isVisible ? 'opacity-100' : 'opacity-0'
-          }`}
+          className={`text-center ${isVisible ? 'section-visible' : 'section-hidden'}`}
         >
           <HolographicEffect type="text" intensity="glow">
-            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[rgba(237,201,81,0.95)] leading-tight leading-relaxed mx-auto text-center transition-all duration-300 max-w-3xl">
+            <h1 
+              className="text-2xl md:text-3xl lg:text-4xl font-bold text-[rgba(237,201,81,0.95)] leading-tight leading-relaxed mx-auto text-center max-w-3xl cursor-pointer"
+              onClick={openNavbar}
+              title="Kliknij aby przełączyć nawigację"
+            >
               <TypewriterText text={sections[currentSection]} speed={60} />
             </h1>
           </HolographicEffect>
