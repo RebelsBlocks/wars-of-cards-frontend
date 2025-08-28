@@ -81,7 +81,7 @@ const HomePage: NextPage = () => {
           <div className="max-w-4xl mx-auto text-center">
             <HolographicEffect type="text" intensity="glow">
               <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[rgba(237,201,81,0.95)] leading-tight">
-                Web3 gaming platform combining classic card games and mini-games with Vanessa, an interactive AI host.
+                Web3 gaming platform with Vanessa, an interactive AI host.
               </h1>
             </HolographicEffect>
           </div>
