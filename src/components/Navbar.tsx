@@ -58,6 +58,16 @@ export default function Navbar() {
     }
   }, [router.pathname, useMobileHeader]);
 
+  // Listen for openNavbar event - toggle functionality
+  useEffect(() => {
+    const handleOpenNavbar = () => {
+      setIsMenuOpen(prev => !prev);
+    };
+
+    window.addEventListener('openNavbar', handleOpenNavbar);
+    return () => window.removeEventListener('openNavbar', handleOpenNavbar);
+  }, []);
+
   const handleMenuItemClick = (menuItem: MenuItem) => {
     setActiveMenuItem(menuItem);
     if (useMobileHeader) setIsMenuOpen(false);
