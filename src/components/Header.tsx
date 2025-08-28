@@ -25,7 +25,7 @@ export default function Header({ isMenuOpen, onMenuToggle, isMobile }: HeaderPro
       // On desktop, header slides to the right when sidebar opens
       if (isMenuOpen) {
         return {
-          left: '240px', // Updated to match new sidebar width
+          left: '200px', // Updated to match new sidebar width
           right: '0',
           opacity: 1,
           width: 'auto'
