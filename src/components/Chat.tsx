@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNearWallet } from '../contexts/NearWalletContext';
 import { useNetwork } from '../contexts/NetworkContext';
 import HolographicEffect from './HolographicEffect';
@@ -30,6 +30,7 @@ const Chat: React.FC = () => {
   const [newMessage, setNewMessage] = useState<string>('');
   const [isSendingMessage, setIsSendingMessage] = useState(false);
   const MAX_MESSAGE_LENGTH = 1000;
+  const messageInputRef = useRef<HTMLInputElement>(null);
   
   // Transaction States
   const [isWithdrawing, setIsWithdrawing] = useState(false);
@@ -234,6 +235,11 @@ const Chat: React.FC = () => {
       // Clear input after successful send
       setNewMessage('');
       
+      // Focus the input field after sending
+      setTimeout(() => {
+        messageInputRef.current?.focus();
+      }, 100);
+      
       // Refresh both messages and storage balance after a short delay
       setTimeout(() => {
         refreshMessages();
@@ -434,6 +440,7 @@ const Chat: React.FC = () => {
                  <div className="p-2 sm:p-4 border-t border-[rgba(237,201,81,0.25)] bg-[rgba(0,0,0,0.2)] flex-shrink-0">
                   <div className="flex gap-2 mb-2">
                     <input
+                      ref={messageInputRef}
                       type="text"
                       value={newMessage}
                       onChange={handleInputChange}
