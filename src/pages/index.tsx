@@ -1,6 +1,7 @@
 import type { NextPage } from 'next';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
+import HolographicEffect from '../components/HolographicEffect';
 
 const HomePage: NextPage = () => {
   const [currentSection, setCurrentSection] = useState(0);
@@ -16,22 +17,24 @@ const HomePage: NextPage = () => {
 
   const sections = [
     {
-      title: "Why NEAR?",
-      content: "Because NEAR is fast and cheap, making it easy for new players to join — perfect for casual gaming at scale."
+      title: "Who made it?",
+      content: "Rebels Blocks",
+      isLink: true,
+      link: "https://x.com/rebelsblocks"
     },
     {
       title: "Why is there a one-time deposit?",
       content: "Smart contracts need storage in NEAR tokens to keep player data. Players cover that cost once through a storage deposit, so afterwards they don't need to manually confirm every transaction."
     },
     {
-      title: "Who made it?",
-      content: "Developed by Rebels Blocks"
-    },
-    {
-      title: "Partner",
+      title: "Who trusted us?",
       content: "NEAR Horizon",
       isLink: true,
       link: "https://www.hzn.xyz/"
+    },
+    {
+      title: "Why NEAR?",
+      content: "Because it's fast and cheap, making it easy for new players to join — perfect for casual gaming at scale."
     }
   ];
 
@@ -41,75 +44,103 @@ const HomePage: NextPage = () => {
       setTimeout(() => {
         setCurrentSection((prev) => (prev + 1) % sections.length);
         setIsVisible(true);
-      }, 500); // Half second fade out
-    }, 9000); // 9 seconds per section
+      }, 500);
+    }, 9000);
 
     return () => clearInterval(interval);
   }, [sections.length]);
 
-  return (
-    <div className="mx-auto flex h-full max-w-5xl md:max-w-6xl flex-col items-center justify-between px-4 md:px-6 py-8">
-      {/* Main Logo Section - Top */}
-      <div className="flex flex-col md:flex-row items-center justify-center text-center md:text-left mb-12 gap-8 md:gap-12">
-        <div className="flex-shrink-0">
-          <Image
-            src="/logo.png"
-            alt="Wars of Cards Logo"
-            width={500}
-            height={375}
-            priority
-            className="w-full h-auto object-contain max-w-md md:max-w-lg"
-          />
-        </div>
-      </div>
+  const scrollToFAQ = () => {
+    const faqSection = document.getElementById('faq-section');
+    if (faqSection) {
+      faqSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
-      {/* FAQ Sections - Bottom */}
-      <div 
-        className={`bg-[rgba(0,0,0,0.3)] border border-[rgba(237,201,81,0.3)] rounded-lg p-8 max-w-3xl transition-opacity duration-500 shadow-lg backdrop-blur-sm ${
-          isVisible ? 'opacity-100' : 'opacity-0'
-        }`}
-      >
-        <div className="text-center px-6">
-          <div className="flex flex-col items-center space-y-6">
-            {/* Text content */}
-            <div className="w-full max-w-3xl">
-              <h3 className="text-3xl md:text-4xl font-bold mb-4 text-[rgba(237,201,81,0.95)] leading-tight transition-all duration-300">
-                {sections[currentSection].title}
-              </h3>
-              
-              {sections[currentSection].isLink ? (
-                <a 
-                  href={sections[currentSection].link} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-xl md:text-2xl text-[rgba(237,201,81,0.85)] hover:text-[rgba(237,201,81,1)] transition-colors font-medium block"
-                >
-                  {sections[currentSection].content}
-                </a>
-              ) : (
-                <p className="text-lg md:text-xl text-[rgba(237,201,81,0.8)] leading-relaxed mx-auto text-center transition-all duration-300">
-                  {sections[currentSection].content}
-                </p>
-              )}
+  return (
+    <div className="min-h-screen">
+      {/* Kontener główny z równym podziałem na 3 sekcje */}
+      <div className="min-h-screen grid grid-rows-3">
+        
+        {/* Hero Section - Logo */}
+        <div className="flex items-center justify-center px-4 md:px-6">
+          <div className="max-w-4xl mx-auto text-center">
+            <Image
+              src="/logo.png"
+              alt="Wars of Cards Logo"
+              width={600}
+              height={450}
+              priority
+              className="w-full h-auto object-contain max-w-lg md:max-w-xl mx-auto"
+            />
+          </div>
+        </div>
+
+        {/* Description Section - Opis */}
+        <div className="flex items-center justify-center px-4 md:px-6">
+          <div className="max-w-4xl mx-auto text-center">
+            <HolographicEffect type="text" intensity="glow">
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[rgba(237,201,81,0.95)] leading-tight">
+                Web3 gaming platform combining classic card games and mini-games with Vanessa, an interactive AI host.
+              </h1>
+            </HolographicEffect>
+          </div>
+        </div>
+
+        {/* FAQ Section */}
+        <div id="faq-section" className="flex items-center justify-center px-4 md:px-6">
+          <div className="relative w-full max-w-4xl">
+            <div 
+              className={`bg-[rgba(0,0,0,0.3)] border border-[rgba(237,201,81,0.3)] rounded-lg p-8 md:p-12 mx-auto transition-opacity duration-500 shadow-lg backdrop-blur-sm ${
+                isVisible ? 'opacity-100' : 'opacity-0'
+              }`}
+            >
+              <div className="text-center">
+                <div className="flex flex-col items-center space-y-6">
+                  {/* Zawartość tekstowa */}
+                  <div className="w-full">
+                    <HolographicEffect type="text" intensity="normal">
+                      <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-[rgba(237,201,81,0.95)] leading-tight transition-all duration-300">
+                        {sections[currentSection].title}
+                      </h3>
+                    </HolographicEffect>
+                    
+                    {sections[currentSection].isLink ? (
+                      <a 
+                        href={sections[currentSection].link} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="inline-block transition-transform hover:scale-105 duration-300 text-center"
+                      >
+                        <div className="flex flex-col items-center space-y-4">
+                          <Image
+                            src={sections[currentSection].title === "Who trusted us?" ? "/horizon.png" : "/rebelsblocks_logo.png"}
+                            alt={sections[currentSection].content}
+                            width={150}
+                            height={150}
+                            className="w-[150px] h-[150px] object-contain"
+                          />
+                          <HolographicEffect type="text" intensity="subtle">
+                            <span className="text-xl md:text-2xl text-[rgba(237,201,81,0.85)] hover:text-[rgba(237,201,81,1)] transition-colors font-medium">
+                              {sections[currentSection].content}
+                            </span>
+                          </HolographicEffect>
+                        </div>
+                      </a>
+                    ) : (
+                      <HolographicEffect type="text" intensity="subtle">
+                        <p className="text-lg md:text-xl lg:text-2xl text-[rgba(237,201,81,0.8)] leading-relaxed mx-auto text-center transition-all duration-300 max-w-3xl">
+                          {sections[currentSection].content}
+                        </p>
+                      </HolographicEffect>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        
-        {/* Navigation Dots */}
-        <div className="flex justify-center mt-8 space-x-3">
-          {sections.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => handleDotClick(index)}
-              className={`w-4 h-4 rounded-full transition-all duration-300 ${
-                index === currentSection
-                  ? 'bg-[rgba(237,201,81,0.9)] scale-110'
-                  : 'bg-[rgba(237,201,81,0.4)] hover:bg-[rgba(237,201,81,0.6)] hover:scale-105'
-              }`}
-              aria-label={`Go to section ${index + 1}`}
-            />
-          ))}
-        </div>
+
       </div>
     </div>
   );
