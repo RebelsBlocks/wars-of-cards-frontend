@@ -25,7 +25,6 @@ const NEAR_CONFIG = {
 
 // REF-Finance SDK Configuration
 const REF_SDK_CONFIG = {
-  apiKey: '', // Optional: API key for REF-Finance API (if required)
   networkId: NETWORK_ID,
   nodeUrl: NEAR_CONFIG.nodeUrl,
   // Set a custom contract ID if needed
