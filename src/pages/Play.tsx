@@ -1,10 +1,48 @@
 import type { NextPage } from 'next';
+import { useState, useEffect } from 'react';
+import HolographicEffect from '../components/HolographicEffect';
+import { useNearWallet } from '../contexts/NearWalletContext';
+
+// Typewriter effect component - simplified with CSS animations
+const TypewriterText: React.FC<{ text: string; speed?: number }> = ({ text, speed = 50 }) => {
+  const [displayText, setDisplayText] = useState('');
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  // Reset when text changes
+  useEffect(() => {
+    setDisplayText('');
+    setCurrentIndex(0);
+  }, [text]);
+
+  useEffect(() => {
+    if (currentIndex < text.length) {
+      const timer = setTimeout(() => {
+        setDisplayText(prev => prev + text[currentIndex]);
+        setCurrentIndex(prev => prev + 1);
+      }, speed);
+      return () => clearTimeout(timer);
+    }
+  }, [currentIndex, text, speed]);
+
+  return (
+    <span>
+      {displayText}
+      <span className="typewriter-cursor">|</span>
+    </span>
+  );
+};
 
 const PlayPage: NextPage = () => {
   return (
-    <div className="mx-auto max-w-4xl md:max-w-5xl px-3 md:px-4 py-6">
-      <div className="card">
-        <p className="text-[rgba(237,201,81,0.8)]">Coming soon!</p>
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="w-full max-w-4xl mx-auto px-4 md:px-6">
+        <div className="text-center">
+          <HolographicEffect type="text" intensity="glow">
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[rgba(237,201,81,0.95)] leading-tight leading-relaxed mx-auto text-center max-w-3xl">
+              <TypewriterText text="Coming soon!" speed={60} />
+            </h1>
+          </HolographicEffect>
+        </div>
       </div>
     </div>
   );
