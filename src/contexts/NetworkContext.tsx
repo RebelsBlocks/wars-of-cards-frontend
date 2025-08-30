@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useMemo } from 'react';
 
 export type NetworkId = 'mainnet';
 
@@ -16,21 +16,13 @@ interface NetworkProviderProps {
 }
 
 export const NetworkProvider: React.FC<NetworkProviderProps> = ({ children }) => {
-  const [networkId, setNetworkIdState] = useState<NetworkId>(() => {
-    // Always use mainnet
-    return 'mainnet';
-  });
-
-  const setNetworkId = (newNetworkId: NetworkId) => {
-    // No-op since we only support mainnet
-  };
-
-  const value = {
-    networkId,
-    setNetworkId,
+  // Since we only support mainnet, we can make this completely static
+  const value = useMemo(() => ({
+    networkId: 'mainnet' as NetworkId,
+    setNetworkId: () => {}, // No-op since we only support mainnet
     isMainnet: true,
     isTestnet: false,
-  };
+  }), []); // Empty dependency array since values never change
 
   return (
     <NetworkContext.Provider value={value}>
@@ -59,9 +51,6 @@ export const getNetworkConfig = (networkId: NetworkId) => {
   return {
     networkId,
     nodeUrl: 'https://free.rpc.fastnear.com',
-    walletUrl: 'https://wallet.near.org',
-    helperUrl: 'https://helper.mainnet.near.org',
-    explorerUrl: 'https://explorer.near.org',
     contracts: CONTRACT_INFO.mainnet,
     chatContractId: CONTRACT_INFO.mainnet.chat,
   };
