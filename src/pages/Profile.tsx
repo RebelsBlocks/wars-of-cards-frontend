@@ -220,7 +220,7 @@ const ProfilePage: NextPage = () => {
             )}
             <div>
               <h2 className="text-xl font-semibold holographic-text-strong">
-                {accountId ? truncateWalletName(accountId) : 'Profile'}
+                {accountId ? truncateWalletName(accountId) : ''}
               </h2>
               {accountId && (
                 <a 
@@ -368,11 +368,8 @@ const ProfilePage: NextPage = () => {
             </div>
             <button 
               onClick={connect} 
-              className="px-6 py-3 bg-[rgb(237,201,81)] text-black font-semibold rounded-lg hover:bg-[rgba(237,201,81,0.9)] transition-colors flex items-center gap-2 mx-auto shadow-[0_0_20px_rgba(237,201,81,0.3)] border border-[rgba(237,201,81,0.4)]"
+              className="px-6 py-3 bg-[rgb(237,201,81)] text-black font-semibold rounded-lg hover:bg-[rgba(237,201,81,0.9)] transition-colors"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
               Connect Wallet
             </button>
           </div>
