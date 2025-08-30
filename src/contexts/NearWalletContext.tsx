@@ -1,4 +1,4 @@
-import React, { type ReactNode, useEffect, useState, useCallback } from 'react';
+import React, { type ReactNode, useEffect, useState, useCallback, useMemo } from 'react';
 import { providers } from 'near-api-js';
 import { setupWalletSelector } from '@near-wallet-selector/core';
 import type { Network, WalletSelector, Wallet, Transaction, Action, FunctionCallAction, WalletModuleFactory } from '@near-wallet-selector/core';
@@ -115,6 +115,80 @@ function NearWalletProviderComponent({ children }: Props) {
     setError(null);
   }, []);
 
+  // Memoize functions to prevent unnecessary re-renders and improve performance
+  const connect = useCallback(async () => {
+    if (!modal) return;
+    
+    try {
+      clearError();
+      console.log('Opening wallet selector modal');
+      
+      // Optimized connection flow with reduced timeouts
+      await new Promise<void>((resolve, reject) => {
+        let timeoutId: NodeJS.Timeout | null = null;
+        
+        const handleChange = (state: any) => {
+          if (state.accounts.length > 0) {
+            if (timeoutId) clearTimeout(timeoutId);
+            subscription?.unsubscribe();
+            modal.off('onHide', handleModalHide);
+            resolve();
+          }
+        };
+
+        const handleModalHide = () => {
+          if (timeoutId) clearTimeout(timeoutId);
+          subscription?.unsubscribe();
+          reject(new Error('User cancelled the action'));
+        };
+
+        const subscription = selector?.store.observable.subscribe(handleChange);
+        modal.show();
+        modal.on('onHide', handleModalHide);
+        
+        // Reduced timeout for faster feedback
+        const timeoutDuration = isFirefox() ? 15000 : 10000; // 15s for Firefox, 10s for others
+        timeoutId = setTimeout(() => {
+          // Check if the user is actually connected before rejecting
+          const state = selector?.store.getState();
+          if (state && state.accounts && state.accounts.length > 0) {
+            subscription?.unsubscribe();
+            modal.off('onHide', handleModalHide);
+            resolve();
+          } else {
+            subscription?.unsubscribe();
+            modal.off('onHide', handleModalHide);
+            reject(new Error('Connection timeout'));
+          }
+        }, timeoutDuration);
+      });
+    } catch (err: any) {
+      console.error('Failed to connect wallet:', err);
+      if (!isUserCancellation(err)) {
+        setError(err);
+      }
+    }
+  }, [modal, selector, clearError]);
+
+  const disconnect = useCallback(async () => {
+    if (!selector) return;
+    
+    try {
+      const wallet = await selector.wallet();
+      await wallet.signOut();
+      setAccounts([]);
+      setAccountId(null);
+      clearError();
+    } catch (err: any) {
+      console.error('Failed to disconnect wallet:', err);
+      if (!isUserCancellation(err)) {
+        setError(err);
+      }
+    }
+  }, [selector, clearError]);
+
+
+
   useEffect(() => {
     let isInitializing = false;
     
@@ -187,8 +261,8 @@ function NearWalletProviderComponent({ children }: Props) {
       }
     };
 
-    // Small delay to prevent React Strict Mode double calls
-    const timeoutId = setTimeout(initNear, 100);
+    // Reduced delay for faster initialization
+    const timeoutId = setTimeout(initNear, 50); // Reduced from 100ms to 50ms
     
     return () => {
       clearTimeout(timeoutId);
@@ -196,98 +270,7 @@ function NearWalletProviderComponent({ children }: Props) {
     };
   }, [networkId]); // Usuń clearError dependency żeby nie tworzyć pętli
 
-  const disconnect = async () => {
-    if (!selector) return;
-    
-    try {
-      const wallet = await selector.wallet();
-      await wallet.signOut();
-      setAccounts([]);
-      setAccountId(null);
-      clearError();
-    } catch (err: any) {
-      console.error('Failed to disconnect wallet:', err);
-      if (!isUserCancellation(err)) {
-        setError(err);
-      }
-    }
-  };
-
-  const connect = async () => {
-    if (!modal) return;
-    
-    try {
-      clearError();
-      console.log('Opening wallet selector modal');
-      
-      // For Firefox, use a different approach with timeout
-      if (isFirefox()) {
-        await new Promise<void>((resolve, reject) => {
-          let timeoutId: NodeJS.Timeout | null = null;
-          
-          const handleChange = (state: any) => {
-            if (state.accounts.length > 0) {
-              if (timeoutId) clearTimeout(timeoutId);
-              subscription?.unsubscribe();
-              modal.off('onHide', handleModalHide);
-              resolve();
-            }
-          };
-
-          const handleModalHide = () => {
-            if (timeoutId) clearTimeout(timeoutId);
-            subscription?.unsubscribe();
-            reject(new Error('User cancelled the action'));
-          };
-
-          const subscription = selector?.store.observable.subscribe(handleChange);
-          modal.show();
-          modal.on('onHide', handleModalHide);
-          
-          // Set a longer timeout for Firefox
-          timeoutId = setTimeout(() => {
-            // Check if the user is actually connected before rejecting
-            const state = selector?.store.getState();
-            if (state && state.accounts && state.accounts.length > 0) {
-              subscription?.unsubscribe();
-              modal.off('onHide', handleModalHide);
-              resolve();
-            } else {
-              subscription?.unsubscribe();
-              modal.off('onHide', handleModalHide);
-              reject(new Error('Connection timeout'));
-            }
-          }, 30000); // 30 seconds timeout
-        });
-      } else {
-        // Original logic for other browsers
-        await new Promise<void>((resolve, reject) => {
-          const handleChange = (state: any) => {
-            if (state.accounts.length > 0) {
-              subscription?.unsubscribe();
-              resolve();
-            }
-          };
-
-          const handleModalHide = () => {
-            subscription?.unsubscribe();
-            reject(new Error('User cancelled the action'));
-          };
-
-          const subscription = selector?.store.observable.subscribe(handleChange);
-          modal.show();
-          modal.on('onHide', handleModalHide);
-        });
-      }
-    } catch (err: any) {
-      console.error('Failed to connect wallet:', err);
-      if (!isUserCancellation(err)) {
-        setError(err);
-      }
-    }
-  };
-
-  const executeTransaction = async (transaction: {
+  const executeTransaction = useCallback(async (transaction: {
     contractId: string;
     methodName: string;
     args: any;
@@ -312,19 +295,17 @@ function NearWalletProviderComponent({ children }: Props) {
 
       console.log(`Executing transaction: ${transaction.methodName} on ${transaction.contractId}`);
       
-      // Set a timeout specifically for Firefox to handle hanging popups
+      // Reduced timeout for faster feedback
       let timeoutId: NodeJS.Timeout | null = null;
       let hasCompleted = false;
       
-      if (isFirefox()) {
-        timeoutId = setTimeout(() => {
-          if (!hasCompleted) {
-            console.log('Firefox transaction timeout - checking state');
-            // We'll check if the transaction actually went through before erroring
-            hasCompleted = true;
-          }
-        }, 20000); // 20 seconds timeout for Firefox
-      }
+      const timeoutDuration = isFirefox() ? 15000 : 10000; // Reduced from 20s to 15s for Firefox, 10s for others
+      timeoutId = setTimeout(() => {
+        if (!hasCompleted) {
+          console.log('Transaction timeout - checking state');
+          hasCompleted = true;
+        }
+      }, timeoutDuration);
 
       const result = await wallet.signAndSendTransaction({
         receiverId: transaction.contractId,
@@ -369,9 +350,9 @@ function NearWalletProviderComponent({ children }: Props) {
     } finally {
       setTransactionInProgress(false);
     }
-  };
+  }, [selector, accountId, transactionInProgress, clearError]);
 
-  const executeTransactions = async (transactions: {
+  const executeTransactions = useCallback(async (transactions: {
     contractId: string;
     methodName: string;
     args: any;
@@ -408,19 +389,17 @@ function NearWalletProviderComponent({ children }: Props) {
       
       console.log(`Executing ${transactions.length} transactions`);
       
-      // Set a timeout specifically for Firefox to handle hanging popups
+      // Reduced timeout for faster feedback
       let timeoutId: NodeJS.Timeout | null = null;
       let hasCompleted = false;
       
-      if (isFirefox()) {
-        timeoutId = setTimeout(() => {
-          if (!hasCompleted) {
-            console.log('Firefox transaction timeout - checking state');
-            // We'll check if the transaction actually went through before erroring
-            hasCompleted = true;
-          }
-        }, 20000); // 20 seconds timeout for Firefox
-      }
+      const timeoutDuration = isFirefox() ? 15000 : 10000; // Reduced from 20s to 15s for Firefox, 10s for others
+      timeoutId = setTimeout(() => {
+        if (!hasCompleted) {
+          console.log('Transaction timeout - checking state');
+          hasCompleted = true;
+        }
+      }, timeoutDuration);
 
       const result = await wallet.signAndSendTransactions({
         transactions: formattedTransactions,
@@ -453,9 +432,9 @@ function NearWalletProviderComponent({ children }: Props) {
     } finally {
       setTransactionInProgress(false);
     }
-  };
+  }, [selector, accountId, transactionInProgress, clearError]);
 
-  const viewFunction = async (params: {
+  const viewFunction = useCallback(async (params: {
     contractId: string;
     methodName: string;
     args?: any;
@@ -483,9 +462,9 @@ function NearWalletProviderComponent({ children }: Props) {
       }
       throw error;
     }
-  };
+  }, [networkId, clearError]);
 
-  const contextValue = {
+  const contextValue = useMemo(() => ({
     selector,
     modal,
     accounts,
@@ -498,7 +477,19 @@ function NearWalletProviderComponent({ children }: Props) {
     executeTransaction,
     executeTransactions,
     viewFunction,
-  };
+  }), [
+    selector,
+    modal,
+    accounts,
+    accountId,
+    isLoading,
+    error,
+    connect,
+    disconnect,
+    executeTransaction,
+    executeTransactions,
+    viewFunction,
+  ]);
 
   return (
     <WalletContext.Provider value={contextValue}>
