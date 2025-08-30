@@ -204,8 +204,6 @@ function NearWalletProviderComponent({ children }: Props) {
         const extendedNetworkConfig = {
           networkId: networkConfig.networkId,
           nodeUrl: networkConfig.nodeUrl,
-          helperUrl: networkConfig.helperUrl,
-          explorerUrl: networkConfig.explorerUrl,
           indexerUrl: 'https://api.kitwallet.app'
         } as ExtendedNetwork;
         
