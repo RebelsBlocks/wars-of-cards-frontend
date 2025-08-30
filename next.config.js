@@ -1,6 +1,25 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false, // Wyłączamy żeby zatrzymać duplikacje w development
+  // Performance optimizations
+  swcMinify: true,
+  compress: true,
+  poweredByHeader: false,
+  
+  // Bundle optimization
+  experimental: {
+    optimizePackageImports: ['@near-wallet-selector/core', '@near-wallet-selector/modal-ui', 'near-api-js'],
+  },
+  
+  // Image optimization
+  images: {
+    formats: ['image/webp', 'image/avif'],
+    minimumCacheTTL: 60,
+  },
+  
+  // Source maps configuration
+  productionBrowserSourceMaps: false,
+  
   async headers() {
     return [
       {
@@ -47,7 +66,7 @@ const nextConfig = {
       }
     ];
   },
-  webpack: (config, { isServer }) => {
+  webpack: (config, { isServer, dev }) => {
     if (!isServer) {
       config.resolve.fallback = {
         fs: false,
@@ -64,6 +83,30 @@ const nextConfig = {
         path: require.resolve('path-browserify'),
       };
     }
+    
+    // Bundle optimization
+    if (!dev) {
+      config.optimization = {
+        ...config.optimization,
+        splitChunks: {
+          chunks: 'all',
+          cacheGroups: {
+            vendor: {
+              test: /[\\/]node_modules[\\/]/,
+              name: 'vendors',
+              chunks: 'all',
+            },
+            near: {
+              test: /[\\/]node_modules[\\/]@near[\\/]/,
+              name: 'near-vendor',
+              chunks: 'all',
+              priority: 10,
+            },
+          },
+        },
+      };
+    }
+    
     return config;
   },
 };
