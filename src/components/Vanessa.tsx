@@ -4,7 +4,87 @@ import { useNetwork } from '@/contexts/NetworkContext';
 import { useTokenPrices } from './TokenPriceDisplay';
 import HolographicEffect from './HolographicEffect';
 
-import { getVanessaResponse, formatConversationHistory, ChatMessage } from '../utils/openai';
+// Vanessa API utility functions
+interface ChatMessage {
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+}
+
+// Helper function to count words in a string
+function countWords(text: string): number {
+  return text.trim().split(/\s+/).filter(word => word.length > 0).length;
+}
+
+// Helper function to truncate text to word limit
+function truncateToWordLimit(text: string, wordLimit: number): string {
+  const words = text.trim().split(/\s+/);
+  if (words.length <= wordLimit) {
+    return text;
+  }
+  return words.slice(0, wordLimit).join(' ') + '...';
+}
+
+// Helper function to format conversation history for Vanessa API
+function formatConversationHistory(messages: Array<{role: string, content: string}>): ChatMessage[] {
+  return messages
+    .filter(msg => msg.role === 'user' || msg.role === 'assistant')
+    .map(msg => ({
+      role: msg.role as 'user' | 'assistant',
+      content: msg.content
+    }))
+    .slice(-10); // Keep last 10 messages for context
+}
+
+async function getVanessaResponse(
+  userMessage: string, 
+  conversationHistory: ChatMessage[] = [],
+  userAccountId?: string | null
+): Promise<string> {
+  try {
+    // Prepare messages for the API
+    const messages = [
+      ...conversationHistory,
+      { role: 'user', content: userMessage }
+    ];
+
+    // Call our server-side API route
+    const response = await fetch('/api/vanessa', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        messages,
+        userWallet: userAccountId
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to get response from Vanessa');
+    }
+
+    const data = await response.json();
+    const assistantResponse = data.response;
+    
+    if (!assistantResponse) {
+      throw new Error('No response from Vanessa');
+    }
+
+    // Check and enforce 500-word limit
+    const wordCount = countWords(assistantResponse);
+    if (wordCount > 500) {
+      console.warn(`Vanessa response exceeded 500 words (${wordCount} words). Truncating...`);
+      return truncateToWordLimit(assistantResponse, 500);
+    }
+
+    return assistantResponse;
+
+  } catch (error) {
+    console.error('Error calling Vanessa API:', error);
+    throw error;
+  }
+}
 
 interface Message {
   id: string;
@@ -80,8 +160,6 @@ export function Vanessa() {
     const initializeChat = async () => {
       if (wallet.accountId) {
         console.log('Wallet connected, accountId:', wallet.accountId);
-        // Add small delay to ensure wallet is fully connected
-        await new Promise(resolve => setTimeout(resolve, 100));
         
         const welcomeMessage = getWelcomeMessage(wallet.accountId);
         
@@ -181,7 +259,7 @@ export function Vanessa() {
       // Add typing indicator with animation and delay before response
       await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate typing time
       
-      // Get response from OpenAI
+      // Get response from Vanessa API
       const conversationHistory = formatConversationHistory(messages);
       const botResponse = await getVanessaResponse(messageContent, conversationHistory, wallet.accountId);
       
@@ -201,7 +279,7 @@ export function Vanessa() {
       setMessages(prev => [...prev, {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: 'Sorry, I encountered an error processing your request. Please check your OpenAI API key configuration and try again.',
+        content: 'Sorry, I encountered an error processing your request. Please try again later.',
         timestamp: new Date()
       }]);
     } finally {
