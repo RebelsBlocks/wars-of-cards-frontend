@@ -217,16 +217,14 @@ const Community: React.FC = () => {
     <div className="mx-auto max-w-4xl md:max-w-5xl px-3 md:px-4 py-6">
       <HolographicEffect type="border" className="card">
         <div className="text-red-400 text-center">
-          <HolographicEffect type="text" intensity="strong" className="font-semibold">Error loading posts</HolographicEffect>
+          <HolographicEffect type="text" intensity="strong" className="font-semibold">NEAR Social is currently down.</HolographicEffect>
           <HolographicEffect type="text" intensity="subtle" className="text-sm mt-2 text-red-300">{error}</HolographicEffect>
-          <HolographicEffect type="glow">
-            <button 
-              onClick={handleRefresh}
-              className="mt-4 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition-colors"
-            >
-              Try Again
-            </button>
-          </HolographicEffect>
+          <button 
+            onClick={handleRefresh}
+            className="mt-4 px-4 py-2 bg-[rgb(237,201,81)] text-black font-semibold rounded-lg hover:bg-[rgba(237,201,81,0.9)] transition-all duration-200 shadow-[0_0_15px_rgba(237,201,81,0.3)] hover:shadow-[0_0_25px_rgba(237,201,81,0.5)] transform hover:scale-105"
+          >
+            Try Again
+          </button>
         </div>
       </HolographicEffect>
     </div>
