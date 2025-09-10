@@ -1,5 +1,6 @@
 import { useNearWallet } from '@/contexts/NearWalletContext';
 import { useRouter } from 'next/router';
+import HolographicEffect from './HolographicEffect';
 
 interface HeaderProps {
   isMenuOpen: boolean;
@@ -89,9 +90,11 @@ export default function Header({ isMenuOpen, onMenuToggle, isMobile }: HeaderPro
                   e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(wallet.accountId || '')}&background=edc951&color=000&size=24`;
                 }}
               />
-              <span className="text-sm text-[rgb(237,201,81)] font-medium group-hover:text-[rgba(237,201,81,0.8)] transition-colors duration-200">
-                {wallet.accountId || 'Unknown'}
-              </span>
+              <HolographicEffect type="text" intensity="strong">
+                <span className="text-sm text-[rgb(237,201,81)] font-medium group-hover:text-[rgba(237,201,81,0.8)] transition-colors duration-200">
+                  {wallet.accountId || 'Unknown'}
+                </span>
+              </HolographicEffect>
             </button>
           </div>
         ) : (
