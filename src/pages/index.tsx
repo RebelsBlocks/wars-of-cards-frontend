@@ -51,7 +51,8 @@ const HomePage: NextPage = () => {
   };
 
   const sections = [
-    "Web3 gaming platform with Vanessa, an interactive AI host.",
+    "Welcome to the card gaming platform.",
+    "Talk to Vanessa, your AI companion.", 
     "Player data stored with NEAR."
   ];
 
