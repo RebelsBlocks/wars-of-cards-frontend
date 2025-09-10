@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { JsonRpcProvider } from 'near-api-js/lib/providers';
 import { Big } from 'big.js';
+import HolographicEffect from './HolographicEffect';
 
 // Essential constants from TokenPrices.tsx
 const TOKENS = {
@@ -134,12 +135,16 @@ export default function TokenPriceDisplay() {
 
   return (
     <div className="space-y-2">
-      <div className="flex items-center justify-between rounded-lg border border-[rgba(237,201,81,0.4)] bg-gradient-to-r from-[rgba(237,201,81,0.08)] to-[rgba(237,201,81,0.12)] px-3 py-2.5 hover:bg-gradient-to-r hover:from-[rgba(237,201,81,0.12)] hover:to-[rgba(237,201,81,0.16)] transition-all duration-200">
-        <span className="text-sm font-bold text-[rgb(237,201,81)] tracking-wide">NEAR</span>
-        <span className="text-sm text-[rgb(237,201,81)] font-semibold">
-          {nearInUsdc === '—' ? '—' : `$${nearInUsdc}`}
-        </span>
-      </div>
+      <HolographicEffect type="border" className="flex items-center justify-between rounded-lg border border-[rgba(237,201,81,0.4)] bg-gradient-to-r from-[rgba(237,201,81,0.08)] to-[rgba(237,201,81,0.12)] px-3 py-2.5 hover:bg-gradient-to-r hover:from-[rgba(237,201,81,0.12)] hover:to-[rgba(237,201,81,0.16)] transition-all duration-200">
+        <HolographicEffect type="text" intensity="strong">
+          <span className="text-sm font-bold text-[rgb(237,201,81)] tracking-wide">NEAR</span>
+        </HolographicEffect>
+        <HolographicEffect type="text" intensity="strong">
+          <span className="text-sm text-[rgb(237,201,81)] font-semibold">
+            {nearInUsdc === '—' ? '—' : `$${nearInUsdc}`}
+          </span>
+        </HolographicEffect>
+      </HolographicEffect>
     </div>
   );
 }
