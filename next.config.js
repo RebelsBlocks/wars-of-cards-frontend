@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: false, // Wyłączamy żeby zatrzymać duplikacje w development
+  reactStrictMode: false, 
   // Performance optimizations
   swcMinify: true,
   compress: true,
@@ -10,6 +10,9 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['@near-wallet-selector/core', '@near-wallet-selector/modal-ui', 'near-api-js'],
   },
+  
+  // Transpile ESM modules
+  transpilePackages: ['nanoid', '@meteorwallet/sdk'],
   
   // Image optimization
   images: {
